@@ -8,7 +8,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 
 | Device | Role | Notes |
 |---|---|---|
-| **Varia VS3** | Grinder | Grind settings are shown as `full-turns.dial` starting points (e.g. `1.8` = 1 turn + 8). |
+| **Varia VS3** | Grinder | Grind shown as the **dial number** (~0–20 scale, finer = lower). Espresso `0.2–3.3`, moka `3.1–7.8`, cold brew `10.1–19.6` per the [Honest Coffee Guide](https://honestcoffeeguide.com/varia-vs3-gen-2-grind-settings/) Gen 2 chart. |
 | **DeLonghi Dedica** | Espresso | **51 mm** pressurized basket — grind runs a touch coarser than a true espresso machine. |
 | **Moka pot** (makineta) | Stovetop | Medium-fine, salt-like grind; no pressure needed. |
 | **Cold brew** | Immersion | No machine — very coarse grind, 14–16 h fridge steep, then strain. |
@@ -17,13 +17,15 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 
 | Drink | Machine | Grind | Dose → Yield | Time |
 |---|---|---|---|---|
-| Espresso / milk drinks | Dedica | **1.8** | 14 g → 28 g | 25–30 s |
-| Flat white (tighter) | Dedica | **1.7** | 14 g → 26 g | 25–30 s |
-| Moka coffee | Moka pot | **3.2** | fill basket → full pot | ~4–5 min |
-| Cold brew concentrate | Immersion | **5.5** | 100 g → 500 ml | 16 h steep |
+| Espresso / milk drinks | Dedica | **2.5** | 14 g → 28 g | 25–30 s |
+| Flat white (tighter) | Dedica | **2.3** | 14 g → 26 g | 25–30 s |
+| Moka coffee | Moka pot | **4.8** | fill basket → full pot | ~4–5 min |
+| Cold brew concentrate | Immersion | **13** | 100 g → 500 ml | 16 h steep |
+| Smooth cold brew | Immersion | **15** | 80 g → 650 ml | 14 h steep |
 
-> These are **starting points**. Taste the shot, then move the grind ±0.2:
-> sour & fast → **finer**; bitter, slow or choking → **coarser**.
+> These are **starting points** within the VS3's per-method ranges. Taste, then nudge:
+> sour & fast → **finer** (lower number); bitter, slow or choking → **coarser** (higher).
+> The Dedica's **pressurized** basket likes espresso a touch coarser (~2.5) than a bare basket would.
 
 ## Features
 

@@ -203,7 +203,7 @@
   <div id="recipe"></div>
 
   <footer>
-    Grind numbers are <b>starting points</b> for the Varia VS3 — taste, then dial ±0.2.<br />
+    VS3 dial runs ~0–20 (finer = lower). Numbers are <b>starting points</b> — taste, then nudge.<br />
     Built for Or's kitchen · <a href="https://github.com/AdbitRush/espresso">github.com/AdbitRush/espresso</a>
   </footer>
 </div>
@@ -249,12 +249,12 @@ const MACHINES = {
     drinks:{
       espresso:{
         name:"Espresso", tag:"The foundation shot · 1:2 in 25–30 s",
-        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"~92 °C",
-        dial:"Too fast &amp; pale → go <b>finer</b> (1.5). Chokes / drips forever → go <b>coarser</b> (2.1).",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"~92 °C",
+        dial:"Too fast &amp; pale → go <b>finer</b> (2.2). Chokes / drips forever → go <b>coarser</b> (2.9).",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
           "Power on and let it heat <b>at least 3 min</b>. Lock in the empty portafilter and run a blank shot to warm the group and your cup.",
-          "Grind <span class='hl'>14 g</span> into the double basket at VS3 <span class='hl'>1.8</span>.",
+          "Grind <span class='hl'>14 g</span> into the double basket at VS3 <span class='hl'>2.5</span>.",
           "Give it a quick <b>WDT stir</b>, level the bed, and tamp <b>gently &amp; even</b> — pressurized baskets don't need muscle.",
           "Lock in, put the warm cup underneath, and start the shot immediately.",
           "Aim for <span class='hl'>~28 g out in 25–30 s</span> from first drip. Sour = grind finer; harsh &amp; bitter = coarser.",
@@ -263,11 +263,11 @@ const MACHINES = {
       },
       americano:{
         name:"Americano", tag:"Espresso loosened with hot water",
-        grind:"1.8", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
+        grind:"2.5", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
         dial:"Same shot as espresso. If it tastes thin, use <b>less water</b>, not a finer grind.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
-          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>1.8</span>.",
+          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>2.5</span>.",
           "Fill the cup with <span class='hl'>120–180 ml</span> hot water <b>first</b>.",
           "Pour the shot <b>on top</b> of the water — this floats the crema instead of blasting it away.",
           "Adjust strength with the water volume, not the grind.",
@@ -276,7 +276,7 @@ const MACHINES = {
       },
       cappuccino:{
         name:"Cappuccino", tag:"1 : 1 : 1 — shot, milk, foam",
-        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"Dial the shot as espresso; the character comes from a <b>thick 1 cm foam cap</b>.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Fill the steel jug 1/3 with cold milk. Purge the wand, then <b>stretch 4–5 s</b> at the surface (hissing) to build foam, submerge to <b>60–65 °C</b>, wipe &amp; purge.",
@@ -290,7 +290,7 @@ const MACHINES = {
       },
       latte:{
         name:"Latte", tag:"Double shot drowned in silky milk",
-        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"Big milk volume hides a weak shot — keep the double <b>tight (1:2)</b> so it cuts through.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Fill jug ~1/2 with cold milk. Short <b>2–3 s stretch</b> then submerge — you want <b>thin microfoam</b>, not a foam cap.",
@@ -304,12 +304,12 @@ const MACHINES = {
       },
       flatwhite:{
         name:"Flat white", tag:"Small, strong, glossy microfoam",
-        grind:"1.7", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
-        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk. Grind ~1.7.",
+        grind:"2.3", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
+        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk. Grind ~2.3.",
         timer:{label:"Shot time", target:26, mode:"up"},
         milk:"Only a <b>1–2 s stretch</b> — the flat white is defined by tight, shiny, barely-there foam folded fully into the milk.",
         steps:[
-          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>1.7</span>.",
+          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>2.3</span>.",
           "Steam <span class='hl'>~120 ml</span> milk to silky microfoam, minimal air.",
           "Pour into a <span class='hl'>150–170 ml</span> cup for a high coffee-to-milk ratio.",
           "Keep the foam under <b>~5 mm</b> — smooth, no dry peaks.",
@@ -318,7 +318,7 @@ const MACHINES = {
       },
       cortado:{
         name:"Cortado", tag:"Equal parts espresso & warm milk",
-        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
         dial:"Balanced 1:1 drink — a clean, slightly sweet shot shines here. Standard grind.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Barely texture it: <b>1 s stretch max</b>. Warm milk, almost no foam — it should stay flat and silky.",
@@ -332,7 +332,7 @@ const MACHINES = {
       },
       macchiato:{
         name:"Macchiato", tag:"Espresso 'stained' with a foam dollop",
-        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"It's 95% espresso, so the shot has nowhere to hide — dial it clean first.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"You only need a <b>spoonful of foam</b>. Steam a small amount of milk with a good stretch and use the top layer.",
@@ -351,12 +351,12 @@ const MACHINES = {
     drinks:{
       moka:{
         name:"Moka coffee", tag:"Rich stovetop brew · no pressure needed",
-        grind:"3.2", dose:"fill basket", yield:"full pot", time:"~4–5 min", temp:"low–med heat",
-        dial:"Bitter / sputtery → grind <b>coarser</b> (3.5) &amp; lower the heat. Weak &amp; sour → <b>finer</b> (2.9).",
+        grind:"4.8", dose:"fill basket", yield:"full pot", time:"~4–5 min", temp:"low–med heat",
+        dial:"Bitter / sputtery → grind <b>coarser</b> (5.5) &amp; lower the heat. Weak &amp; sour → <b>finer</b> (4.2).",
         timer:{label:"On the heat", target:270, mode:"up"},
         steps:[
           "<b>Boil water separately</b> and fill the base to just <b>below the safety valve</b> — starting hot means the grounds don't stew and go metallic.",
-          "Fill the funnel basket with grind at VS3 <span class='hl'>3.2</span>, level it off — <b>do not tamp</b>.",
+          "Fill the funnel basket with grind at VS3 <span class='hl'>4.8</span>, level it off — <b>do not tamp</b>.",
           "Assemble (the base is hot — use a towel) and set on <b>low–medium</b> heat, lid open.",
           "When coffee rises and you hear the <b>first gurgle</b>, pull it off the heat.",
           "Cool the base under the cold tap to <b>stop extraction</b>, stir, and pour.",
@@ -365,11 +365,11 @@ const MACHINES = {
       },
       mokaamericano:{
         name:"Moka americano", tag:"Moka brew lengthened with hot water",
-        grind:"3.2", dose:"fill basket", yield:"pot + water", time:"~4–5 min", temp:"low–med heat",
+        grind:"4.8", dose:"fill basket", yield:"pot + water", time:"~4–5 min", temp:"low–med heat",
         dial:"Brew as normal moka; stretch with water to taste rather than changing the grind.",
         timer:{label:"On the heat", target:270, mode:"up"},
         steps:[
-          "Brew a full moka pot as usual (VS3 <span class='hl'>3.2</span>, hot start).",
+          "Brew a full moka pot as usual (VS3 <span class='hl'>4.8</span>, hot start).",
           "Add <span class='hl'>100–150 ml</span> hot water to a mug.",
           "Pour the moka coffee in — it's naturally strong, so it takes water well.",
           "Adjust with more water rather than re-grinding.",
@@ -378,12 +378,12 @@ const MACHINES = {
       },
       mokacap:{
         name:"Moka cappuccino", tag:"Stovetop shot + hand-frothed milk",
-        grind:"3.2", dose:"fill basket", yield:"pot + milk", time:"~4–5 min", temp:"warm milk",
+        grind:"4.8", dose:"fill basket", yield:"pot + milk", time:"~4–5 min", temp:"warm milk",
         dial:"No wand, so froth by hand. Whole milk foams thickest.",
         timer:{label:"On the heat", target:270, mode:"up"},
         milk:"Warm ~120 ml milk in the microwave or a pan to <b>~60 °C</b>, then <b>frother-whisk 20–30 s</b> until doubled and glossy.",
         steps:[
-          "Brew a strong moka pot (VS3 <span class='hl'>3.2</span>).",
+          "Brew a strong moka pot (VS3 <span class='hl'>4.8</span>).",
           "Warm and froth the milk by hand until thick and airy.",
           "Pour the moka coffee into a cup, then spoon and pour the foam on top.",
           "Dust with cocoa if you like — the moka's body carries milk beautifully.",
@@ -397,10 +397,10 @@ const MACHINES = {
     drinks:{
       concentrate:{
         name:"Cold brew concentrate", tag:"Strong 1:5 base · dilute to taste",
-        grind:"5.5", dose:"100 g", yield:"500 ml water", time:"16 h", temp:"in fridge",
-        dial:"Gritty / muddy cup → grind <b>coarser</b> (6.0). Weak &amp; watery → steep <b>longer</b>, not finer.",
+        grind:"13", dose:"100 g", yield:"500 ml water", time:"16 h", temp:"in fridge",
+        dial:"Gritty / muddy cup → grind <b>coarser</b> (16). Weak &amp; watery → steep <b>longer</b>, not finer.",
         steps:[
-          "Grind <span class='hl'>100 g</span> coarse at VS3 <span class='hl'>5.5</span> — think coarse sea salt, no fines.",
+          "Grind <span class='hl'>100 g</span> coarse at VS3 <span class='hl'>13</span> — think coarse sea salt, no fines.",
           "Combine with <span class='hl'>500 ml</span> cold filtered water in a jar. Stir so <b>every ground is wet</b>.",
           "Seal and steep in the fridge <span class='hl'>16 h</span> (14 h for lighter, 18 h for bolder).",
           "Strain through a paper filter or mesh, then a second time for clarity.",
@@ -410,10 +410,10 @@ const MACHINES = {
       },
       smooth:{
         name:"Smooth cold brew", tag:"Ready to drink · gentle 1:8",
-        grind:"5.0", dose:"80 g", yield:"650 ml water", time:"14 h", temp:"in fridge",
+        grind:"15", dose:"80 g", yield:"650 ml water", time:"14 h", temp:"in fridge",
         dial:"For a rounder, tea-like cup. Too sharp → coarser + shorter steep; flat → +2 h.",
         steps:[
-          "Grind <span class='hl'>80 g</span> at VS3 <span class='hl'>5.0</span> (a hair finer than concentrate for a fuller ready-to-drink brew).",
+          "Grind <span class='hl'>80 g</span> at VS3 <span class='hl'>15</span> (a touch coarser than the concentrate for a clean ready-to-drink brew).",
           "Add <span class='hl'>650 ml</span> cold water, stir until fully saturated.",
           "Steep <span class='hl'>14 h</span> in the fridge.",
           "Double-strain and pour <b>straight over ice</b> — no dilution needed.",
@@ -422,7 +422,7 @@ const MACHINES = {
       },
       icedlatte:{
         name:"Iced cold-brew latte", tag:"Concentrate + cold milk over ice",
-        grind:"5.5", dose:"use concentrate", yield:"1:1 milk", time:"—", temp:"iced",
+        grind:"13", dose:"use concentrate", yield:"1:1 milk", time:"—", temp:"iced",
         dial:"Uses your ready concentrate. Want it stronger? Less milk, not a finer grind.",
         steps:[
           "Fill a tall glass with <b>big ice cubes</b>.",
@@ -434,7 +434,7 @@ const MACHINES = {
       },
       tonic:{
         name:"Cold-brew tonic", tag:"Fizzy, citrusy, wakes you up",
-        grind:"5.5", dose:"use concentrate", yield:"tonic + ice", time:"—", temp:"iced",
+        grind:"13", dose:"use concentrate", yield:"tonic + ice", time:"—", temp:"iced",
         dial:"A long, refreshing drink. Balance is concentrate-to-tonic, roughly 1:2.",
         steps:[
           "Fill a glass with ice and pour in <span class='hl'>~150 ml</span> tonic water.",
@@ -496,7 +496,7 @@ function renderRecipe(){
       <p class="sub">${d.tag}</p>
     </div>
     <div class="readout" role="group" aria-label="Recipe numbers">
-      <div class="cell grind"><div class="k">VS3 grind</div><div class="v">${d.grind}</div><div class="u">turns</div></div>
+      <div class="cell grind"><div class="k">VS3 grind</div><div class="v">${d.grind}</div><div class="u">on dial</div></div>
       <div class="cell"><div class="k">Dose</div><div class="v">${d.dose}</div><div class="u">in</div></div>
       <div class="cell"><div class="k">Yield</div><div class="v">${d.yield}</div><div class="u">out</div></div>
       <div class="cell"><div class="k">Time</div><div class="v">${d.time}</div><div class="u">${d.temp}</div></div>
