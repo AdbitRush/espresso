@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#17120e" />
+<title>Espresso — your brew guide</title>
+<meta name="description" content="Grind numbers and step-by-step recipes for the Varia VS3, DeLonghi Dedica and moka pot." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ground:#f6f1ea; --card:#fffdfa; --card-2:#f0e8dd;
+    --ink:#231a12; --ink-soft:#6b5b4b; --hair:#e3d8c8;
+    --crema:#b56f2a; --crema-bright:#d9902f; --copper:#9a5a2b;
+    --led:#1f7a4d; --warn:#b26a12;
+    --readout-bg:#1c1510; --readout-ink:#f3c986; --readout-dim:#8a6a45;
+    --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 30px rgba(80,50,20,.08);
+    --r:16px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#141019; --card:#1d1720; --card-2:#251d29;
+      --ink:#f3ece4; --ink-soft:#b09f92; --hair:#332a38;
+      --crema:#e0a45b; --crema-bright:#f0b667; --copper:#c98346;
+      --led:#4fc98a; --warn:#e6a748;
+      --readout-bg:#0e0a12; --readout-ink:#f3c986; --readout-dim:#7a5f43;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="light"]{
+    --ground:#f6f1ea; --card:#fffdfa; --card-2:#f0e8dd;
+    --ink:#231a12; --ink-soft:#6b5b4b; --hair:#e3d8c8;
+    --crema:#b56f2a; --crema-bright:#d9902f; --copper:#9a5a2b;
+    --led:#1f7a4d; --warn:#b26a12;
+    --readout-bg:#1c1510; --readout-ink:#f3c986; --readout-dim:#8a6a45;
+    --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 30px rgba(80,50,20,.08);
+  }
+  :root[data-theme="dark"]{
+    --ground:#141019; --card:#1d1720; --card-2:#251d29;
+    --ink:#f3ece4; --ink-soft:#b09f92; --hair:#332a38;
+    --crema:#e0a45b; --crema-bright:#f0b667; --copper:#c98346;
+    --led:#4fc98a; --warn:#e6a748;
+    --readout-bg:#0e0a12; --readout-ink:#f3c986; --readout-dim:#7a5f43;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Archivo",system-ui,sans-serif; line-height:1.55;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:22px 18px 96px}
+
+  /* ---- header ---- */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+  .brand{display:flex;align-items:center;gap:11px;min-width:0}
+  .mark{width:38px;height:38px;flex:none;border-radius:11px;background:
+      radial-gradient(120% 120% at 30% 20%,var(--crema-bright),var(--copper) 70%);
+      display:grid;place-items:center;box-shadow:var(--shadow)}
+  .mark::after{content:"";width:15px;height:15px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.85),rgba(255,255,255,.05) 60%);
+      border:1.5px solid rgba(255,255,255,.5)}
+  .brand h1{font-family:"Fraunces",serif;font-weight:600;font-size:1.32rem;letter-spacing:-.01em;margin:0;line-height:1}
+  .brand p{margin:2px 0 0;font-size:.72rem;color:var(--ink-soft);letter-spacing:.02em}
+  .theme-btn{flex:none;background:var(--card);border:1px solid var(--hair);color:var(--ink-soft);
+      width:40px;height:40px;border-radius:11px;cursor:pointer;font-size:1.05rem;display:grid;place-items:center;
+      transition:transform .15s ease,color .15s ease}
+  .theme-btn:hover{color:var(--crema);transform:rotate(-12deg)}
+  .theme-btn:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+
+  .label{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft);
+      font-weight:600;margin:0 0 9px}
+
+  /* ---- machine segmented ---- */
+  .machines{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+  .machine{position:relative;background:var(--card);border:1px solid var(--hair);border-radius:14px;
+      padding:13px 10px 11px;cursor:pointer;text-align:left;color:var(--ink);
+      transition:border-color .18s ease,transform .12s ease,background .18s ease;font-family:inherit}
+  .machine:hover{transform:translateY(-2px)}
+  .machine:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .machine .ic{font-size:1.35rem;line-height:1;display:block;margin-bottom:7px}
+  .machine .mn{font-weight:600;font-size:.86rem;letter-spacing:-.01em;display:block}
+  .machine .ms{font-size:.68rem;color:var(--ink-soft);display:block;margin-top:1px}
+  .machine[aria-pressed="true"]{border-color:var(--crema);background:
+      linear-gradient(180deg,color-mix(in oklab,var(--crema) 14%,var(--card)),var(--card))}
+  .machine[aria-pressed="true"]::before{content:"";position:absolute;top:9px;right:9px;width:8px;height:8px;
+      border-radius:50%;background:var(--crema-bright);box-shadow:0 0 0 3px color-mix(in oklab,var(--crema) 30%,transparent)}
+
+  /* ---- drink chips ---- */
+  .drinks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px}
+  .chip{background:var(--card);border:1px solid var(--hair);color:var(--ink-soft);
+      padding:7px 13px;border-radius:999px;font-size:.82rem;font-weight:500;cursor:pointer;font-family:inherit;
+      transition:all .15s ease}
+  .chip:hover{color:var(--ink);border-color:var(--crema)}
+  .chip:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+
+  /* ---- recipe card ---- */
+  .recipe{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow);
+      overflow:hidden;animation:rise .4s cubic-bezier(.2,.7,.3,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.recipe{animation:none}}
+
+  .rhead{padding:20px 20px 4px}
+  .rhead h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;letter-spacing:-.015em;margin:0;
+      text-wrap:balance;line-height:1.05}
+  .rhead .sub{color:var(--ink-soft);font-size:.86rem;margin:5px 0 0}
+
+  /* readout strip */
+  .readout{margin:16px 20px 0;background:var(--readout-bg);border-radius:13px;padding:15px 8px;
+      display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:4px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+  .cell{text-align:center;padding:0 6px;position:relative}
+  .cell + .cell::before{content:"";position:absolute;left:0;top:14%;height:72%;width:1px;
+      background:rgba(243,201,134,.14)}
+  .cell .k{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--readout-dim);
+      font-weight:600;margin-bottom:5px}
+  .cell .v{font-family:"JetBrains Mono",monospace;color:var(--readout-ink);font-weight:700;
+      font-size:1.02rem;line-height:1;font-variant-numeric:tabular-nums;
+      text-shadow:0 0 12px color-mix(in oklab,var(--readout-ink) 45%,transparent)}
+  .cell .u{font-size:.58rem;color:var(--readout-dim);margin-top:3px;letter-spacing:.04em}
+  .cell.grind .v{font-size:1.55rem}
+  .cell.grind .k{color:var(--readout-ink);opacity:.75}
+
+  .dial-note{margin:11px 20px 0;font-size:.76rem;color:var(--ink-soft);display:flex;gap:7px;align-items:flex-start}
+  .dial-note b{color:var(--crema);font-weight:600}
+
+  /* steps */
+  .sec-t{font-family:"Fraunces",serif;font-weight:600;font-size:1.02rem;margin:24px 20px 12px;
+      display:flex;align-items:center;gap:8px}
+  .sec-t::after{content:"";flex:1;height:1px;background:var(--hair)}
+  ol.steps{list-style:none;margin:0;padding:0 20px;counter-reset:s}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 40px;font-size:.92rem}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:26px;height:26px;
+      border-radius:8px;background:var(--card-2);color:var(--crema);font-family:"JetBrains Mono",monospace;
+      font-weight:700;font-size:.82rem;display:grid;place-items:center;border:1px solid var(--hair)}
+  ol.steps li:not(:last-child)::after{content:"";position:absolute;left:13px;top:26px;bottom:6px;width:1px;
+      background:var(--hair)}
+  ol.steps li b{color:var(--ink);font-weight:600}
+  ol.steps li .hl{color:var(--crema);font-weight:600;font-family:"JetBrains Mono",monospace;font-size:.88em}
+
+  /* timer */
+  .timer{margin:6px 20px 4px;background:var(--card-2);border:1px solid var(--hair);border-radius:13px;
+      padding:14px 16px;display:flex;align-items:center;gap:14px}
+  .timer .disp{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1.9rem;font-variant-numeric:tabular-nums;
+      color:var(--ink);min-width:96px;letter-spacing:-.02em}
+  .timer .disp.hot{color:var(--led)}
+  .timer .disp.over{color:var(--warn)}
+  .timer .meta{flex:1;min-width:0}
+  .timer .meta .tt{font-size:.78rem;color:var(--ink-soft)}
+  .timer .meta .tgt{font-size:.72rem;color:var(--crema);font-weight:600;font-family:"JetBrains Mono",monospace}
+  .tbtn{flex:none;border:none;border-radius:10px;padding:10px 16px;font-family:inherit;font-weight:600;
+      font-size:.84rem;cursor:pointer;background:var(--crema);color:#fff;transition:filter .15s}
+  .tbtn:hover{filter:brightness(1.06)}
+  .tbtn.rst{background:var(--card);color:var(--ink-soft);border:1px solid var(--hair)}
+  .tbtn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* milk */
+  .milk-box{margin:0 20px;background:color-mix(in oklab,var(--crema) 8%,var(--card));border:1px solid var(--hair);
+      border-radius:12px;padding:13px 15px;font-size:.88rem}
+  .milk-box .mt{font-weight:600;color:var(--crema);font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+
+  /* gear */
+  .gear{padding:0 20px 22px}
+  .gear ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .gear li{display:flex;gap:11px;align-items:flex-start;background:var(--card-2);border:1px solid var(--hair);
+      border-radius:11px;padding:11px 13px}
+  .gear .gi{font-size:1.15rem;line-height:1.3;flex:none}
+  .gear .gn{font-weight:600;font-size:.86rem}
+  .gear .gw{font-size:.78rem;color:var(--ink-soft);margin-top:1px}
+  .gear .star{color:var(--crema);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+      border:1px solid var(--crema);border-radius:5px;padding:1px 5px;margin-left:6px;white-space:nowrap}
+
+  footer{text-align:center;color:var(--ink-soft);font-size:.74rem;margin-top:26px;line-height:1.6}
+  footer a{color:var(--crema)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <h1>Espresso</h1>
+        <p>Grind &amp; recipe guide · your kit</p>
+      </div>
+    </div>
+    <button class="theme-btn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+  </header>
+
+  <p class="label">1 · Machine</p>
+  <div class="machines" id="machines" role="group" aria-label="Choose machine"></div>
+
+  <p class="label">2 · Drink</p>
+  <div class="drinks" id="drinks" role="group" aria-label="Choose drink"></div>
+
+  <div id="recipe"></div>
+
+  <footer>
+    Grind numbers are <b>starting points</b> for the Varia VS3 — taste, then dial ±0.2.<br />
+    Built for Or's kitchen · <a href="https://github.com/AdbitRush/espresso">github.com/AdbitRush/espresso</a>
+  </footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   DATA — Varia VS3 settings are "full-turns.dial" starting points
+   for a Dedica 51mm pressurized basket & a stovetop moka pot.
+----------------------------------------------------------------*/
+const BASE_GEAR = {
+  scale:  {i:"⚖️", n:"0.1 g pocket scale", w:"Weigh dose in and shot out — the only way grind changes mean anything."},
+  beans:  {i:"🫘", n:"Fresh beans, rested 5–14 days", w:"Off-gassing settles after roast; stale beans won't crema no matter the grind."},
+  water:  {i:"💧", n:"Filtered water", w:"Half the cup is water. Tap scale ruins taste and clogs the boiler."},
+};
+
+const DEDICA_GEAR = {
+  tamp51: {i:"🔨", n:"51 mm tamper", w:"The Dedica is 51 mm, not 58 — the plastic tamper it ships with is undersized.", star:"key"},
+  wdt:    {i:"🪡", n:"WDT distribution tool", w:"Stir the grounds with fine needles before tamping — kills channeling even in pressurized baskets."},
+  funnel: {i:"⭕", n:"51 mm dosing funnel", w:"Grind straight into the basket with zero mess on the rim."},
+  pitcher:{i:"🥛", n:"350 ml steel milk jug", w:"You can't texture milk in the plastic cup — a cold steel pitcher is essential for the wand."},
+  therm:  {i:"🌡️", n:"Milk thermometer / temp strip", w:"Dedica's wand has no auto-stop. Pull at 60–65 °C or you scald the milk sweet spot."},
+  knock:  {i:"🗑️", n:"Knock box", w:"Bang the puck out in one move instead of digging at the basket."},
+};
+
+const MOKA_GEAR = {
+  gasket: {i:"⭕", n:"Spare silicone gasket", w:"The rubber seal hardens and leaks — a spare keeps pressure (and coffee) where it belongs."},
+  frother:{i:"🌀", n:"Handheld milk frother", w:"No steam wand here — a €5 whisk froths warm milk for a moka cappuccino."},
+  trivet: {i:"🔥", n:"Small burner / trivet", w:"A big flame licking up the sides scorches the pot. Keep the base fully on a small ring."},
+};
+
+function g(base, extra){ return [...base, ...(extra||[])]; }
+
+const MACHINES = {
+  dedica:{
+    name:"Dedica", sub:"Espresso machine", ic:"☕",
+    drinks:{
+      espresso:{
+        name:"Espresso", tag:"The foundation shot · 1:2 in 25–30 s",
+        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"~92 °C",
+        dial:"Too fast &amp; pale → go <b>finer</b> (1.5). Chokes / drips forever → go <b>coarser</b> (2.1).",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        steps:[
+          "Power on and let it heat <b>at least 3 min</b>. Lock in the empty portafilter and run a blank shot to warm the group and your cup.",
+          "Grind <span class='hl'>14 g</span> into the double basket at VS3 <span class='hl'>1.8</span>.",
+          "Give it a quick <b>WDT stir</b>, level the bed, and tamp <b>gently &amp; even</b> — pressurized baskets don't need muscle.",
+          "Lock in, put the warm cup underneath, and start the shot immediately.",
+          "Aim for <span class='hl'>~28 g out in 25–30 s</span> from first drip. Sour = grind finer; harsh &amp; bitter = coarser.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51,DEDICA_GEAR.wdt,DEDICA_GEAR.funnel,BASE_GEAR.water]),
+      },
+      americano:{
+        name:"Americano", tag:"Espresso loosened with hot water",
+        grind:"1.8", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
+        dial:"Same shot as espresso. If it tastes thin, use <b>less water</b>, not a finer grind.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        steps:[
+          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>1.8</span>.",
+          "Fill the cup with <span class='hl'>120–180 ml</span> hot water <b>first</b>.",
+          "Pour the shot <b>on top</b> of the water — this floats the crema instead of blasting it away.",
+          "Adjust strength with the water volume, not the grind.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51,BASE_GEAR.water]),
+      },
+      cappuccino:{
+        name:"Cappuccino", tag:"1 : 1 : 1 — shot, milk, foam",
+        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        dial:"Dial the shot as espresso; the character comes from a <b>thick 1 cm foam cap</b>.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        milk:"Fill the steel jug 1/3 with cold milk. Purge the wand, then <b>stretch 4–5 s</b> at the surface (hissing) to build foam, submerge to <b>60–65 °C</b>, wipe &amp; purge.",
+        steps:[
+          "Pull a double espresso into a 150–180 ml cup.",
+          "Steam milk with a <b>thick foam</b> — plenty of surface stretch.",
+          "Pour to roughly <span class='hl'>1/3 espresso · 1/3 milk · 1/3 foam</span>.",
+          "Spoon-hold the foam back, pour the milk, then top with the foam cap.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.pitcher,DEDICA_GEAR.therm,DEDICA_GEAR.tamp51]),
+      },
+      latte:{
+        name:"Latte", tag:"Double shot drowned in silky milk",
+        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        dial:"Big milk volume hides a weak shot — keep the double <b>tight (1:2)</b> so it cuts through.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        milk:"Fill jug ~1/2 with cold milk. Short <b>2–3 s stretch</b> then submerge — you want <b>thin microfoam</b>, not a foam cap.",
+        steps:[
+          "Pull a double espresso into a tall 220–250 ml glass or cup.",
+          "Steam <span class='hl'>~180 ml</span> milk to a glossy, paint-like microfoam.",
+          "Swirl the jug, pour from a height to mix, then drop close to finish.",
+          "Aim for a thin <b>~5 mm</b> foam layer on top.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.pitcher,DEDICA_GEAR.therm]),
+      },
+      flatwhite:{
+        name:"Flat white", tag:"Small, strong, glossy microfoam",
+        grind:"1.7", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
+        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk. Grind ~1.7.",
+        timer:{label:"Shot time", target:26, mode:"up"},
+        milk:"Only a <b>1–2 s stretch</b> — the flat white is defined by tight, shiny, barely-there foam folded fully into the milk.",
+        steps:[
+          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>1.7</span>.",
+          "Steam <span class='hl'>~120 ml</span> milk to silky microfoam, minimal air.",
+          "Pour into a <span class='hl'>150–170 ml</span> cup for a high coffee-to-milk ratio.",
+          "Keep the foam under <b>~5 mm</b> — smooth, no dry peaks.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.pitcher,DEDICA_GEAR.therm]),
+      },
+      cortado:{
+        name:"Cortado", tag:"Equal parts espresso & warm milk",
+        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
+        dial:"Balanced 1:1 drink — a clean, slightly sweet shot shines here. Standard grind.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        milk:"Barely texture it: <b>1 s stretch max</b>. Warm milk, almost no foam — it should stay flat and silky.",
+        steps:[
+          "Pull a double espresso into a small <span class='hl'>90–120 ml</span> glass.",
+          "Steam an <b>equal volume</b> of milk (~60 ml) with almost no foam.",
+          "Pour to <span class='hl'>1:1</span> — espresso to warm milk.",
+          "Serve small; it's meant to be drunk while hot.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.pitcher]),
+      },
+      macchiato:{
+        name:"Macchiato", tag:"Espresso 'stained' with a foam dollop",
+        grind:"1.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        dial:"It's 95% espresso, so the shot has nowhere to hide — dial it clean first.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        milk:"You only need a <b>spoonful of foam</b>. Steam a small amount of milk with a good stretch and use the top layer.",
+        steps:[
+          "Pull a double espresso into a small cup.",
+          "Steam a little milk to a stiff foam.",
+          "Spoon <b>one dollop</b> of foam onto the centre of the crema.",
+          "That's it — a mark of milk, not a milk drink.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51]),
+      },
+    },
+  },
+  moka:{
+    name:"Moka pot", sub:"Makineta · stovetop", ic:"🫖",
+    drinks:{
+      moka:{
+        name:"Moka coffee", tag:"Rich stovetop brew · no pressure needed",
+        grind:"3.2", dose:"fill basket", yield:"full pot", time:"~4–5 min", temp:"low–med heat",
+        dial:"Bitter / sputtery → grind <b>coarser</b> (3.5) &amp; lower the heat. Weak &amp; sour → <b>finer</b> (2.9).",
+        timer:{label:"On the heat", target:270, mode:"up"},
+        steps:[
+          "<b>Boil water separately</b> and fill the base to just <b>below the safety valve</b> — starting hot means the grounds don't stew and go metallic.",
+          "Fill the funnel basket with grind at VS3 <span class='hl'>3.2</span>, level it off — <b>do not tamp</b>.",
+          "Assemble (the base is hot — use a towel) and set on <b>low–medium</b> heat, lid open.",
+          "When coffee rises and you hear the <b>first gurgle</b>, pull it off the heat.",
+          "Cool the base under the cold tap to <b>stop extraction</b>, stir, and pour.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,MOKA_GEAR.gasket,MOKA_GEAR.trivet,BASE_GEAR.water]),
+      },
+      mokaamericano:{
+        name:"Moka americano", tag:"Moka brew lengthened with hot water",
+        grind:"3.2", dose:"fill basket", yield:"pot + water", time:"~4–5 min", temp:"low–med heat",
+        dial:"Brew as normal moka; stretch with water to taste rather than changing the grind.",
+        timer:{label:"On the heat", target:270, mode:"up"},
+        steps:[
+          "Brew a full moka pot as usual (VS3 <span class='hl'>3.2</span>, hot start).",
+          "Add <span class='hl'>100–150 ml</span> hot water to a mug.",
+          "Pour the moka coffee in — it's naturally strong, so it takes water well.",
+          "Adjust with more water rather than re-grinding.",
+        ],
+        gear:g([BASE_GEAR.beans,MOKA_GEAR.gasket,MOKA_GEAR.trivet,BASE_GEAR.water]),
+      },
+      mokacap:{
+        name:"Moka cappuccino", tag:"Stovetop shot + hand-frothed milk",
+        grind:"3.2", dose:"fill basket", yield:"pot + milk", time:"~4–5 min", temp:"warm milk",
+        dial:"No wand, so froth by hand. Whole milk foams thickest.",
+        timer:{label:"On the heat", target:270, mode:"up"},
+        milk:"Warm ~120 ml milk in the microwave or a pan to <b>~60 °C</b>, then <b>frother-whisk 20–30 s</b> until doubled and glossy.",
+        steps:[
+          "Brew a strong moka pot (VS3 <span class='hl'>3.2</span>).",
+          "Warm and froth the milk by hand until thick and airy.",
+          "Pour the moka coffee into a cup, then spoon and pour the foam on top.",
+          "Dust with cocoa if you like — the moka's body carries milk beautifully.",
+        ],
+        gear:g([BASE_GEAR.beans,MOKA_GEAR.frother,MOKA_GEAR.gasket,MOKA_GEAR.trivet]),
+      },
+    },
+  },
+};
+
+/* --------------------------- render --------------------------- */
+const state={ machine:null, drink:null };
+const $=s=>document.querySelector(s);
+const mEl=$("#machines"), dEl=$("#drinks"), rEl=$("#recipe");
+
+function renderMachines(){
+  mEl.innerHTML="";
+  for(const [key,m] of Object.entries(MACHINES)){
+    const b=document.createElement("button");
+    b.className="machine"; b.type="button";
+    b.setAttribute("aria-pressed", state.machine===key);
+    b.innerHTML=`<span class="ic" aria-hidden="true">${m.ic}</span>
+      <span class="mn">${m.name}</span><span class="ms">${m.sub}</span>`;
+    b.onclick=()=>{ state.machine=key; state.drink=null; save(); renderMachines(); renderDrinks(); renderRecipe(); };
+    mEl.appendChild(b);
+  }
+}
+
+function renderDrinks(){
+  dEl.innerHTML="";
+  if(!state.machine){ dEl.innerHTML=`<span style="color:var(--ink-soft);font-size:.85rem">Pick a machine first ↑</span>`; return; }
+  const drinks=MACHINES[state.machine].drinks;
+  for(const [key,d] of Object.entries(drinks)){
+    const b=document.createElement("button");
+    b.className="chip"; b.type="button";
+    b.setAttribute("aria-pressed", state.drink===key);
+    b.textContent=d.name;
+    b.onclick=()=>{ state.drink=key; save(); renderDrinks(); renderRecipe(); };
+    dEl.appendChild(b);
+  }
+}
+
+function renderRecipe(){
+  stopTimer();
+  if(!state.machine || !state.drink){ rEl.innerHTML=""; return; }
+  const d=MACHINES[state.machine].drinks[state.drink];
+  const gearHTML=d.gear.map(x=>`<li><span class="gi" aria-hidden="true">${x.i}</span>
+      <div><div class="gn">${x.n}${x.star?`<span class="star">${x.star}</span>`:""}</div>
+      <div class="gw">${x.w}</div></div></li>`).join("");
+  const milkHTML=d.milk?`<div class="sec-t">Milk</div><div class="milk-box">
+      <div class="mt">Texture &amp; heat</div>${d.milk}</div>`:"";
+
+  rEl.innerHTML=`<div class="recipe">
+    <div class="rhead">
+      <h2>${d.name}</h2>
+      <p class="sub">${d.tag}</p>
+    </div>
+    <div class="readout" role="group" aria-label="Recipe numbers">
+      <div class="cell grind"><div class="k">VS3 grind</div><div class="v">${d.grind}</div><div class="u">turns</div></div>
+      <div class="cell"><div class="k">Dose</div><div class="v">${d.dose}</div><div class="u">in</div></div>
+      <div class="cell"><div class="k">Yield</div><div class="v">${d.yield}</div><div class="u">out</div></div>
+      <div class="cell"><div class="k">Time</div><div class="v">${d.time}</div><div class="u">${d.temp}</div></div>
+    </div>
+    <p class="dial-note"><b>Dial in →</b><span>${d.dial}</span></p>
+
+    <div class="sec-t">Steps</div>
+    ${timerHTML(d.timer)}
+    <ol class="steps">${d.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+    ${milkHTML}
+    <div class="sec-t" style="margin-top:22px">Gear that helps</div>
+    <div class="gear"><ul>${gearHTML}</ul></div>
+  </div>`;
+  wireTimer(d.timer);
+}
+
+/* ----------------------------- timer ----------------------------- */
+let tHandle=null, tStart=0, tTarget=0, tLabel="";
+function timerHTML(t){
+  if(!t) return "";
+  tTarget=t.target; tLabel=t.label;
+  const tg = t.target>=60 ? `${Math.round(t.target/60)} min` : `${t.target}s`;
+  return `<div class="timer">
+    <div class="disp" id="disp">0:00</div>
+    <div class="meta"><div class="tt">${t.label}</div><div class="tgt">target · ${tg}</div></div>
+    <button class="tbtn" id="tstart" type="button">Start</button>
+    <button class="tbtn rst" id="treset" type="button">Reset</button>
+  </div>`;
+}
+function fmt(s){ const m=Math.floor(s/60); const ss=s%60; return `${m}:${String(ss).padStart(2,"0")}`; }
+function wireTimer(t){
+  if(!t) return;
+  const disp=$("#disp"), start=$("#tstart"), reset=$("#treset");
+  start.onclick=()=>{
+    if(tHandle){ stopTimer(); start.textContent="Start"; return; }
+    tStart=Date.now(); start.textContent="Stop";
+    tHandle=setInterval(()=>{
+      const el=Math.floor((Date.now()-tStart)/1000);
+      disp.textContent=fmt(el);
+      disp.classList.toggle("hot", el>0 && el<tTarget);
+      disp.classList.toggle("over", el>=tTarget);
+    },200);
+  };
+  reset.onclick=()=>{ stopTimer(); disp.textContent="0:00"; disp.className="disp"; if(start) start.textContent="Start"; };
+}
+function stopTimer(){ if(tHandle){ clearInterval(tHandle); tHandle=null; } }
+
+/* --------------------------- theme + persist --------------------------- */
+const themeBtn=$("#theme");
+function applyTheme(t){ if(t) document.documentElement.setAttribute("data-theme",t); }
+themeBtn.onclick=()=>{
+  const cur=document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+  const next=cur==="dark"?"light":"dark";
+  applyTheme(next); localStorage.setItem("espresso.theme",next);
+};
+function save(){ localStorage.setItem("espresso.sel", JSON.stringify(state)); }
+function restore(){
+  applyTheme(localStorage.getItem("espresso.theme"));
+  try{ const s=JSON.parse(localStorage.getItem("espresso.sel")||"{}");
+    if(s.machine && MACHINES[s.machine]){ state.machine=s.machine;
+      if(s.drink && MACHINES[s.machine].drinks[s.drink]) state.drink=s.drink; } }catch(e){}
+}
+
+restore(); renderMachines(); renderDrinks(); renderRecipe();
+</script>
+</body>
+</html>
