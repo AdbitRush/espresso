@@ -77,7 +77,8 @@
       font-weight:600;margin:0 0 9px}
 
   /* ---- machine segmented ---- */
-  .machines{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+  .machines{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:22px}
+  @media (min-width:520px){.machines{grid-template-columns:repeat(4,1fr)}}
   .machine{position:relative;background:var(--card);border:1px solid var(--hair);border-radius:14px;
       padding:13px 10px 11px;cursor:pointer;text-align:left;color:var(--ink);
       transition:border-color .18s ease,transform .12s ease,background .18s ease;font-family:inherit}
@@ -233,6 +234,13 @@ const MOKA_GEAR = {
   trivet: {i:"🔥", n:"Small burner / trivet", w:"A big flame licking up the sides scorches the pot. Keep the base fully on a small ring."},
 };
 
+const COLD_GEAR = {
+  jar:    {i:"🫙", n:"1 L jar or French press", w:"Any lidded jar works to steep; a French press doubles as the plunge-filter.", star:"key"},
+  filter: {i:"☕", n:"Paper filter / fine mesh", w:"Coarse grounds slip through metal mesh — a paper pass makes it crystal clear, not silty."},
+  bottle: {i:"🍾", n:"Sealed fridge bottle", w:"Concentrate keeps ~1 week sealed and cold. Airtight = it stays fresh, doesn't taste flat."},
+  ice:    {i:"🧊", n:"Big ice cubes", w:"Large cubes melt slower so the drink dilutes gently instead of turning to water."},
+};
+
 function g(base, extra){ return [...base, ...(extra||[])]; }
 
 const MACHINES = {
@@ -381,6 +389,60 @@ const MACHINES = {
           "Dust with cocoa if you like — the moka's body carries milk beautifully.",
         ],
         gear:g([BASE_GEAR.beans,MOKA_GEAR.frother,MOKA_GEAR.gasket,MOKA_GEAR.trivet]),
+      },
+    },
+  },
+  cold:{
+    name:"Cold brew", sub:"No heat · immersion", ic:"🧊",
+    drinks:{
+      concentrate:{
+        name:"Cold brew concentrate", tag:"Strong 1:5 base · dilute to taste",
+        grind:"5.5", dose:"100 g", yield:"500 ml water", time:"16 h", temp:"in fridge",
+        dial:"Gritty / muddy cup → grind <b>coarser</b> (6.0). Weak &amp; watery → steep <b>longer</b>, not finer.",
+        steps:[
+          "Grind <span class='hl'>100 g</span> coarse at VS3 <span class='hl'>5.5</span> — think coarse sea salt, no fines.",
+          "Combine with <span class='hl'>500 ml</span> cold filtered water in a jar. Stir so <b>every ground is wet</b>.",
+          "Seal and steep in the fridge <span class='hl'>16 h</span> (14 h for lighter, 18 h for bolder).",
+          "Strain through a paper filter or mesh, then a second time for clarity.",
+          "That's your <b>concentrate</b> — dilute <span class='hl'>1:1</span> with water or milk over ice. Keeps ~1 week sealed.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,COLD_GEAR.jar,COLD_GEAR.filter,COLD_GEAR.bottle]),
+      },
+      smooth:{
+        name:"Smooth cold brew", tag:"Ready to drink · gentle 1:8",
+        grind:"5.0", dose:"80 g", yield:"650 ml water", time:"14 h", temp:"in fridge",
+        dial:"For a rounder, tea-like cup. Too sharp → coarser + shorter steep; flat → +2 h.",
+        steps:[
+          "Grind <span class='hl'>80 g</span> at VS3 <span class='hl'>5.0</span> (a hair finer than concentrate for a fuller ready-to-drink brew).",
+          "Add <span class='hl'>650 ml</span> cold water, stir until fully saturated.",
+          "Steep <span class='hl'>14 h</span> in the fridge.",
+          "Double-strain and pour <b>straight over ice</b> — no dilution needed.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,COLD_GEAR.jar,COLD_GEAR.filter,COLD_GEAR.ice]),
+      },
+      icedlatte:{
+        name:"Iced cold-brew latte", tag:"Concentrate + cold milk over ice",
+        grind:"5.5", dose:"use concentrate", yield:"1:1 milk", time:"—", temp:"iced",
+        dial:"Uses your ready concentrate. Want it stronger? Less milk, not a finer grind.",
+        steps:[
+          "Fill a tall glass with <b>big ice cubes</b>.",
+          "Pour <span class='hl'>~120 ml</span> cold-brew concentrate over the ice.",
+          "Top with <span class='hl'>~120 ml</span> cold milk (oat foams nicely cold).",
+          "Sweeten with syrup if you like — it dissolves fine in cold since it's a liquid.",
+        ],
+        gear:g([COLD_GEAR.bottle,COLD_GEAR.ice,BASE_GEAR.beans]),
+      },
+      tonic:{
+        name:"Cold-brew tonic", tag:"Fizzy, citrusy, wakes you up",
+        grind:"5.5", dose:"use concentrate", yield:"tonic + ice", time:"—", temp:"iced",
+        dial:"A long, refreshing drink. Balance is concentrate-to-tonic, roughly 1:2.",
+        steps:[
+          "Fill a glass with ice and pour in <span class='hl'>~150 ml</span> tonic water.",
+          "Slowly pour <span class='hl'>~70 ml</span> cold-brew concentrate <b>over the back of a spoon</b> so it layers.",
+          "Add a squeeze of <b>lemon or orange</b>.",
+          "Stir once at the table — the fizz + coffee is the whole point.",
+        ],
+        gear:g([COLD_GEAR.bottle,COLD_GEAR.ice]),
       },
     },
   },

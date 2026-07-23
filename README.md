@@ -11,6 +11,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 | **Varia VS3** | Grinder | Grind settings are shown as `full-turns.dial` starting points (e.g. `1.8` = 1 turn + 8). |
 | **DeLonghi Dedica** | Espresso | **51 mm** pressurized basket — grind runs a touch coarser than a true espresso machine. |
 | **Moka pot** (makineta) | Stovetop | Medium-fine, salt-like grind; no pressure needed. |
+| **Cold brew** | Immersion | No machine — very coarse grind, 14–16 h fridge steep, then strain. |
 
 ## Grind quick-reference (VS3 starting points)
 
@@ -19,6 +20,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 | Espresso / milk drinks | Dedica | **1.8** | 14 g → 28 g | 25–30 s |
 | Flat white (tighter) | Dedica | **1.7** | 14 g → 26 g | 25–30 s |
 | Moka coffee | Moka pot | **3.2** | fill basket → full pot | ~4–5 min |
+| Cold brew concentrate | Immersion | **5.5** | 100 g → 500 ml | 16 h steep |
 
 > These are **starting points**. Taste the shot, then move the grind ±0.2:
 > sour & fast → **finer**; bitter, slow or choking → **coarser**.
