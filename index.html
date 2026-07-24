@@ -24,6 +24,7 @@
     --crema:#b0631e; --crema-bright:#d5872a; --copper:#8c4d20;
     --led:#2c7a4c; --warn:#b26a12;
     --readout-bg:#20160e; --readout-ink:#f2c485; --readout-dim:#8a6a45;
+    --bg-veil:color-mix(in oklab, var(--ground) 85%, transparent); --bg-photo:url("images/bg.jpg");
     --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 30px rgba(80,50,20,.08);
     --r:16px;
   }
@@ -34,6 +35,7 @@
       --crema:#e0a45b; --crema-bright:#f0b667; --copper:#c9834a;
       --led:#4fc98a; --warn:#e6a748;
       --readout-bg:#0c0805; --readout-ink:#f3c986; --readout-dim:#7a5f43;
+      --bg-veil:transparent; --bg-photo:none;
       --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
     }
   }
@@ -43,6 +45,7 @@
     --crema:#b0631e; --crema-bright:#d5872a; --copper:#8c4d20;
     --led:#2c7a4c; --warn:#b26a12;
     --readout-bg:#20160e; --readout-ink:#f2c485; --readout-dim:#8a6a45;
+    --bg-veil:color-mix(in oklab, var(--ground) 85%, transparent); --bg-photo:url("images/bg.jpg");
     --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 30px rgba(80,50,20,.08);
   }
   :root[data-theme="dark"]{
@@ -51,6 +54,7 @@
     --crema:#e0a45b; --crema-bright:#f0b667; --copper:#c9834a;
     --led:#4fc98a; --warn:#e6a748;
     --readout-bg:#0c0805; --readout-ink:#f3c986; --readout-dim:#7a5f43;
+    --bg-veil:transparent; --bg-photo:none;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
   }
 
@@ -58,10 +62,15 @@
   html{-webkit-text-size-adjust:100%}
   body{
     margin:0; color:var(--ink);
-    background:var(--ground);
+    background-color:var(--ground);
     background-image:
       radial-gradient(120% 80% at 100% -10%, color-mix(in oklab,var(--crema) 12%,transparent), transparent 60%),
-      radial-gradient(90% 70% at -10% 0%, color-mix(in oklab,var(--copper) 9%,transparent), transparent 55%);
+      radial-gradient(90% 70% at -10% 0%, color-mix(in oklab,var(--copper) 9%,transparent), transparent 55%),
+      linear-gradient(var(--bg-veil), var(--bg-veil)),
+      var(--bg-photo);
+    background-size:auto,auto,auto,cover;
+    background-position:center;
+    background-repeat:no-repeat;
     background-attachment:fixed;
     font-family:"Archivo",system-ui,sans-serif; line-height:1.55;
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
@@ -1385,7 +1394,7 @@ function wireProfiles(){
     input.hidden=true; add.hidden=false;
     if(name && !getProfiles().includes(name)){
       const ps=getProfiles(); ps.push(name); setProfiles(ps); setProfile(name);
-      localStorage.setItem(pfx()+"syncpin","6699");
+      localStorage.setItem(pfx()+"syncpin","3944");
       renderProfiles(); applyLang(); wireSync();
     }
   };
@@ -1669,7 +1678,7 @@ function scheduleSync(){ if(applyingRemote || !syncCode()) return;
 function wireSync(){
   const inp=$("#syncCode"), pin=$("#syncPin"), save=$("#syncSave"), load=$("#syncLoad");
   if(!inp) return;
-  if(!localStorage.getItem(pfx()+"syncpin")) localStorage.setItem(pfx()+"syncpin","6699");
+  if(!localStorage.getItem(pfx()+"syncpin")) localStorage.setItem(pfx()+"syncpin","3944");
   inp.value=syncCode(); pin.value=syncPin();
   inp.oninput=()=>localStorage.setItem(pfx()+"synccode", inp.value.trim());
   pin.oninput=()=>localStorage.setItem(pfx()+"syncpin", pin.value.trim());
