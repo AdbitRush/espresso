@@ -44,6 +44,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 - **Installable PWA** — add to your home screen, runs fullscreen and **offline** (service worker + app icons).
 - **Bilingual EN / עברית** with full RTL — every drink, step, and gear item translated; toggle in the header.
 - **QR code** on the page — scan from desktop to open it on your phone (`make_qr.py` regenerates it).
+- **Cloud sync** — pick a sync code and save your favorites, notes & ratings to the server, then load them on any device or share the code. Auto-saves on change; works from the GitHub Pages copy too (CORS). Runs on the server build (`server.py`), which also serves the static app.
 - Light / dark coffee theme, remembers your last pick + language.
 
 ## Install on your phone
