@@ -14,21 +14,22 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 | **Cold brew** | Immersion | No machine — very coarse grind, 14–16 h fridge steep, then strain. |
 | **Filter** | V60 / French press | Manual brews off the grinder — medium (V60) to coarse (press). |
 
-## Grind quick-reference (VS3 starting points)
+## Grind quick-reference (Varia VS3 — dial 0–9.9 per full turn)
 
-| Drink | Machine | Grind | Dose → Yield | Time |
+Varia's own reference: **espresso ≈ #4, filter ≈ #9–10**. Coarser than 9.9 means one more full turn (e.g. `13` = turn 2, dial 3).
+
+| Drink | Machine | Grind (dial) | Dose → Yield | Time |
 |---|---|---|---|---|
-| Espresso / milk drinks | Dedica | **2.5** | 14 g → 28 g | 25–30 s |
-| Flat white (tighter) | Dedica | **2.3** | 14 g → 26 g | 25–30 s |
-| Moka coffee | Moka pot | **4.8** | fill basket → full pot | ~4–5 min |
-| Cold brew concentrate | Immersion | **13** | 100 g → 500 ml | 16 h steep |
-| Smooth cold brew | Immersion | **15** | 80 g → 650 ml | 14 h steep |
-| V60 pour-over | Filter | **6.5** | 20 g → 320 g | ~3 min |
-| French press | Filter | **11** | 30 g → 450 g | ~8 min |
+| Espresso / milk drinks | Dedica | **4.0** | 14 g → 28 g | 25–30 s |
+| Flat white (tighter) | Dedica | **3.8** | 14 g → 26 g | 25–30 s |
+| Moka coffee | Moka pot | **6.0** | fill basket → full pot | ~4–5 min |
+| V60 pour-over | Filter | **9.0** | 20 g → 320 g | ~3 min |
+| French press | Filter | **11** (turn 2 · 1.0) | 30 g → 450 g | ~8 min |
+| Cold brew concentrate | Immersion | **13** (turn 2 · 3.0) | 100 g → 500 ml | 16 h steep |
+| Smooth cold brew | Immersion | **15** (turn 2 · 5.0) | 80 g → 650 ml | 14 h steep |
 
-> These are **starting points** within the VS3's per-method ranges. Taste, then nudge:
-> sour & fast → **finer** (lower number); bitter, slow or choking → **coarser** (higher).
-> The Dedica's **pressurized** basket likes espresso a touch coarser (~2.5) than a bare basket would.
+> These are **starting points**. Taste, then nudge: sour & fast → **finer** (lower);
+> bitter, slow or choking → **coarser** (higher). The Dedica's **pressurized** basket is forgiving around #4.
 
 ## Features
 
