@@ -12,6 +12,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 | **DeLonghi Dedica** | Espresso | **51 mm** pressurized basket — grind runs a touch coarser than a true espresso machine. |
 | **Moka pot** (makineta) | Stovetop | Medium-fine, salt-like grind; no pressure needed. |
 | **Cold brew** | Immersion | No machine — very coarse grind, 14–16 h fridge steep, then strain. |
+| **Filter** | V60 / French press | Manual brews off the grinder — medium (V60) to coarse (press). |
 
 ## Grind quick-reference (VS3 starting points)
 
@@ -22,6 +23,8 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 | Moka coffee | Moka pot | **4.8** | fill basket → full pot | ~4–5 min |
 | Cold brew concentrate | Immersion | **13** | 100 g → 500 ml | 16 h steep |
 | Smooth cold brew | Immersion | **15** | 80 g → 650 ml | 14 h steep |
+| V60 pour-over | Filter | **6.5** | 20 g → 320 g | ~3 min |
+| French press | Filter | **11** | 30 g → 450 g | ~8 min |
 
 > These are **starting points** within the VS3's per-method ranges. Taste, then nudge:
 > sour & fast → **finer** (lower number); bitter, slow or choking → **coarser** (higher).

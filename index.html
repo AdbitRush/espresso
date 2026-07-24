@@ -241,6 +241,13 @@ const COLD_GEAR = {
   ice:    {i:"🧊", n:"Big ice cubes", w:"Large cubes melt slower so the drink dilutes gently instead of turning to water."},
 };
 
+const FILTER_GEAR = {
+  v60:    {i:"🔻", n:"V60 dripper + paper filters", w:"The cone + paper is what gives pour-over its clean, bright cup.", star:"key"},
+  press:  {i:"🍶", n:"French press (350–1000 ml)", w:"Metal-mesh immersion — no paper, so more body and oils land in the cup."},
+  kettle: {i:"♨️", n:"Gooseneck kettle", w:"The thin spout gives the slow, aimed pour that even extraction needs."},
+  shaker: {i:"🍸", n:"Cocktail shaker or lidded jar", w:"Shaking espresso hard with ice is what whips a shakerato into silky foam."},
+};
+
 function g(base, extra){ return [...base, ...(extra||[])]; }
 
 const MACHINES = {
@@ -344,6 +351,44 @@ const MACHINES = {
         ],
         gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51]),
       },
+      icedlatte:{
+        name:"Iced latte", tag:"Hot shot shocked over ice + cold milk",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
+        dial:"Ice + cold milk dilute fast — pull the shot a touch <b>tighter (1:1.8)</b> so it still cuts through.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        steps:[
+          "Fill a tall glass with <b>big ice cubes</b>.",
+          "Pull a double espresso (14 g → ~28 g at VS3 <span class='hl'>2.5</span>) <b>straight onto the ice</b> — the cold shock keeps it bright, not stewed.",
+          "Top with <span class='hl'>~150 ml</span> cold milk.",
+          "Stir. Add syrup <b>before</b> the milk if you want it sweet — it won't dissolve once cold otherwise.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51,COLD_GEAR.ice]),
+      },
+      icedamericano:{
+        name:"Iced americano", tag:"Espresso, cold water, plenty of ice",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
+        dial:"Same shot as espresso. Long &amp; refreshing — adjust with water, not the grind.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        steps:[
+          "Fill a tall glass with ice and <span class='hl'>~150 ml</span> cold water.",
+          "Pull a double espresso <b>over the top</b> so the crema floats.",
+          "Stir once. Lengthen with more water to taste.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51,COLD_GEAR.ice]),
+      },
+      shakerato:{
+        name:"Espresso shakerato", tag:"Shaken iced espresso — silky, frothy, no milk",
+        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"iced",
+        dial:"An Italian summer classic. A sweeter shot shakes into a thicker foam.",
+        timer:{label:"Shot time", target:28, mode:"up"},
+        steps:[
+          "Pull a double espresso and, if you want it sweet, stir in <b>1 tsp sugar while hot</b> so it melts.",
+          "Fill a cocktail shaker with ice, add the shot.",
+          "<b>Shake hard for 15–20 s</b> — until the outside frosts over.",
+          "Strain (no ice) into a chilled coupe or glass. Drink the crema-foam on top first.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,FILTER_GEAR.shaker,COLD_GEAR.ice]),
+      },
     },
   },
   moka:{
@@ -443,6 +488,39 @@ const MACHINES = {
           "Stir once at the table — the fizz + coffee is the whole point.",
         ],
         gear:g([COLD_GEAR.bottle,COLD_GEAR.ice]),
+      },
+    },
+  },
+  filter:{
+    name:"Filter", sub:"V60 · French press", ic:"🫗",
+    drinks:{
+      v60:{
+        name:"V60 pour-over", tag:"Clean & bright · 1:16, ~20 g → 320 g",
+        grind:"6.5", dose:"20 g", yield:"320 g", time:"~3 min", temp:"94–96 °C",
+        dial:"Drains too fast &amp; tastes weak → grind <b>finer</b> (5.5). Stalls / gets bitter → <b>coarser</b> (7.5).",
+        timer:{label:"Total brew", target:180, mode:"up"},
+        steps:[
+          "Rinse the paper filter with hot water to kill the papery taste and warm the vessel — then tip that water out.",
+          "Grind <span class='hl'>20 g</span> at VS3 <span class='hl'>6.5</span> into the cone and make a small well in the centre.",
+          "<b>Bloom:</b> pour <span class='hl'>~50 g</span> water, swirl gently, and wait <b>30–45 s</b> for the gas to escape.",
+          "Pour in slow spirals to <span class='hl'>320 g</span> total over 2–3 additions, keeping the bed level and the water off the paper.",
+          "Finish the drawdown around <span class='hl'>2:45–3:15</span>. Give a final swirl for a flat bed.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,FILTER_GEAR.v60,FILTER_GEAR.kettle,BASE_GEAR.water]),
+      },
+      frenchpress:{
+        name:"French press", tag:"Full-bodied immersion · 1:15, ~30 g → 450 g",
+        grind:"11", dose:"30 g", yield:"450 g", time:"~8 min", temp:"94–96 °C",
+        dial:"Silty / muddy → grind <b>coarser</b> (13) &amp; don't over-stir. Weak &amp; sour → <b>finer</b> (9).",
+        timer:{label:"Steep", target:480, mode:"up"},
+        steps:[
+          "Warm the press. Grind <span class='hl'>30 g</span> coarse at VS3 <span class='hl'>11</span> and add it in.",
+          "Pour all <span class='hl'>450 g</span> water just off the boil, start the timer, and stir the crust at <b>4 min</b>.",
+          "Skim the foam and floating grounds off the top with two spoons — this is what kills the silt.",
+          "Let it steep to <span class='hl'>~8 min</span>, then press the plunger down <b>slowly and evenly</b>.",
+          "Decant <b>all of it</b> into cups or a carafe so it stops extracting and never turns bitter.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,FILTER_GEAR.press,FILTER_GEAR.kettle,BASE_GEAR.water]),
       },
     },
   },
