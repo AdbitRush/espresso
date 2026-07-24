@@ -58,6 +58,8 @@
     --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
   }
 
+  :root[data-bg="off"]{--bg-photo:none; --bg-veil:transparent}
+
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
   body{
@@ -99,6 +101,9 @@
       transition:transform .15s ease,color .15s ease}
   .theme-btn:hover{color:var(--crema);transform:rotate(-12deg)}
   .theme-btn:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  #bgBtn{font-size:.95rem}
+  #bgBtn:hover{transform:none}
+  #bgBtn.off{opacity:.4}
   .head-actions{display:flex;gap:8px;align-items:center;flex:none}
   .lang-btn{width:auto;min-width:44px;padding:0 13px;font-size:.8rem;font-weight:600;letter-spacing:.01em}
   .lang-btn:hover{transform:none}
@@ -494,6 +499,7 @@
     </div>
     <div class="head-actions">
       <button class="theme-btn lang-btn" id="langBtn" type="button" aria-label="Switch language">עברית</button>
+      <button class="theme-btn" id="bgBtn" type="button" title="Background on / off" aria-label="Toggle background">🖼️</button>
       <button class="theme-btn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
     </div>
   </header>
@@ -1789,6 +1795,14 @@ themeBtn.onclick=()=>{
   applyTheme(next); localStorage.setItem("espresso.theme",next);
 };
 
+let bgOn = localStorage.getItem("espresso.bg") !== "off";
+function applyBg(){
+  document.documentElement.setAttribute("data-bg", bgOn ? "on" : "off");
+  const b=$("#bgBtn"); if(b) b.classList.toggle("off", !bgOn);
+}
+const bgBtn=$("#bgBtn");
+if(bgBtn) bgBtn.onclick=()=>{ bgOn=!bgOn; localStorage.setItem("espresso.bg", bgOn?"on":"off"); applyBg(); };
+
 function applyLang(){
   const html=document.documentElement;
   html.setAttribute("lang", lang);
@@ -1993,7 +2007,7 @@ if("serviceWorker" in navigator){
 const surpriseBtn=$("#surprise"); if(surpriseBtn) surpriseBtn.onclick=surprise;
 
 migrateLegacy();
-restore(); applyLang(); wireSync(); wireProfiles();
+restore(); applyBg(); applyLang(); wireSync(); wireProfiles();
 if(syncCode()) cloudLoad(false);
 </script>
 </body>
