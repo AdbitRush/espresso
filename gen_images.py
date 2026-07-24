@@ -50,6 +50,11 @@ DRINKS = {
     "cold_tonic": "a cold-brew tonic in a tall glass, layered coffee over fizzy tonic with a citrus twist",
     "filter_v60": "a V60 pour-over brewing into a glass carafe, clean bright filter coffee, gooseneck kettle",
     "filter_frenchpress": "a French press full of coffee beside a mug of full-bodied brew",
+    "milkfoam_steamwand": "a stainless steel milk pitcher being steamed by an espresso machine wand, glossy silky microfoam swirling, wisps of steam",
+    "milkfoam_cappuccino": "a cappuccino with a thick airy milk foam cap and a light dusting of cocoa in a ceramic cup",
+    "milkfoam_latte": "pouring glossy silky microfoam into a latte forming latte art, a leaf or heart, close up",
+    "milkfoam_flatwhite": "a flat white in a small cup with tight shiny microfoam and fine latte art",
+    "milkfoam_handfroth": "a glass of warm milk being frothed by a handheld electric milk frother, airy foam forming",
 }
 
 def generate(key, subject):

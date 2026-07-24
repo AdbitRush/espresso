@@ -35,6 +35,7 @@ Varia's own reference: **espresso ≈ #4, filter ≈ #9–10**. Coarser than 9.9
 
 - **Machine → drink** picker with a machine-readout recipe card (grind / dose / yield / time).
 - **Illustrated animated step player** — each step plays a hand-drawn SVG scene; prev/next, dot progress, auto-play.
+- **🥛 Milk foaming guide** — a dedicated method with steam-wand basics + foam styles per drink (cappuccino / latte / flat white) and a by-hand option; animated steps + photos, same as the coffee recipes.
 - **Built-in timer** with a target marker (shot time / moka time).
 - **User profiles** — switch between users (e.g. "Me" / a friend) from the top bar; each has its own favorites, notes, ratings, and cloud sync code/PIN. Add a user inline with "+ New user".
 - **★ Favorites** — star any drink; a quick-access strip pins them at the top (per user).

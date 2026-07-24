@@ -303,6 +303,11 @@
   .gear .star{color:var(--crema);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
       border:1px solid var(--crema);border-radius:5px;padding:1px 5px;margin-left:6px;white-space:nowrap}
 
+  /* ---- milk spec strip ---- */
+  .milk-spec{margin:15px 20px 0;background:var(--readout-bg);border-radius:12px;padding:12px 15px;
+      font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--readout-ink);letter-spacing:.01em;
+      text-shadow:0 0 12px color-mix(in oklab,var(--readout-ink) 35%,transparent)}
+
   /* ---- rate this cup / shot log ---- */
   .review{padding:0 20px 4px}
   .rv-hint{font-size:.8rem;color:var(--ink-soft);margin:0 0 12px}
@@ -727,7 +732,7 @@ const MACHINES = {
     name:"Moka pot", sub:"Makineta · stovetop", ic:"🍵",
     drinks:{
       moka:{
-        name:"Moka coffee", tag:"Rich stovetop brew · no pressure needed",
+        name:"Moka coffee", tag:"The moka's espresso — strong stovetop base (no true 9-bar shot)",
         grind:"6.0", dose:"fill basket", yield:"full pot", time:"~4–5 min", temp:"low–med heat",
         dial:"Bitter / sputtery → grind <b>coarser</b> (7) &amp; lower the heat. Weak &amp; sour → <b>finer</b> (5).",
         timer:{label:"On the heat", target:270, mode:"up"},
@@ -856,6 +861,66 @@ const MACHINES = {
       },
     },
   },
+  milkfoam:{
+    name:"Milk foam", sub:"Steam & froth", ic:"🥛",
+    drinks:{
+      steamwand:{
+        name:"Steam wand basics", tag:"The foundation for every milk drink",
+        spec:"Cold whole milk · pitcher ⅓ full · 60–65 °C",
+        steps:[
+          "Start with <b>cold</b> milk in a cold steel pitcher, filled about <b>⅓</b> — it grows as you foam.",
+          "Purge the wand for a second to clear water, then set the tip just <b>under the surface</b> of the milk.",
+          "<b>Stretch (add air):</b> keep the tip near the top — you'll hear a gentle <i>tss… tss…</i> — until the milk grows by ~⅓.",
+          "<b>Texture:</b> sink the tip a little deeper and angle it to spin the milk into a smooth <b>whirlpool</b>, no big bubbles.",
+          "Stop at <b>60–65 °C</b> (jug too hot to hold for 3 s). Wipe &amp; purge the wand right away.",
+          "<b>Tap</b> the jug on the counter to pop bubbles, then <b>swirl</b> until it shines like wet paint.",
+        ],
+        gear:g([DEDICA_GEAR.pitcher, DEDICA_GEAR.therm, MOKA_GEAR.frother]),
+      },
+      cappuccino:{
+        name:"Cappuccino foam", tag:"More air — a thick, spoonable cap",
+        spec:"Thick foam ~1 cm+ · airy · 60–65 °C",
+        steps:[
+          "Stretch <b>longer (5–7 s)</b> near the surface to fold in lots of air.",
+          "Texture briefly, then tap &amp; swirl — you want a thick, cloud-like foam.",
+          "Pour so the foam sits about <b>1 cm</b> on top; hold it back with a spoon if needed.",
+          "Aim for roughly equal espresso · milk · foam.",
+        ],
+        gear:g([DEDICA_GEAR.pitcher, DEDICA_GEAR.therm]),
+      },
+      latte:{
+        name:"Latte microfoam", tag:"Barely any air — glossy microfoam",
+        spec:"Thin foam ~5 mm · silky · 60–65 °C",
+        steps:[
+          "Short stretch (<b>2–3 s</b>), then submerge and texture — aim for a paint-like sheen, not bubbles.",
+          "Tap &amp; swirl until it rolls like glossy paint.",
+          "Pour from a height to mix, then drop close to the cup to finish — about 5 mm of foam.",
+        ],
+        gear:g([DEDICA_GEAR.pitcher, DEDICA_GEAR.therm]),
+      },
+      flatwhite:{
+        name:"Flat white microfoam", tag:"Tight, shiny, folded-in foam",
+        spec:"~5 mm silky microfoam · 60–63 °C",
+        steps:[
+          "Minimal air — a <b>1–2 s</b> stretch only.",
+          "Texture into a tight, glossy whirlpool; keep it thin.",
+          "Pour into a small cup so the foam folds fully into the milk.",
+        ],
+        gear:g([DEDICA_GEAR.pitcher, DEDICA_GEAR.therm]),
+      },
+      handfroth:{
+        name:"By hand (no wand)", tag:"No steam wand? Foam it by hand",
+        spec:"Warm milk ~60 °C · handheld whisk or French press",
+        steps:[
+          "Warm the milk to about <b>60 °C</b> (microwave or a pan) — don't boil it.",
+          "<b>Handheld frother:</b> whisk 20–30 s, lifting to the surface to fold in air until doubled.",
+          "<b>French press:</b> half-fill, then pump the plunger up &amp; down ~30 s until thick and doubled.",
+          "Tap &amp; swirl to tidy the bubbles, then spoon it onto your coffee.",
+        ],
+        gear:g([MOKA_GEAR.frother, DEDICA_GEAR.pitcher]),
+      },
+    },
+  },
 };
 
 /* ------------------- animated step scenes (inline SVG) ------------------- */
@@ -919,12 +984,13 @@ const SCENES={
     <rect class="ln" x="74" y="60" width="70" height="42" rx="14" fill="none"/><rect class="cr" x="82" y="108" width="56" height="8" rx="4"/></svg>`,
 };
 const SCENE_RULES=[
-  [/shake|shaker/,'shake'],[/plunger|plunge/,'plunge'],[/bloom/,'bloom'],
+  [/shake|shaker|frother|whisk/,'shake'],[/plunger|plunge|french press:/,'plunge'],[/bloom/,'bloom'],
   [/spiral|drawdown/,'spiral'],[/gurgle|\bassemble\b|medium heat|stovetop|moka pot/,'moka'],
   [/steep|fridge|seal and/,'steep'],[/rinse/,'water'],
   [/strain|paper filter|through .*mesh|double-strain/,'strain'],
   [/\bice\b|iced|over the ice|tall glass with/,'iced'],
-  [/steam|texture it|microfoam|stretch/,'steam'],[/grind/,'grind'],
+  [/pour from|pour into|pour so/,'pour'],
+  [/steam|texture|microfoam|stretch|whirlpool|\bwand\b|purge|swirl|cold.{0,6}milk|pitcher|warm the milk/,'steam'],[/grind/,'grind'],
   [/\btamp\b|wdt|distribut|level the bed/,'tamp'],
   [/pull a|shot|first drip|espresso over|brew a|blank shot/,'shot'],
   [/top with|pour.{0,12}milk|cold milk|spoon.*foam|dollop/,'pour'],
@@ -1037,6 +1103,7 @@ const HE_MACHINES = {
   moka:{name:"מקינטה", sub:"מקינטה · על הכיריים"},
   cold:{name:"קולד ברו", sub:"ללא חום · השרייה"},
   filter:{name:"פילטר", sub:"V60 · פרנץ' פרס"},
+  milkfoam:{name:"קצף חלב", sub:"קיטור והקצפה"},
 };
 const HE_GEAR = {
   "0.1 g pocket scale":{n:"משקל כיס 0.1 גרם", w:"שוקלים מנה פנימה ושוט החוצה — הדרך היחידה ששינויי טחינה באמת אומרים משהו."},
@@ -1135,7 +1202,7 @@ const HE_DRINKS = {
       "ממלאים שייקר בקרח, מוסיפים את השוט.",
       "<b>מנערים חזק 15–20 שנ'</b> — עד שהחוץ מכוסה כפור.",
       "מסננים (בלי קרח) לכוס מצוננת. שותים קודם את הקצף למעלה."]},
-  "moka/moka":{name:"קפה מוקה", tag:"משקה עשיר על הכיריים · בלי לחץ",
+  "moka/moka":{name:"קפה מוקה", tag:"האספרסו של המוקה — בסיס חזק מהכיריים (לא שוט 9 בר אמיתי)",
     dial:"מר / מקרטע → טוחנים <b>גס יותר</b> (7) ומנמיכים אש. חלש וחמוץ → <b>דק יותר</b> (5).",
     steps:["<b>מרתיחים מים בנפרד</b> וממלאים את הבסיס עד <b>מתחת לשסתום הביטחון</b> — התחלה חמה מונעת מהקפה להתבשל ולהפוך מתכתי.",
       "ממלאים את סל המשפך בקפה ב-VS3 <span class='hl'>6.0</span>, מיישרים — <b>בלי לטמפר</b>.",
@@ -1194,6 +1261,36 @@ const HE_DRINKS = {
       "מקלפים את הקצף והגרגרים הצפים מלמעלה עם שתי כפות — זה מה שהורג את הבוציות.",
       "נותנים להשרות ל-<span class='hl'>~8 דק'</span>, ואז לוחצים את הבוכנה <b>לאט ואחיד</b>.",
       "מוזגים <b>הכול</b> לספלים או קנקן שיפסיק לחלץ ולעולם לא יהפוך מר."]},
+  "milkfoam/steamwand":{name:"יסודות מקל הקיטור", tag:"הבסיס לכל משקה חלב",
+    spec:"חלב מלא קר · כד ⅓ מלא · 60–65°C",
+    steps:["מתחילים עם חלב <b>קר</b> בכד פלדה קר, מלא בערך <b>⅓</b> — הוא גדל תוך כדי ההקצפה.",
+      "מנקים את המקל לשנייה כדי לפנות מים, ואז מציבים את הקצה בדיוק <b>מתחת לפני החלב</b>.",
+      "<b>מתיחה (הוספת אוויר):</b> שומרים את הקצה קרוב למעלה — תשמעו <i>טסס… טסס…</i> — עד שהחלב גדל בכ-⅓.",
+      "<b>מרקום:</b> משקיעים את הקצה קצת עמוק יותר ומטים כדי לסובב את החלב ל<b>מערבולת</b> חלקה, בלי בועות גדולות.",
+      "עוצרים ב-<b>60–65°C</b> (הכד חם מכדי להחזיק 3 שנ'). מנגבים ומנקים את המקל מיד.",
+      "<b>מקישים</b> את הכד על השיש כדי לפוצץ בועות, ואז <b>מסובבים</b> עד שהוא מבריק כמו צבע רטוב."]},
+  "milkfoam/cappuccino":{name:"קצף לקפוצ'ינו", tag:"יותר אוויר — כובע עבה שאפשר לכף",
+    spec:"קצף עבה ~1 ס״מ+ · אוורירי · 60–65°C",
+    steps:["מותחים <b>יותר זמן (5–7 שנ')</b> קרוב לפני השטח כדי להכניס הרבה אוויר.",
+      "ממרקמים קצר, ואז מקישים ומסובבים — רוצים קצף עבה כמו ענן.",
+      "מוזגים כך שהקצף יושב בערך <b>1 ס״מ</b> למעלה; מחזיקים אותו עם כף אם צריך.",
+      "מכוונים לחלוקה שווה בערך אספרסו · חלב · קצף."]},
+  "milkfoam/latte":{name:"מיקרו-קצף ללאטה", tag:"כמעט בלי אוויר — מיקרו-קצף מבריק",
+    spec:"קצף דק ~5 מ״מ · משיי · 60–65°C",
+    steps:["מתיחה קצרה (<b>2–3 שנ'</b>), ואז משקיעים וממרקמים — רוצים ברק כמו צבע, לא בועות.",
+      "מקישים ומסובבים עד שהוא נע כמו צבע מבריק.",
+      "מוזגים מגובה לערבוב, ואז יורדים קרוב לכוס לסיום — בערך 5 מ״מ קצף."]},
+  "milkfoam/flatwhite":{name:"מיקרו-קצף לפלאט וייט", tag:"קצף הדוק, מבריק, מקופל פנימה",
+    spec:"~5 מ״מ מיקרו-קצף משיי · 60–63°C",
+    steps:["מינימום אוויר — מתיחה של <b>1–2 שנ'</b> בלבד.",
+      "ממרקמים למערבולת הדוקה ומבריקה; שומרים אותו דק.",
+      "מוזגים לכוס קטנה כך שהקצף מתקפל לגמרי לתוך החלב."]},
+  "milkfoam/handfroth":{name:"ביד (בלי מקל)", tag:"אין מקל קיטור? מקציפים ביד",
+    spec:"חלב חם ~60°C · מטרפה ידנית או פרנץ' פרס",
+    steps:["מחממים את החלב לכ-<b>60°C</b> (מיקרוגל או סיר) — לא מרתיחים.",
+      "<b>מטרפה ידנית:</b> מקציפים 20–30 שנ', עולים לפני השטח כדי לקפל אוויר עד הכפלה.",
+      "<b>פרנץ' פרס:</b> ממלאים חצי, ואז שואבים את הבוכנה מעלה-מטה ~30 שנ' עד סמיך וכפול.",
+      "מקישים ומסובבים כדי לסדר את הבועות, ואז מכפילים בכף על הקפה."]},
 };
 function machineT(key,m){ return lang==="he"&&HE_MACHINES[key] ? HE_MACHINES[key] : {name:m.name,sub:m.sub}; }
 function drinkName(mkey,dkey,d){ const h=HE_DRINKS[mkey+"/"+dkey]; return (lang==="he"&&h&&h.name)||d.name; }
@@ -1203,6 +1300,7 @@ function drinkT(mkey,dkey,d){
     name:h.name||d.name, tag:h.tag||d.tag, dial:h.dial||d.dial,
     steps:(h.steps&&h.steps.length===d.steps.length)?h.steps:d.steps,
     milk:d.milk?(h.milk||d.milk):null,
+    spec:d.spec?(h.spec||d.spec):null,
     dose:tv(d.dose), yield:tv(d.yield), time:tv(d.time), temp:tv(d.temp),
   };
 }
@@ -1241,10 +1339,43 @@ function renderDrinks(){
   }
 }
 
+function renderMilk(d){
+  const fkey=state.machine+"/"+state.drink;
+  const t=drinkT(state.machine,state.drink,d), fav=isFav(fkey);
+  const gearHTML=d.gear.map(x=>{ const g=gearT(x); return `<li><span class="gi" aria-hidden="true">${g.i}</span>
+      <div><div class="gn">${g.n}${g.star?`<span class="star">${tr("keyTag")}</span>`:""}</div>
+      <div class="gw">${g.w}</div></div></li>`; }).join("");
+  rEl.innerHTML=`<div class="recipe">
+    <div class="hero"><img loading="lazy" alt="" src="images/${state.machine}_${state.drink}.jpg"
+      onerror="this.closest('.hero').remove()" /></div>
+    <div class="rhead">
+      <div class="rh-t"><h2>${t.name}</h2><p class="sub">${t.tag}</p></div>
+      <div class="rh-actions">
+        <button class="fav-btn" id="shareBtn" type="button" aria-label="${tr("shareTitle")}" title="${tr("shareTitle")}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <path d="M12 3v11"/><path d="M8 7l4-4 4 4"/><path d="M6 12v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7"/></svg>
+        </button>
+        <button class="fav-btn${fav?" on":""}" id="favBtn" type="button"
+          aria-pressed="${fav}" aria-label="${tr("favTitle")}" title="${tr("favTitle")}">${fav?"★":"☆"}</button>
+      </div>
+    </div>
+    ${t.spec?`<p class="milk-spec">${t.spec}</p>`:""}
+    <div class="sec-t">${tr("steps")}</div>
+    ${playerHTML(t.steps, d.steps)}
+    <details class="allsteps"><summary>${tr("allSteps")}</summary>
+      <ol class="steps">${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol></details>
+    <div class="sec-t" style="margin-top:22px">${tr("gear")}</div>
+    <div class="gear"><ul>${gearHTML}</ul></div>
+  </div>`;
+  wirePlayer(t.steps);
+  wireRecipeExtras(fkey);
+}
+
 function renderRecipe(){
   stopTimer(); stopAuto(); pendingStars=0;
   if(!state.machine || !state.drink){ rEl.innerHTML=""; return; }
   const d=MACHINES[state.machine].drinks[state.drink];
+  if(state.machine==="milkfoam"){ renderMilk(d); return; }
   const t=drinkT(state.machine,state.drink,d);
   const gearHTML=d.gear.map(x=>{ const g=gearT(x); return `<li><span class="gi" aria-hidden="true">${g.i}</span>
       <div><div class="gn">${g.n}${g.star?`<span class="star">${tr("keyTag")}</span>`:""}</div>
