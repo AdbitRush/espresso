@@ -340,6 +340,7 @@
   .sync-row{display:flex;gap:8px;flex-wrap:wrap}
   .sync-row input{flex:1;min-width:140px;background:var(--card-2);border:1px solid var(--hair);border-radius:9px;
       color:var(--ink);font-family:"JetBrains Mono",monospace;font-size:.86rem;padding:9px 12px}
+  .sync-row input.pin{flex:0 0 84px;min-width:0;text-align:center;letter-spacing:.15em}
   .sync-row input:focus{outline:none;border-color:var(--crema)}
   .sync-btn{flex:none;border:none;background:var(--crema);color:#fff;font-family:inherit;font-weight:600;
       font-size:.82rem;padding:9px 15px;border-radius:9px;cursor:pointer;transition:filter .15s}
@@ -493,6 +494,8 @@
     <div class="sync-row">
       <input id="syncCode" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
         maxlength="40" placeholder="your sync code" />
+      <input id="syncPin" class="pin" type="password" inputmode="numeric" autocomplete="off"
+        maxlength="8" placeholder="PIN" />
       <button class="sync-btn" id="syncSave" type="button">Save to cloud</button>
       <button class="sync-btn sec" id="syncLoad" type="button">Load</button>
     </div>
@@ -959,6 +962,9 @@ const UI = {
   syncTitle:{en:"☁ Sync across devices", he:"☁ סנכרון בין מכשירים"},
   syncDesc:{en:"Save your favorites, notes & ratings to the cloud with a code you choose — then load them on any device, or share the code with someone.", he:"שמרו מועדפים, הערות ודירוגים בענן עם קוד שתבחרו — וטענו בכל מכשיר, או שתפו את הקוד עם מישהו."},
   syncCodePh:{en:"your sync code", he:"קוד הסנכרון שלכם"},
+  syncPinPh:{en:"PIN", he:"קוד סודי"},
+  syncWrongPin:{en:"Wrong PIN for this code.", he:"קוד סודי שגוי לקוד הזה."},
+  syncPinBad:{en:"PIN must be 4–8 digits.", he:"הקוד הסודי חייב 4–8 ספרות."},
   syncSave:{en:"Save to cloud", he:"שמירה בענן"},
   syncLoad:{en:"Load", he:"טעינה"},
   syncSaved:{en:"Saved to cloud ✓", he:"נשמר בענן ✓"},
@@ -1503,6 +1509,7 @@ function applyLang(){
   set("#syncH", tr("syncTitle"));
   set("#syncD", tr("syncDesc"));
   const sc=$("#syncCode"); if(sc) sc.placeholder=tr("syncCodePh");
+  const sp=$("#syncPin"); if(sp) sp.placeholder=tr("syncPinPh");
   const ssv=$("#syncSave"); if(ssv) ssv.textContent=tr("syncSave");
   const sld=$("#syncLoad"); if(sld) sld.textContent=tr("syncLoad");
   const foot=$("#footNote"); if(foot) foot.innerHTML=tr("footer");
@@ -1520,8 +1527,10 @@ const SYNC_BASE = (["localhost","127.0.0.1","178.105.148.72"].includes(location.
   ? location.origin + "/api/state/"
   : "https://espresso.178-105-148-72.sslip.io/api/state/";
 const CODE_RE = /^[A-Za-z0-9_-]{3,40}$/;
+const PIN_RE = /^\d{4,8}$/;
 let syncTimer=null, applyingRemote=false;
 function syncCode(){ return (localStorage.getItem("espresso.synccode")||"").trim(); }
+function syncPin(){ return (localStorage.getItem("espresso.syncpin")||"").trim(); }
 function syncStatus(msg,cls){ const el=$("#syncStatus"); if(el){ el.textContent=msg; el.className="sync-status "+(cls||""); } }
 function gatherState(){
   const o={favs:getFavs(), notes:{}, logs:{},
@@ -1548,7 +1557,9 @@ async function cloudSave(manual){
   if(!code){ if(manual) syncStatus(tr("syncNoCode"),"warn"); return; }
   try{
     const r=await fetch(SYNC_BASE+encodeURIComponent(code),{method:"POST",
-      headers:{"Content-Type":"application/json"}, body:JSON.stringify(gatherState())});
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({pin:syncPin(), data:gatherState()})});
+    if(r.status===403){ syncStatus(tr("syncWrongPin"),"err"); return; }
     if(!r.ok) throw 0;
     syncStatus(tr("syncSaved"),"ok");
   }catch(e){ syncStatus(tr("syncErr"),"err"); }
@@ -1557,7 +1568,9 @@ async function cloudLoad(manual){
   const code=syncCode();
   if(!code){ if(manual) syncStatus(tr("syncNoCode"),"warn"); return; }
   try{
-    const r=await fetch(SYNC_BASE+encodeURIComponent(code),{cache:"no-store"});
+    const r=await fetch(SYNC_BASE+encodeURIComponent(code),{cache:"no-store",
+      headers:{"X-Sync-Pin":syncPin()}});
+    if(r.status===403){ if(manual) syncStatus(tr("syncWrongPin"),"err"); return; }
     if(!r.ok) throw 0;
     applyState(await r.json());
     applyLang();
@@ -1567,12 +1580,18 @@ async function cloudLoad(manual){
 function scheduleSync(){ if(applyingRemote || !syncCode()) return;
   clearTimeout(syncTimer); syncTimer=setTimeout(()=>cloudSave(false),1500); }
 function wireSync(){
-  const inp=$("#syncCode"), save=$("#syncSave"), load=$("#syncLoad");
+  const inp=$("#syncCode"), pin=$("#syncPin"), save=$("#syncSave"), load=$("#syncLoad");
   if(!inp) return;
-  inp.value=syncCode();
+  if(!localStorage.getItem("espresso.syncpin")) localStorage.setItem("espresso.syncpin","6699");
+  inp.value=syncCode(); pin.value=syncPin();
   inp.oninput=()=>localStorage.setItem("espresso.synccode", inp.value.trim());
-  const check=()=>{ const v=inp.value.trim(); if(!CODE_RE.test(v)){ syncStatus(tr("syncCodeBad"),"warn"); return null; }
-    localStorage.setItem("espresso.synccode",v); return v; };
+  pin.oninput=()=>localStorage.setItem("espresso.syncpin", pin.value.trim());
+  const check=()=>{
+    const v=inp.value.trim(), p=pin.value.trim();
+    if(!CODE_RE.test(v)){ syncStatus(tr("syncCodeBad"),"warn"); return null; }
+    if(!PIN_RE.test(p)){ syncStatus(tr("syncPinBad"),"warn"); return null; }
+    localStorage.setItem("espresso.synccode",v); localStorage.setItem("espresso.syncpin",p); return v;
+  };
   save.onclick=()=>{ if(check()) cloudSave(true); };
   load.onclick=()=>{ if(check()) cloudLoad(true); };
 }

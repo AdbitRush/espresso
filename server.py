@@ -33,7 +33,7 @@ class Handler(SimpleHTTPRequestHandler):
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Sync-Pin")
 
     def _json(self, status, obj):
         body = json.dumps(obj).encode("utf-8")
@@ -56,18 +56,29 @@ class Handler(SimpleHTTPRequestHandler):
             self._cors()
         self.end_headers()
 
+    def _load(self, f):
+        """Return {pin, data}; migrate legacy raw blobs (no pin) as unlocked."""
+        try:
+            obj = json.loads(f.read_text("utf-8"))
+        except Exception:
+            return {"pin": "", "data": {}}
+        if isinstance(obj, dict) and "data" in obj and "pin" in obj:
+            return {"pin": str(obj.get("pin") or ""), "data": obj.get("data") or {}}
+        return {"pin": "", "data": obj}  # legacy raw blob = no pin
+
     def do_GET(self):
         if self.path.startswith("/api/state/"):
             code = self._code()
             if not code or not CODE_RE.match(code):
                 return self._json(400, {"error": "bad code"})
             f = DATA / (code + ".json")
-            if f.exists():
-                try:
-                    return self._json(200, json.loads(f.read_text("utf-8")))
-                except Exception:
-                    return self._json(200, {})
-            return self._json(200, {})
+            if not f.exists():
+                return self._json(200, {})  # nothing saved yet — no pin needed
+            rec = self._load(f)
+            pin = (self.headers.get("X-Sync-Pin") or "").strip()
+            if rec["pin"] and pin != rec["pin"]:
+                return self._json(403, {"error": "pin"})
+            return self._json(200, rec["data"])
         return super().do_GET()
 
     def do_POST(self):
@@ -79,10 +90,19 @@ class Handler(SimpleHTTPRequestHandler):
             if n <= 0 or n > MAX_BODY:
                 return self._json(413, {"error": "bad size"})
             try:
-                obj = json.loads(self.rfile.read(n))
+                body = json.loads(self.rfile.read(n))
             except Exception:
                 return self._json(400, {"error": "bad json"})
-            (DATA / (code + ".json")).write_text(json.dumps(obj), "utf-8")
+            pin = str(body.get("pin") or "").strip()
+            data = body.get("data")
+            if data is None:
+                return self._json(400, {"error": "no data"})
+            f = DATA / (code + ".json")
+            if f.exists():
+                existing = self._load(f)
+                if existing["pin"] and pin != existing["pin"]:
+                    return self._json(403, {"error": "pin"})  # can't overwrite with wrong pin
+            f.write_text(json.dumps({"pin": pin, "data": data}), "utf-8")  # first write claims the pin
             return self._json(200, {"ok": True})
         self.send_response(404)
         self.end_headers()
