@@ -16,22 +16,22 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 
 ## Grind quick-reference (Varia VS3 — dial 0–9.9, finer = lower)
 
-Calibrated to a real Dedica espresso setting of **~0.8** (espresso is a very fine grind, near the bottom of the dial). Coarser methods climb from there.
+VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). The Dedica's **pressurized** basket favours the coarser end, so espresso ≈ **2.5**. Coarser methods climb from there; past 9.9 = a second full turn (`13` = turn 2, dial 3).
 
 | Drink | Machine | Grind (dial) | Dose → Yield | Time |
 |---|---|---|---|---|
-| Espresso / cappuccino / macchiato | Dedica | **0.8** | 14 g → 28 g | 25–30 s |
-| Latte / cortado / iced / shakerato | Dedica | **0.7** | — | 25–30 s |
-| Flat white (ristretto) | Dedica | **0.6** | 14 g → 26 g | 25–30 s |
-| Americano / iced americano (long) | Dedica | **1.0–1.1** | 14 g → 28 g+ | 25–30 s |
-| Moka coffee | Moka pot | **3.0** | fill basket → full pot | ~4–5 min |
-| V60 pour-over | Filter | **4.5** | 20 g → 320 g | ~3 min |
-| French press | Filter | **6.5** | 30 g → 450 g | ~8 min |
-| Cold brew | Immersion | **8.5–9.0** | 100 g → 500 ml | 14–16 h |
+| Espresso / cappuccino / macchiato | Dedica | **2.5** | 14 g → 28 g | 25–30 s |
+| Latte / iced / shakerato | Dedica | **2.4** | — | 25–30 s |
+| Flat white / cortado (ristretto) | Dedica | **2.2–2.3** | 14 g → 26 g | 25–30 s |
+| Americano / iced americano (long) | Dedica | **2.8–2.9** | 14 g → 28 g+ | 25–30 s |
+| Moka coffee | Moka pot | **4.8** | fill basket → full pot | ~4–5 min |
+| V60 pour-over | Filter | **6.5** | 20 g → 320 g | ~3 min |
+| French press | Filter | **11** (turn 2 · 1.0) | 30 g → 450 g | ~8 min |
+| Cold brew | Immersion | **13–15** (turn 2 · 3–5) | 100 g → 500 ml | 14–16 h |
 
 > These are **starting points** — taste, then nudge: sour & fast → **finer** (lower);
-> bitter, slow or choking → **coarser** (higher). Espresso ≈ 0.8 is confirmed; the coarser
-> numbers are estimates to dial to your own taste.
+> bitter, slow or choking → **coarser** (higher). On a **pressurized** basket use ~2.5;
+> if you run a modded **unpressurized** basket, go finer (~0.8–1.5).
 
 ## Features
 
