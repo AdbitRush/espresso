@@ -51,7 +51,9 @@ VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). Pick your **basket** 
 - **QR code** on the page — scan from desktop to open it on your phone (`make_qr.py` regenerates it).
 - **Cloud sync** — pick a sync code and save your favorites, notes & ratings to the server, then load them on any device or share the code. Auto-saves on change; works from the GitHub Pages copy too (CORS). Runs on the server build (`server.py`), which also serves the static app.
 - **Basket toggle** (Dedica) — stock/pressurized vs unpressurized; a global choice that reshuffles the grind on every espresso drink at once.
-- Light / dark coffee theme + a **🖼️ background on/off** toggle; remembers your last pick, language, basket, and background.
+- **Photo machine tiles** — each method (Dedica, moka, cold brew, filter, milk) shows a generated photo for easy visual picking.
+- The basket toggle also changes the **prep step**: pressurized = light tamp; unpressurized = WDT-distribute + firm level tamp.
+- Light / dark coffee theme + a **🖼️ background button** that cycles through a few textures (beans, coffee rings, burlap) and off; remembers your last pick, language, basket, and background.
 
 ## Install on your phone
 

@@ -57,6 +57,12 @@ DRINKS = {
     "milkfoam_handfroth": "a glass of warm milk being frothed by a handheld electric milk frother, airy foam forming",
     "milkfoam_latteart": "a barista pouring a rosetta latte art into a coffee cup, top-down close up, elegant white fern pattern",
     "milkfoam_alt": "a frothy oat milk latte in a glass beside a plain carton of barista oat milk, plant-based, warm tones",
+    # machine-tile thumbnails
+    "machine_dedica": "a slim stainless-steel DeLonghi Dedica style espresso machine on a warm kitchen counter, front product photo",
+    "machine_moka": "a classic aluminium moka pot stovetop espresso maker, product photo",
+    "machine_cold": "a tall glass jar of dark cold-brew coffee concentrate with a lid, product photo",
+    "machine_filter": "a white ceramic V60 pour-over dripper with a paper filter on a glass carafe, product photo",
+    "machine_milkfoam": "a stainless-steel milk frothing pitcher holding glossy white microfoam, product photo",
 }
 
 def generate(key, subject):

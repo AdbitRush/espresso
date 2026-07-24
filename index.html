@@ -160,6 +160,8 @@
   .machine:hover{transform:translateY(-2px)}
   .machine:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
   .machine .ic{font-size:1.35rem;line-height:1;display:block;margin-bottom:7px}
+  .machine .mic{width:100%;height:58px;object-fit:cover;border-radius:9px;display:block;margin-bottom:7px}
+  .machine:has(.mic) .ic{display:none}
   .machine .mn{font-weight:600;font-size:.86rem;letter-spacing:-.01em;display:block}
   .machine .ms{font-size:.68rem;color:var(--ink-soft);display:block;margin-top:1px}
   .machine[aria-pressed="true"]{border-color:var(--crema);background:
@@ -617,7 +619,7 @@ const MACHINES = {
         steps:[
           "Power on and let it heat <b>at least 3 min</b>. Lock in the empty portafilter and run a blank shot to warm the group and your cup.",
           "Grind <span class='hl'>14 g</span> into the double basket at VS3 <span class='hl'>{{g}}</span>.",
-          "Give it a quick <b>WDT stir</b>, level the bed, and tamp <b>gently &amp; even</b> — pressurized baskets don't need muscle.",
+          "Level the bed evenly, then {{tamp}}",
           "Lock in, put the warm cup underneath, and start the shot immediately.",
           "Aim for <span class='hl'>~28 g out in 25–30 s</span> from first drip. Sour = grind finer; harsh &amp; bitter = coarser.",
         ],
@@ -1070,6 +1072,8 @@ const UI = {
   basketLbl:{en:"Basket", he:"סל"},
   bStock:{en:"Stock (pressurized)", he:"מקורי (בלחץ)"},
   bMod:{en:"Unpressurized", he:"ללא לחץ"},
+  tampStock:{en:"tamp <b>gently &amp; even</b> — a pressurized basket doesn't need muscle.", he:"טמפרים <b>בעדינות ואחיד</b> — סל בלחץ לא צריך כוח."},
+  tampMod:{en:"<b>WDT-distribute well</b>, then tamp <b>firm &amp; level (~15 kg)</b> — an unpressurized basket needs a tidy, even puck or it channels.", he:"<b>מפזרים היטב עם WDT</b>, ואז טמפרים <b>חזק ואחיד (~15 ק\"ג)</b> — סל ללא לחץ צריך פאק מסודר ואחיד אחרת נוצרים ערוצים."},
   turn2:{en:"turn 2 ·", he:"סיבוב 2 ·"},
   doseK:{en:"Dose", he:"מנה"}, inU:{en:"in", he:"פנימה"},
   yieldK:{en:"Yield", he:"תפוקה"}, outU:{en:"out", he:"החוצה"},
@@ -1197,7 +1201,7 @@ const HE_DRINKS = {
     dial:"מהיר וחיוור מדי → לכו <b>דק יותר</b>. נחנק / מטפטף לנצח → <b>גס יותר</b>.",
     steps:["מדליקים ומחממים <b>לפחות 3 דק'</b>. נועלים את הפורטהפילטר הריק ומריצים שוט סרק לחימום הראש והכוס.",
       "טוחנים <span class='hl'>14 g</span> לתוך הסל הכפול ב-VS3 <span class='hl'>{{g}}</span>.",
-      "נותנים ערבוב <b>WDT</b> מהיר, מיישרים את המצע, וטמפרים <b>בעדינות ואחיד</b> — סלים בלחץ לא צריכים כוח.",
+      "מיישרים את המצע, ואז {{tamp}}",
       "נועלים, שמים את הכוס החמה מתחת, ומתחילים את השוט מיד.",
       "מכוונים ל-<span class='hl'>~28 g החוצה ב-25–30 שנ'</span> מהטיפה הראשונה. חמוץ = דק יותר; מר וחריף = גס יותר."]},
   "dedica/americano":{name:"אמריקנו", tag:"אספרסו מדולל במים חמים",
@@ -1386,7 +1390,8 @@ function renderMachines(){
     b.className="machine"; b.type="button";
     b.setAttribute("aria-pressed", state.machine===key);
     const mt=machineT(key,m);
-    b.innerHTML=`<span class="ic" aria-hidden="true">${m.ic}</span>
+    b.innerHTML=`<img class="mic" src="images/machine_${key}.jpg" alt="" onerror="this.remove()" />
+      <span class="ic" aria-hidden="true">${m.ic}</span>
       <span class="mn">${mt.name}</span><span class="ms">${mt.sub}</span>`;
     b.onclick=()=>{ state.machine=key; state.drink=null; save(); renderMachines(); renderDrinks(); renderRecipe(); };
     mEl.appendChild(b);
@@ -1446,7 +1451,8 @@ function renderRecipe(){
   if(state.machine==="milkfoam"){ renderMilk(d); return; }
   const t=drinkT(state.machine,state.drink,d);
   const dg = (state.machine==="dedica" && basket==="unpressurized" && d.grindU) ? d.grindU : d.grind;
-  t.steps = t.steps.map(s=>s.replace(/\{\{g\}\}/g, dg));
+  const tampTxt = tr(basket==="unpressurized" ? "tampMod" : "tampStock");
+  t.steps = t.steps.map(s=>s.replace(/\{\{g\}\}/g, dg).replace(/\{\{tamp\}\}/g, tampTxt));
   const gearHTML=d.gear.map(x=>{ const g=gearT(x); return `<li><span class="gi" aria-hidden="true">${g.i}</span>
       <div><div class="gn">${g.n}${g.star?`<span class="star">${tr("keyTag")}</span>`:""}</div>
       <div class="gw">${g.w}</div></div></li>`; }).join("");
@@ -1795,13 +1801,16 @@ themeBtn.onclick=()=>{
   applyTheme(next); localStorage.setItem("espresso.theme",next);
 };
 
-let bgOn = localStorage.getItem("espresso.bg") !== "off";
+const BGS = ["bg.jpg","bg2.jpg","bg3.jpg"];   // 0 = off, then cycle through these
+let bgIndex = (()=>{ const v=localStorage.getItem("espresso.bgi");
+  if(v!=null) return Math.max(0, Math.min(BGS.length, parseInt(v)||0));
+  return localStorage.getItem("espresso.bg")==="off" ? 0 : 1; })();
 function applyBg(){
-  document.documentElement.setAttribute("data-bg", bgOn ? "on" : "off");
-  const b=$("#bgBtn"); if(b) b.classList.toggle("off", !bgOn);
+  document.documentElement.style.setProperty("--bg-photo", bgIndex<=0 ? "none" : 'url("images/'+BGS[bgIndex-1]+'")');
+  const b=$("#bgBtn"); if(b) b.classList.toggle("off", bgIndex<=0);
 }
 const bgBtn=$("#bgBtn");
-if(bgBtn) bgBtn.onclick=()=>{ bgOn=!bgOn; localStorage.setItem("espresso.bg", bgOn?"on":"off"); applyBg(); };
+if(bgBtn) bgBtn.onclick=()=>{ bgIndex=(bgIndex+1)%(BGS.length+1); localStorage.setItem("espresso.bgi", bgIndex); applyBg(); };
 
 function applyLang(){
   const html=document.documentElement;

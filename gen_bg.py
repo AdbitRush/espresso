@@ -20,18 +20,19 @@ def api_key():
             return line.split("=", 1)[1].strip().strip('"').strip("'")
     raise SystemExit("no GOOGLE_API_KEY")
 
-PROMPT = (
-    "A soft, out-of-focus minimalist background texture: a few scattered dark "
-    "roasted coffee beans on a warm cream linen surface, lots of empty negative "
-    "space, very subtle, muted, low contrast, gentle warm beige and soft brown "
-    "tones, soft diffused natural light, calm and airy, tasteful, no text, no "
-    "people, no logos. Suitable as a faint app background."
-)
+COMMON = (" lots of empty negative space, very subtle, muted, low contrast, warm "
+          "beige and soft brown tones, soft diffused light, calm, tasteful, no text, "
+          "no people, no logos. Suitable as a faint app background.")
+BGS = {
+    "bg":  "A soft out-of-focus minimalist texture: a few scattered dark roasted coffee beans on a warm cream linen surface." + COMMON,
+    "bg2": "A soft minimalist texture of faint coffee-cup rings and light stains on warm off-white paper." + COMMON,
+    "bg3": "A soft minimalist texture of a woven burlap coffee-sack surface in warm natural beige." + COMMON,
+}
 
-def generate():
+def generate(name, prompt):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={api_key()}"
     body = json.dumps({
-        "contents": [{"role": "user", "parts": [{"text": PROMPT}]}],
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]},
     }).encode()
     req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
@@ -45,10 +46,15 @@ def generate():
             img = ImageEnhance.Contrast(img).enhance(0.85)
             img = ImageEnhance.Color(img).enhance(0.9)
             img = img.resize((1200, 1200), Image.LANCZOS)
-            img.save(OUT / "bg.jpg", "JPEG", quality=72, optimize=True)
-            print("wrote", OUT / "bg.jpg", (OUT / "bg.jpg").stat().st_size, "bytes")
+            out = OUT / (name + ".jpg")
+            img.save(out, "JPEG", quality=72, optimize=True)
+            print("wrote", out, out.stat().st_size, "bytes")
             return
     raise RuntimeError("no image: " + json.dumps(data)[:300])
 
 if __name__ == "__main__":
-    generate()
+    import sys
+    names = sys.argv[1:] or list(BGS)
+    for n in names:
+        if n in BGS:
+            generate(n, BGS[n])
