@@ -104,6 +104,22 @@
   [dir="rtl"] .cell .v{direction:ltr;unicode-bidi:plaintext}
   [dir="rtl"] .theme-btn:hover{transform:none}
 
+  /* ---- user profiles ---- */
+  .profiles{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+  .pf-ico{font-size:1rem;flex:none;opacity:.8}
+  .pf-list{display:flex;gap:6px;flex-wrap:wrap}
+  .pf-chip{background:var(--card);border:1px solid var(--hair);color:var(--ink-soft);border-radius:999px;
+      padding:5px 13px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+  .pf-chip:hover{border-color:var(--crema);color:var(--ink)}
+  .pf-chip.on{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+  .pf-add{background:none;border:1px dashed var(--hair);color:var(--ink-soft);border-radius:999px;
+      padding:5px 12px;font-size:.76rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+  .pf-add:hover{border-color:var(--crema);color:var(--crema)}
+  .pf-input{background:var(--card-2);border:1px solid var(--crema);border-radius:999px;padding:5px 12px;
+      font-size:.8rem;font-family:inherit;color:var(--ink);width:110px}
+  .pf-input:focus{outline:none}
+  .pf-chip:focus-visible,.pf-add:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+
   /* ---- install banner ---- */
   .install-banner{display:flex;align-items:center;gap:10px;margin:-4px 0 20px;
       background:linear-gradient(100deg,color-mix(in oklab,var(--crema) 16%,var(--card)),var(--card));
@@ -460,6 +476,13 @@
     <span class="ib-txt" id="ibTxt"></span>
     <button class="ib-btn" id="ibBtn" type="button">Install</button>
     <button class="ib-x" id="ibX" type="button" aria-label="Dismiss">✕</button>
+  </div>
+
+  <div class="profiles" id="profilesBar">
+    <span class="pf-ico" aria-hidden="true">👤</span>
+    <div class="pf-list" id="pfList" role="group" aria-label="User profiles"></div>
+    <input class="pf-input" id="pfInput" maxlength="20" placeholder="name" autocomplete="off" hidden />
+    <button class="pf-add" id="pfAdd" type="button">+ New user</button>
   </div>
 
   <section id="favWrap" hidden>
@@ -960,6 +983,8 @@ const UI = {
   sugCoarser:{en:"Runs bitter — grind coarser next time.", he:"יוצא מר — טחנו גס יותר בפעם הבאה."},
   applyTo:{en:"Set my grind →", he:"עדכן טחינה →"},
   nowT:{en:"now", he:"עכשיו"},
+  addUser:{en:"+ New user", he:"+ משתמש חדש"},
+  newUserPh:{en:"name", he:"שם"},
   syncTitle:{en:"☁ Sync across devices", he:"☁ סנכרון בין מכשירים"},
   syncDesc:{en:"Save your favorites, notes & ratings to the cloud with a code you choose — then load them on any device, or share the code with someone.", he:"שמרו מועדפים, הערות ודירוגים בענן עם קוד שתבחרו — וטענו בכל מכשיר, או שתפו את הקוד עם מישהו."},
   syncCodePh:{en:"your sync code", he:"קוד הסנכרון שלכם"},
@@ -977,6 +1002,26 @@ const UI = {
 };
 function tr(k){ const o=UI[k]||{}; return o[lang]||o.en||k; }
 function grindUnit(g){ const n=parseFloat(g); if(isNaN(n)||n<=9.9) return tr("onDial"); return tr("turn2")+" "+(n-10).toFixed(1); }
+
+/* --------------------------- user profiles --------------------------- */
+let profile = localStorage.getItem("espresso.profile") || "Me";
+function getProfiles(){ try{ const a=JSON.parse(localStorage.getItem("espresso.profiles")||"null"); if(Array.isArray(a)&&a.length) return a; }catch(e){} return [profile]; }
+function setProfiles(a){ localStorage.setItem("espresso.profiles", JSON.stringify(a)); }
+function setProfile(p){ profile=p; localStorage.setItem("espresso.profile", p); }
+function pfx(){ return "espresso."+profile+"."; }   // per-profile key prefix
+function migrateLegacy(){
+  if(localStorage.getItem("espresso.migrated")==="2") return;
+  const keys=[]; for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i));
+  const move=(from,to)=>{ const v=localStorage.getItem(from); if(v!=null){ if(localStorage.getItem(to)==null) localStorage.setItem(to,v); localStorage.removeItem(from); } };
+  move("espresso.favs", pfx()+"favs");
+  move("espresso.synccode", pfx()+"synccode");
+  move("espresso.syncpin", pfx()+"syncpin");
+  keys.forEach(k=>{
+    if(k.indexOf("espresso.note.")===0) move(k, pfx()+"note."+k.slice(14));
+    else if(k.indexOf("espresso.log.")===0) move(k, pfx()+"log."+k.slice(13));
+  });
+  localStorage.setItem("espresso.migrated","2");
+}
 
 const HE_MACHINES = {
   dedica:{name:"דדיקה", sub:"מכונת אספרסו"},
@@ -1253,15 +1298,15 @@ function renderRecipe(){
 }
 
 /* --------------------------- favorites + notes + surprise --------------------------- */
-function getFavs(){ try{ return JSON.parse(localStorage.getItem("espresso.favs")||"[]"); }catch(e){ return []; } }
-function setFavs(a){ localStorage.setItem("espresso.favs", JSON.stringify(a)); scheduleSync(); }
+function getFavs(){ try{ return JSON.parse(localStorage.getItem(pfx()+"favs")||"[]"); }catch(e){ return []; } }
+function setFavs(a){ localStorage.setItem(pfx()+"favs", JSON.stringify(a)); scheduleSync(); }
 function isFav(key){ return getFavs().includes(key); }
 function toggleFav(key){
   const a=getFavs(), i=a.indexOf(key); let now;
   if(i>=0){ a.splice(i,1); now=false; } else { a.push(key); now=true; }
   setFavs(a); return now;
 }
-function noteKey(k){ return "espresso.note."+k; }
+function noteKey(k){ return pfx()+"note."+k; }
 function getNote(k){ try{ return JSON.parse(localStorage.getItem(noteKey(k))||"{}"); }catch(e){ return {}; } }
 function setNote(k,o){ localStorage.setItem(noteKey(k), JSON.stringify(o)); scheduleSync(); }
 
@@ -1311,6 +1356,43 @@ function jumpTo(m,dk){
   renderMachines(); renderDrinks(); renderRecipe();
   const r=$("#recipe"); if(r) window.scrollTo({top:r.getBoundingClientRect().top+window.scrollY-72, behavior:"smooth"});
 }
+
+/* --------------------------- profiles UI --------------------------- */
+function renderProfiles(){
+  const list=$("#pfList"); if(!list) return;
+  const ps=getProfiles(); setProfiles(ps);
+  list.innerHTML="";
+  for(const p of ps){
+    const b=document.createElement("button"); b.type="button";
+    b.className="pf-chip"+(p===profile?" on":"");
+    b.textContent=p; b.onclick=()=>switchProfile(p);
+    list.appendChild(b);
+  }
+}
+function switchProfile(p){
+  if(p===profile) return;
+  setProfile(p);
+  renderProfiles(); applyLang(); wireSync();
+  if(syncCode()) cloudLoad(false);
+}
+function wireProfiles(){
+  const add=$("#pfAdd"), input=$("#pfInput");
+  if(!add) return;
+  add.onclick=()=>{ input.hidden=false; add.hidden=true; input.value=""; input.focus(); };
+  const commit=()=>{
+    if(input.hidden) return;
+    const name=input.value.trim().slice(0,20);
+    input.hidden=true; add.hidden=false;
+    if(name && !getProfiles().includes(name)){
+      const ps=getProfiles(); ps.push(name); setProfiles(ps); setProfile(name);
+      localStorage.setItem(pfx()+"syncpin","6699");
+      renderProfiles(); applyLang(); wireSync();
+    }
+  };
+  input.onkeydown=(e)=>{ if(e.key==="Enter"){ e.preventDefault(); commit(); }
+    else if(e.key==="Escape"){ input.hidden=true; add.hidden=false; } };
+  input.onblur=commit;
+}
 function surprise(){
   const ms=Object.keys(MACHINES), m=ms[Math.floor(Math.random()*ms.length)];
   const ds=Object.keys(MACHINES[m].drinks), dk=ds[Math.floor(Math.random()*ds.length)];
@@ -1319,7 +1401,7 @@ function surprise(){
 
 /* --------------------------- shot log / reviews --------------------------- */
 let pendingStars=0;
-function logKey(k){ return "espresso.log."+k; }
+function logKey(k){ return pfx()+"log."+k; }
 function getLog(k){ try{ return JSON.parse(localStorage.getItem(logKey(k))||"[]"); }catch(e){ return []; } }
 function setLog(k,a){ localStorage.setItem(logKey(k), JSON.stringify(a.slice(-24))); scheduleSync(); }
 function pushLog(k,taste,grind,stars){ const a=getLog(k); a.push({t:Date.now(),taste,grind,stars:stars||0}); setLog(k,a); }
@@ -1517,9 +1599,11 @@ function applyLang(){
   const foot=$("#footNote"); if(foot) foot.innerHTML=tr("footer");
   const built=$("#footBuilt"); if(built) built.innerHTML=tr("builtFor")+' · <a href="https://github.com/AdbitRush/espresso">github.com/AdbitRush/espresso</a>';
   const lb=$("#langBtn"); if(lb) lb.textContent=tr("langBtn");
+  const pfa=$("#pfAdd"); if(pfa) pfa.textContent=tr("addUser");
+  const pfi=$("#pfInput"); if(pfi) pfi.placeholder=tr("newUserPh");
   if(bannerMode) showBanner(bannerMode, bannerMode==="install");
   // dynamic content
-  renderMachines(); renderDrinks(); renderFavorites(); renderRecipe();
+  renderProfiles(); renderMachines(); renderDrinks(); renderFavorites(); renderRecipe();
 }
 const langBtn=$("#langBtn");
 if(langBtn) langBtn.onclick=()=>{ lang = lang==="he"?"en":"he"; localStorage.setItem("espresso.lang", lang); applyLang(); };
@@ -1531,15 +1615,16 @@ const SYNC_BASE = (["localhost","127.0.0.1","178.105.148.72"].includes(location.
 const CODE_RE = /^[A-Za-z0-9_-]{3,40}$/;
 const PIN_RE = /^\d{4,8}$/;
 let syncTimer=null, applyingRemote=false;
-function syncCode(){ return (localStorage.getItem("espresso.synccode")||"").trim(); }
-function syncPin(){ return (localStorage.getItem("espresso.syncpin")||"").trim(); }
+function syncCode(){ return (localStorage.getItem(pfx()+"synccode")||"").trim(); }
+function syncPin(){ return (localStorage.getItem(pfx()+"syncpin")||"").trim(); }
 function syncStatus(msg,cls){ const el=$("#syncStatus"); if(el){ el.textContent=msg; el.className="sync-status "+(cls||""); } }
 function gatherState(){
   const o={favs:getFavs(), notes:{}, logs:{},
     theme:localStorage.getItem("espresso.theme")||null, lang:localStorage.getItem("espresso.lang")||null};
+  const np=pfx()+"note.", lp=pfx()+"log.";
   for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i);
-    if(k.indexOf("espresso.note.")===0) o.notes[k.slice(14)]=localStorage.getItem(k);
-    else if(k.indexOf("espresso.log.")===0) o.logs[k.slice(13)]=localStorage.getItem(k);
+    if(k.indexOf(np)===0) o.notes[k.slice(np.length)]=localStorage.getItem(k);
+    else if(k.indexOf(lp)===0) o.logs[k.slice(lp.length)]=localStorage.getItem(k);
   }
   return o;
 }
@@ -1547,9 +1632,9 @@ function applyState(o){
   if(!o||typeof o!=="object") return;
   applyingRemote=true;
   try{
-    if(Array.isArray(o.favs)) localStorage.setItem("espresso.favs", JSON.stringify(o.favs));
-    if(o.notes) for(const k in o.notes) localStorage.setItem("espresso.note."+k, o.notes[k]);
-    if(o.logs) for(const k in o.logs) localStorage.setItem("espresso.log."+k, o.logs[k]);
+    if(Array.isArray(o.favs)) localStorage.setItem(pfx()+"favs", JSON.stringify(o.favs));
+    if(o.notes) for(const k in o.notes) localStorage.setItem(pfx()+"note."+k, o.notes[k]);
+    if(o.logs) for(const k in o.logs) localStorage.setItem(pfx()+"log."+k, o.logs[k]);
     if(o.theme){ applyTheme(o.theme); localStorage.setItem("espresso.theme", o.theme); }
     if(o.lang){ lang = o.lang==="he"?"he":"en"; localStorage.setItem("espresso.lang", lang); }
   } finally { applyingRemote=false; }
@@ -1584,15 +1669,15 @@ function scheduleSync(){ if(applyingRemote || !syncCode()) return;
 function wireSync(){
   const inp=$("#syncCode"), pin=$("#syncPin"), save=$("#syncSave"), load=$("#syncLoad");
   if(!inp) return;
-  if(!localStorage.getItem("espresso.syncpin")) localStorage.setItem("espresso.syncpin","6699");
+  if(!localStorage.getItem(pfx()+"syncpin")) localStorage.setItem(pfx()+"syncpin","6699");
   inp.value=syncCode(); pin.value=syncPin();
-  inp.oninput=()=>localStorage.setItem("espresso.synccode", inp.value.trim());
-  pin.oninput=()=>localStorage.setItem("espresso.syncpin", pin.value.trim());
+  inp.oninput=()=>localStorage.setItem(pfx()+"synccode", inp.value.trim());
+  pin.oninput=()=>localStorage.setItem(pfx()+"syncpin", pin.value.trim());
   const check=()=>{
     const v=inp.value.trim(), p=pin.value.trim();
     if(!CODE_RE.test(v)){ syncStatus(tr("syncCodeBad"),"warn"); return null; }
     if(!PIN_RE.test(p)){ syncStatus(tr("syncPinBad"),"warn"); return null; }
-    localStorage.setItem("espresso.synccode",v); localStorage.setItem("espresso.syncpin",p); return v;
+    localStorage.setItem(pfx()+"synccode",v); localStorage.setItem(pfx()+"syncpin",p); return v;
   };
   save.onclick=()=>{ if(check()) cloudSave(true); };
   load.onclick=()=>{ if(check()) cloudLoad(true); };
@@ -1695,7 +1780,8 @@ if("serviceWorker" in navigator){
 
 const surpriseBtn=$("#surprise"); if(surpriseBtn) surpriseBtn.onclick=surprise;
 
-restore(); applyLang(); wireSync();
+migrateLegacy();
+restore(); applyLang(); wireSync(); wireProfiles();
 if(syncCode()) cloudLoad(false);
 </script>
 </body>

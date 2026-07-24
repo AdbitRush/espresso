@@ -36,7 +36,8 @@ Varia's own reference: **espresso ≈ #4, filter ≈ #9–10**. Coarser than 9.9
 - **Machine → drink** picker with a machine-readout recipe card (grind / dose / yield / time).
 - **Illustrated animated step player** — each step plays a hand-drawn SVG scene; prev/next, dot progress, auto-play.
 - **Built-in timer** with a target marker (shot time / moka time).
-- **★ Favorites** — star any drink; a quick-access strip pins them at the top (kept in local storage).
+- **User profiles** — switch between users (e.g. "Me" / a friend) from the top bar; each has its own favorites, notes, ratings, and cloud sync code/PIN. Add a user inline with "+ New user".
+- **★ Favorites** — star any drink; a quick-access strip pins them at the top (per user).
 - **Your dial-in** — save your own grind number + notes per drink (e.g. bean, ratio, tweaks).
 - **Rate this cup** — a 1–5 **star quality rating** plus a one-tap taste log (sour / just right / bitter) per shot. Tracks avg/best over all cups; after a couple it spots the pattern and suggests a grind change with a one-tap **Apply** (sour→finer, bitter→coarser, step scaled to the brew method), or tells you it's dialed in.
 - **🎲 Surprise me** — jumps to a random drink.
