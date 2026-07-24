@@ -8,7 +8,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 
 | Device | Role | Notes |
 |---|---|---|
-| **Varia VS3** | Grinder | Grind shown as the **dial number** (~0–20 scale, finer = lower). Espresso `0.2–3.3`, moka `3.1–7.8`, cold brew `10.1–19.6` per the [Honest Coffee Guide](https://honestcoffeeguide.com/varia-vs3-gen-2-grind-settings/) Gen 2 chart. |
+| **Varia VS3** | Grinder | Grind shown as the **dial number** (0–9.9, finer = lower). Espresso is fine (~0.8 unpressurized / ~2.5 pressurized); moka ~5; V60 ~6.5; French press ~8; cold brew ~9. See the grind quick-reference below. |
 | **DeLonghi Dedica** | Espresso | **51 mm** pressurized basket — grind runs a touch coarser than a true espresso machine. |
 | **Moka pot** (makineta) | Stovetop | Medium-fine, salt-like grind; no pressure needed. |
 | **Cold brew** | Immersion | No machine — very coarse grind, 14–16 h fridge steep, then strain. |
@@ -24,7 +24,7 @@ VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). Pick your **basket** 
 | Latte / iced / shakerato | Dedica | **2.4** | — | 25–30 s |
 | Flat white / cortado (ristretto) | Dedica | **2.2–2.3** | 14 g → 26 g | 25–30 s |
 | Americano / iced americano (long) | Dedica | **2.8–2.9** | 14 g → 28 g+ | 25–30 s |
-| Moka coffee | Moka pot | **4.8** | fill basket → full pot | ~4–5 min |
+| Moka coffee | Moka pot | **5.0** | fill basket → full pot | ~4–5 min |
 | V60 pour-over | Filter | **6.5** | 20 g → 320 g | ~3 min |
 | French press | Filter | **11** (turn 2 · 1.0) | 30 g → 450 g | ~8 min |
 | Cold brew | Immersion | **13–15** (turn 2 · 3–5) | 100 g → 500 ml | 14–16 h |
@@ -41,7 +41,7 @@ VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). Pick your **basket** 
 - **Built-in timer** with a target marker (shot time / moka time).
 - **User profiles** — switch between users (e.g. "Me" / a friend) from the top bar; each has its own favorites, notes, ratings, and cloud sync code/PIN. Add a user inline with "+ New user".
 - **★ Favorites** — star any drink; a quick-access strip pins them at the top (per user).
-- **Your recipe** — override any number per drink (grind, dose, yield, time) with your own preference; a **− / +** grind stepper nudges finer/coarser (0.1 steps) as you dial by taste; the readout shows your value with a green dot; **↺ Reset to default** clears it. Saved per drink + user and **synced across devices**. Plus free notes.
+- **Your recipe** — override any number per drink (grind, dose, yield, time) with your own preference; a **− / +** grind stepper nudges finer/coarser (0.1 steps) as you dial by taste; the readout shows your value with a green dot; **↺ Reset to default** clears it, and **⤓ Use this grind for all [machine]** copies it to every drink on that machine at once. Saved per drink + user and **synced across devices**. Plus free notes.
 - **Basket-specific shot animation** — the unpressurized basket shows a bottomless-portafilter pour (converging streams) instead of the two-spout shot.
 - **Rate this cup** — a 1–5 **star quality rating** plus a one-tap taste log (sour / just right / bitter) per shot, and a **grind-trend sparkline** (each shot marked by its taste colour) so you can see how your grind is converging. Tracks avg/best over all cups; after a couple it spots the pattern and suggests a grind change with a one-tap **Apply** (sour→finer, bitter→coarser, step scaled to the brew method), or tells you it's dialed in.
 - **🎲 Surprise me** — jumps to a random drink.

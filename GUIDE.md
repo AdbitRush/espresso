@@ -35,7 +35,7 @@ All three run the **same app** — the only difference is the address people see
 - Your **basket** decides the espresso number:
   - **Stock (pressurized)** basket → around **2.5**.
   - **Unpressurized (modded)** basket → around **0.8** (finer). *(This is the one you use.)*
-- Coarser methods climb from there: **moka ≈ 4.8 · V60 ≈ 6.5 · French press ≈ 8 · cold brew ≈ 9**.
+- Coarser methods climb from there: **moka ≈ 5.0 · V60 ≈ 6.5 · French press ≈ 8 · cold brew ≈ 9**.
 
 > These are **starting points**. The shot is the real judge: aim for **14 g in → ~28 g out in
 > 25–30 s**, tasting balanced. **Sour/fast → grind finer (lower). Bitter/slow → coarser (higher).**
