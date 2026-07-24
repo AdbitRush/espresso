@@ -280,7 +280,17 @@
 
   /* ---- rate this cup / shot log ---- */
   .review{padding:0 20px 4px}
-  .rv-hint{font-size:.8rem;color:var(--ink-soft);margin:0 0 10px}
+  .rv-hint{font-size:.8rem;color:var(--ink-soft);margin:0 0 12px}
+  .stars-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .stars{display:flex;gap:3px}
+  .star{background:none;border:none;cursor:pointer;font-size:1.5rem;line-height:1;color:var(--hair);
+      padding:0 1px;transition:color .12s,transform .12s;font-family:inherit}
+  .star:hover{transform:scale(1.15)}
+  .star.on{color:var(--crema-bright)}
+  .star:focus-visible{outline:2px solid var(--crema);outline-offset:2px;border-radius:4px}
+  .rv-stats{margin-top:11px;font-size:.78rem;color:var(--ink-soft)}
+  .rv-stats b{color:var(--crema-bright);font-weight:600}
+  .cup-chip .cs{color:var(--crema-bright);font-size:.66rem;letter-spacing:-1px}
   .taste{display:flex;gap:8px;flex-wrap:wrap}
   .taste-b{flex:1;min-width:98px;background:var(--card-2);border:1px solid var(--hair);color:var(--ink);
       border-radius:11px;padding:11px 10px;font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;
@@ -901,7 +911,9 @@ const UI = {
   builtFor:{en:"Built for Or's kitchen", he:"נבנה למטבח של אור"},
   langBtn:{en:"עברית", he:"EN"},
   rateTitle:{en:"Rate this cup", he:"דרגו את הכוס"},
-  rateHint:{en:"How did it taste? Tap to log the shot.", he:"איך היה הטעם? הקישו כדי לרשום."},
+  rateHint:{en:"Rate the stars (optional), then tap how it tasted — that logs the shot.", he:"דרגו בכוכבים (רשות), ואז הקישו איך היה הטעם — זה רושם את הכוס."},
+  qualityLbl:{en:"Quality", he:"איכות"},
+  avgLbl:{en:"avg", he:"ממוצע"}, bestLbl:{en:"best", he:"הכי טוב"}, cupsLbl:{en:"cups", he:"כוסות"},
   tSour:{en:"🍋 Sour / weak", he:"🍋 חמוץ / חלש"},
   tGood:{en:"✅ Just right", he:"✅ מדויק"},
   tBitter:{en:"🔥 Bitter / harsh", he:"🔥 מר / חריף"},
@@ -1127,7 +1139,7 @@ function renderDrinks(){
 }
 
 function renderRecipe(){
-  stopTimer(); stopAuto();
+  stopTimer(); stopAuto(); pendingStars=0;
   if(!state.machine || !state.drink){ rEl.innerHTML=""; return; }
   const d=MACHINES[state.machine].drinks[state.drink];
   const t=drinkT(state.machine,state.drink,d);
@@ -1257,10 +1269,11 @@ function surprise(){
 }
 
 /* --------------------------- shot log / reviews --------------------------- */
+let pendingStars=0;
 function logKey(k){ return "espresso.log."+k; }
 function getLog(k){ try{ return JSON.parse(localStorage.getItem(logKey(k))||"[]"); }catch(e){ return []; } }
 function setLog(k,a){ localStorage.setItem(logKey(k), JSON.stringify(a.slice(-24))); }
-function pushLog(k,taste,grind){ const a=getLog(k); a.push({t:Date.now(),taste,grind}); setLog(k,a); }
+function pushLog(k,taste,grind,stars){ const a=getLog(k); a.push({t:Date.now(),taste,grind,stars:stars||0}); setLog(k,a); }
 function clearLog(k){ localStorage.removeItem(logKey(k)); }
 function gStep(g){ return g>=8?1:(g>=4?0.5:0.2); }
 function round1(x){ return Math.round(x*10)/10; }
@@ -1290,8 +1303,8 @@ function fmtAgo(ts){
 }
 const TASTE_ICON={sour:"🍋",good:"✅",bitter:"🔥"};
 function reviewHTML(key,d){
-  const recent=getLog(key).slice(-6).reverse();
-  const chips=recent.map(e=>`<span class="cup-chip"><b>${e.grind}</b> ${TASTE_ICON[e.taste]||""} <i>${fmtAgo(e.t)}</i></span>`).join("");
+  const log=getLog(key), recent=log.slice(-6).reverse();
+  const chips=recent.map(e=>`<span class="cup-chip"><b>${e.grind}</b>${e.stars?` <span class="cs">${"★".repeat(e.stars)}</span>`:""} ${TASTE_ICON[e.taste]||""} <i>${fmtAgo(e.t)}</i></span>`).join("");
   const sug=suggest(key,d); let sugHTML="";
   if(sug){
     if(sug.type==="dialed") sugHTML=`<div class="sug ok">${tr("sugDialed")}</div>`;
@@ -1300,15 +1313,25 @@ function reviewHTML(key,d){
       sugHTML=`<div class="sug act"><span>${msg} <b>${sug.from} → ${sug.to}</b></span>
         <button class="sug-btn" data-to="${sug.to}" type="button">${tr("applyTo")} ${sug.to}</button></div>`; }
   }
+  const rated=log.filter(e=>e.stars>0);
+  let statsHTML="";
+  if(rated.length){
+    const avg=(rated.reduce((s,e)=>s+e.stars,0)/rated.length).toFixed(1);
+    const best=Math.max(...rated.map(e=>e.stars));
+    statsHTML=`<div class="rv-stats">${tr("avgLbl")} <b>${avg}★</b> · ${tr("bestLbl")} <b>${"★".repeat(best)}</b> · ${log.length} ${tr("cupsLbl")}</div>`;
+  }
+  const stars=[1,2,3,4,5].map(i=>`<button class="star${i<=pendingStars?" on":""}" data-s="${i}" type="button" aria-label="${i}">★</button>`).join("");
   return `<div class="sec-t" style="margin-top:22px">${tr("rateTitle")}</div>
     <div class="review">
       <p class="rv-hint">${tr("rateHint")}</p>
+      <div class="stars-row"><span class="cups-lbl">${tr("qualityLbl")}</span><div class="stars" id="stars">${stars}</div></div>
       <div class="taste">
         <button class="taste-b" data-t="sour" type="button">${tr("tSour")}</button>
         <button class="taste-b good" data-t="good" type="button">${tr("tGood")}</button>
         <button class="taste-b" data-t="bitter" type="button">${tr("tBitter")}</button>
       </div>
       ${sugHTML}
+      ${statsHTML}
       ${recent.length?`<div class="cups-row"><span class="cups-lbl">${tr("recentCups")}</span>${chips}
         <button class="cups-clear" type="button">${tr("clearLog")}</button></div>`:""}
     </div>`;
@@ -1317,8 +1340,11 @@ function renderReview(key,d){ const a=$("#reviewWrap"); if(!a) return; a.innerHT
 function wireReview(key,d){
   const box=$("#reviewWrap"); if(!box) return;
   const curGrind=()=> ((getNote(key).grind||"").trim()) || d.grind;
+  box.querySelectorAll(".star").forEach(s=>{
+    s.onclick=()=>{ const v=+s.dataset.s; pendingStars = pendingStars===v?0:v; renderReview(key,d); };
+  });
   box.querySelectorAll(".taste-b").forEach(b=>{
-    b.onclick=()=>{ pushLog(key,b.dataset.t,curGrind()); toast(tr("logged")); renderReview(key,d); };
+    b.onclick=()=>{ pushLog(key,b.dataset.t,curGrind(),pendingStars); pendingStars=0; toast(tr("logged")); renderReview(key,d); };
   });
   const ab=box.querySelector(".sug-btn");
   if(ab) ab.onclick=()=>{ const to=ab.dataset.to; setNote(key,{...getNote(key),grind:to});
