@@ -246,6 +246,16 @@
   .note-saved.show{opacity:1}
   .custom-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   @media (max-width:460px){.custom-grid{grid-template-columns:repeat(2,1fr)}}
+  .grind-step{display:flex;align-items:stretch;gap:4px}
+  .grind-step input{flex:1;min-width:0;width:auto;text-align:center}
+  .gs-btn{flex:none;width:28px;background:var(--card-2);border:1px solid var(--hair);color:var(--ink);
+      border-radius:8px;font-size:1.1rem;line-height:1;cursor:pointer;font-family:inherit;padding:0}
+  .gs-btn:hover{border-color:var(--crema);color:var(--crema)}
+  .gs-btn:active{transform:scale(.92)}
+  .gs-btn:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .reset-recipe{margin-top:10px;background:none;border:none;color:var(--ink-soft);font-size:.76rem;
+      cursor:pointer;font-family:inherit;text-decoration:underline;padding:2px 0}
+  .reset-recipe:hover{color:var(--crema)}
   .readout .v.mine::after{content:"•";color:var(--led);font-size:.62em;vertical-align:super;margin-inline-start:2px;
       text-shadow:0 0 6px var(--led)}
 
@@ -1092,6 +1102,8 @@ const UI = {
   timeK:{en:"Time", he:"זמן"},
   yourDialIn:{en:"Your dial-in", he:"הכיול שלכם"},
   yourRecipe:{en:"Your recipe (override any number)", he:"המתכון שלכם (שנו כל מספר)"},
+  resetRecipe:{en:"↺ Reset to default", he:"↺ איפוס לברירת מחדל"},
+  finerA:{en:"finer", he:"דק יותר"}, coarserA:{en:"coarser", he:"גס יותר"},
   myGrind:{en:"My grind", he:"הטחינה שלי"},
   notes:{en:"Notes", he:"הערות"},
   notesPh:{en:"Bean, ratio, tweaks that worked…", he:"פולים, יחס, שינויים שעבדו…"},
@@ -1507,7 +1519,13 @@ function renderRecipe(){
     <div class="sec-t">${tr("yourRecipe")}</div>
     <div class="notes">
       <div class="custom-grid">
-        <div class="note-field"><label>${tr("grindK")}</label><input id="cGrind" inputmode="decimal" maxlength="8" placeholder="${dg}" /></div>
+        <div class="note-field"><label>${tr("grindK")}</label>
+          <div class="grind-step">
+            <button class="gs-btn" id="gMinus" type="button" aria-label="${tr("finerA")}" title="${tr("finerA")}">−</button>
+            <input id="cGrind" inputmode="decimal" maxlength="8" placeholder="${dg}" />
+            <button class="gs-btn" id="gPlus" type="button" aria-label="${tr("coarserA")}" title="${tr("coarserA")}">+</button>
+          </div>
+        </div>
         <div class="note-field"><label>${tr("doseK")}</label><input id="cDose" maxlength="12" placeholder="${t.dose}" /></div>
         <div class="note-field"><label>${tr("yieldK")}</label><input id="cYield" maxlength="14" placeholder="${t.yield}" /></div>
         <div class="note-field"><label>${tr("timeK")}</label><input id="cTime" maxlength="12" placeholder="${t.time}" /></div>
@@ -1516,6 +1534,7 @@ function renderRecipe(){
         <label>${tr("notes")} <span class="note-saved" id="noteSaved">${tr("saved")}</span></label>
         <textarea id="noteText" maxlength="500" placeholder="${tr("notesPh")}"></textarea>
       </div>
+      <button class="reset-recipe" id="resetRecipe" type="button">${tr("resetRecipe")}</button>
     </div>
 
     <div class="sec-t">${tr("steps")}</div>
@@ -1577,6 +1596,17 @@ function wireRecipeExtras(fkey){
     }; };
     bind(cGrind,"grind","rGrind"); bind(cDose,"dose","rDose"); bind(cYield,"yield","rYield"); bind(cTime,"time","rTime");
     nt.oninput=()=>{ const o=getNote(fkey); o.text=nt.value; setNote(fkey,o); flash(); };
+    // grind ± stepper (− finer / + coarser)
+    const nstep=g=> g<3.3?0.1:(g<7?0.2:0.3);
+    const nudge=dir=>{ let g=parseFloat((cGrind.value.trim()||cGrind.placeholder).replace(",",".")); if(isNaN(g)) g=parseFloat(cGrind.placeholder)||1;
+      g=Math.max(0,Math.min(9.9, g + dir*nstep(g)));
+      cGrind.value=(Math.round(g*10)/10).toString();
+      cGrind.dispatchEvent(new Event("input")); };
+    const gm=$("#gMinus"), gp=$("#gPlus");
+    if(gm) gm.onclick=()=>nudge(-1);
+    if(gp) gp.onclick=()=>nudge(1);
+    const rr=$("#resetRecipe");
+    if(rr) rr.onclick=()=>{ const o=getNote(fkey); delete o.grind; delete o.dose; delete o.yield; delete o.time; setNote(fkey,o); renderRecipe(); };
   }
 }
 
