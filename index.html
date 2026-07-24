@@ -6,6 +6,14 @@
 <meta name="theme-color" content="#17110c" />
 <title>Espresso — your brew guide</title>
 <meta name="description" content="Grind numbers and step-by-step recipes for the Varia VS3, DeLonghi Dedica and moka pot." />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Espresso" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -83,6 +91,20 @@
   .theme-btn:hover{color:var(--crema);transform:rotate(-12deg)}
   .theme-btn:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
 
+  /* ---- install banner ---- */
+  .install-banner{display:flex;align-items:center;gap:10px;margin:-4px 0 20px;
+      background:linear-gradient(100deg,color-mix(in oklab,var(--crema) 16%,var(--card)),var(--card));
+      border:1px solid color-mix(in oklab,var(--crema) 30%,var(--hair));border-radius:13px;padding:11px 12px 11px 14px}
+  .install-banner .ib-txt{flex:1;font-size:.82rem;color:var(--ink);line-height:1.35}
+  .install-banner .ib-txt b{color:var(--crema)}
+  .ib-btn{flex:none;border:none;background:var(--crema);color:#fff;font-family:inherit;font-weight:600;
+      font-size:.8rem;padding:8px 15px;border-radius:9px;cursor:pointer;transition:filter .15s}
+  .ib-btn:hover{filter:brightness(1.07)}
+  .ib-x{flex:none;background:none;border:none;color:var(--ink-soft);font-size:.9rem;cursor:pointer;
+      width:26px;height:26px;border-radius:7px;display:grid;place-items:center}
+  .ib-x:hover{color:var(--ink);background:var(--card-2)}
+  .ib-btn:focus-visible,.ib-x:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+
   .label{font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft);
       font-weight:600;margin:0 0 9px}
 
@@ -102,14 +124,36 @@
   .machine[aria-pressed="true"]::before{content:"";position:absolute;top:9px;right:9px;width:8px;height:8px;
       border-radius:50%;background:var(--crema-bright);box-shadow:0 0 0 3px color-mix(in oklab,var(--crema) 30%,transparent)}
 
+  /* ---- label row + mini button + favorites ---- */
+  .label-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .mini{background:none;border:1px solid var(--hair);color:var(--ink-soft);border-radius:999px;
+      font-family:inherit;font-size:.72rem;font-weight:600;padding:4px 11px;cursor:pointer;
+      transition:all .15s;margin-bottom:9px}
+  .mini:hover{color:var(--crema);border-color:var(--crema);transform:translateY(-1px)}
+  .mini:active{transform:scale(.95)}
+  .mini:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  #favWrap{margin-bottom:20px}
+  .favs{display:flex;flex-wrap:wrap;gap:7px}
+  .fav-chip{display:inline-flex;align-items:center;gap:7px;background:var(--card);
+      border:1px solid color-mix(in oklab,var(--crema) 34%,var(--hair));color:var(--ink);
+      padding:7px 13px;border-radius:999px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;
+      transition:all .15s}
+  .fav-chip:hover{border-color:var(--crema);transform:translateY(-1px)}
+  .fav-chip:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .fav-chip .fc-star{color:var(--crema);font-size:.78rem}
+  .fav-chip .fc-m{color:var(--ink-soft);font-weight:500;font-size:.72rem}
+
   /* ---- drink chips ---- */
   .drinks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px}
-  .chip{background:var(--card);border:1px solid var(--hair);color:var(--ink-soft);
+  .chip{position:relative;display:inline-flex;align-items:center;gap:6px;
+      background:var(--card);border:1px solid var(--hair);color:var(--ink-soft);
       padding:7px 13px;border-radius:999px;font-size:.82rem;font-weight:500;cursor:pointer;font-family:inherit;
       transition:all .15s ease}
-  .chip:hover{color:var(--ink);border-color:var(--crema)}
+  .chip:hover{color:var(--ink);border-color:var(--crema);transform:translateY(-1px)}
   .chip:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
   .chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+  .chip .cstar{color:var(--crema);font-size:.72rem;line-height:1}
+  .chip[aria-pressed="true"] .cstar{color:var(--crema-bright)}
 
   /* ---- recipe card ---- */
   .recipe{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow);
@@ -117,10 +161,31 @@
   @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.recipe{animation:none}}
 
-  .rhead{padding:20px 20px 4px}
+  .rhead{padding:20px 20px 4px;display:flex;align-items:flex-start;gap:12px}
+  .rhead .rh-t{flex:1;min-width:0}
   .rhead h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;letter-spacing:-.015em;margin:0;
       text-wrap:balance;line-height:1.05}
   .rhead .sub{color:var(--ink-soft);font-size:.86rem;margin:5px 0 0}
+  .fav-btn{flex:none;width:40px;height:40px;border-radius:11px;border:1px solid var(--hair);background:var(--card);
+      cursor:pointer;font-size:1.15rem;line-height:1;display:grid;place-items:center;color:var(--ink-soft);
+      transition:all .18s;font-family:inherit}
+  .fav-btn:hover{border-color:var(--crema);color:var(--crema);transform:scale(1.06)}
+  .fav-btn:active{transform:scale(.92)}
+  .fav-btn:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .fav-btn.on{background:color-mix(in oklab,var(--crema) 16%,var(--card));border-color:var(--crema);color:var(--crema)}
+
+  /* your dial-in notes */
+  .notes{margin:0 20px}
+  .notes-grid{display:flex;gap:10px;flex-wrap:wrap}
+  .note-field{flex:1;min-width:120px;display:flex;flex-direction:column;gap:4px}
+  .note-field label{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-weight:600}
+  .note-field input,.note-field textarea{background:var(--card-2);border:1px solid var(--hair);border-radius:9px;
+      color:var(--ink);font-family:inherit;font-size:.88rem;padding:9px 11px;width:100%;resize:vertical;transition:border-color .15s}
+  .note-field textarea{min-height:44px;line-height:1.4}
+  .note-field input{font-family:"JetBrains Mono",monospace}
+  .note-field input:focus,.note-field textarea:focus{outline:none;border-color:var(--crema)}
+  .note-saved{font-size:.7rem;color:var(--led);font-weight:600;opacity:0;transition:opacity .3s}
+  .note-saved.show{opacity:1}
 
   /* readout strip */
   .readout{margin:16px 20px 0;background:var(--readout-bg);border-radius:13px;padding:15px 8px;
@@ -289,10 +354,24 @@
     <button class="theme-btn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
   </header>
 
+  <div class="install-banner" id="installBanner" hidden>
+    <span class="ib-txt" id="ibTxt"></span>
+    <button class="ib-btn" id="ibBtn" type="button">Install</button>
+    <button class="ib-x" id="ibX" type="button" aria-label="Dismiss">✕</button>
+  </div>
+
+  <section id="favWrap" hidden>
+    <p class="label">★ Favorites</p>
+    <div class="favs" id="favs" role="group" aria-label="Favorite drinks"></div>
+  </section>
+
   <p class="label">1 · Machine</p>
   <div class="machines" id="machines" role="group" aria-label="Choose machine"></div>
 
-  <p class="label">2 · Drink</p>
+  <div class="label-row">
+    <p class="label">2 · Drink</p>
+    <button class="mini" id="surprise" type="button">🎲 Surprise me</button>
+  </div>
   <div class="drinks" id="drinks" role="group" aria-label="Choose drink"></div>
 
   <div id="recipe"></div>
@@ -725,7 +804,7 @@ function renderDrinks(){
     const b=document.createElement("button");
     b.className="chip"; b.type="button";
     b.setAttribute("aria-pressed", state.drink===key);
-    b.textContent=d.name;
+    b.innerHTML=`${isFav(state.machine+"/"+key)?'<span class="cstar" aria-hidden="true">★</span>':''}${d.name}`;
     b.onclick=()=>{ state.drink=key; save(); renderDrinks(); renderRecipe(); };
     dEl.appendChild(b);
   }
@@ -741,10 +820,13 @@ function renderRecipe(){
   const milkHTML=d.milk?`<div class="sec-t">Milk</div><div class="milk-box">
       <div class="mt">Texture &amp; heat</div>${d.milk}</div>`:"";
 
+  const fkey=state.machine+"/"+state.drink;
+  const fav=isFav(fkey);
   rEl.innerHTML=`<div class="recipe">
     <div class="rhead">
-      <h2>${d.name}</h2>
-      <p class="sub">${d.tag}</p>
+      <div class="rh-t"><h2>${d.name}</h2><p class="sub">${d.tag}</p></div>
+      <button class="fav-btn${fav?" on":""}" id="favBtn" type="button"
+        aria-pressed="${fav}" aria-label="Save to favorites" title="Save to favorites">${fav?"★":"☆"}</button>
     </div>
     <div class="readout" role="group" aria-label="Recipe numbers">
       <div class="cell grind"><div class="k">VS3 grind</div><div class="v">${d.grind}</div><div class="u">on dial</div></div>
@@ -753,6 +835,20 @@ function renderRecipe(){
       <div class="cell"><div class="k">Time</div><div class="v">${d.time}</div><div class="u">${d.temp}</div></div>
     </div>
     <p class="dial-note"><b>Dial in →</b><span>${d.dial}</span></p>
+
+    <div class="sec-t">Your dial-in</div>
+    <div class="notes">
+      <div class="notes-grid">
+        <div class="note-field" style="flex:0 0 116px">
+          <label>My grind</label>
+          <input id="noteGrind" inputmode="decimal" maxlength="6" placeholder="${d.grind}" />
+        </div>
+        <div class="note-field">
+          <label>Notes <span class="note-saved" id="noteSaved">saved ✓</span></label>
+          <textarea id="noteText" maxlength="500" placeholder="Bean, ratio, tweaks that worked…"></textarea>
+        </div>
+      </div>
+    </div>
 
     <div class="sec-t">Steps</div>
     ${playerHTML(d.steps)}
@@ -765,6 +861,71 @@ function renderRecipe(){
   </div>`;
   wirePlayer(d.steps);
   wireTimer(d.timer);
+  wireRecipeExtras(fkey);
+}
+
+/* --------------------------- favorites + notes + surprise --------------------------- */
+function getFavs(){ try{ return JSON.parse(localStorage.getItem("espresso.favs")||"[]"); }catch(e){ return []; } }
+function setFavs(a){ localStorage.setItem("espresso.favs", JSON.stringify(a)); }
+function isFav(key){ return getFavs().includes(key); }
+function toggleFav(key){
+  const a=getFavs(), i=a.indexOf(key); let now;
+  if(i>=0){ a.splice(i,1); now=false; } else { a.push(key); now=true; }
+  setFavs(a); return now;
+}
+function noteKey(k){ return "espresso.note."+k; }
+function getNote(k){ try{ return JSON.parse(localStorage.getItem(noteKey(k))||"{}"); }catch(e){ return {}; } }
+function setNote(k,o){ localStorage.setItem(noteKey(k), JSON.stringify(o)); }
+
+function wireRecipeExtras(fkey){
+  const favBtn=$("#favBtn");
+  if(favBtn){
+    favBtn.onclick=()=>{
+      const now=toggleFav(fkey);
+      favBtn.classList.toggle("on",now);
+      favBtn.textContent=now?"★":"☆";
+      favBtn.setAttribute("aria-pressed",now);
+      renderFavorites(); renderDrinks();
+    };
+  }
+  const ng=$("#noteGrind"), nt=$("#noteText"), saved=$("#noteSaved");
+  if(ng&&nt){
+    const cur=getNote(fkey); ng.value=cur.grind||""; nt.value=cur.text||"";
+    let t=null;
+    const persist=()=>{
+      setNote(fkey,{grind:ng.value.trim(), text:nt.value});
+      if(saved){ saved.classList.add("show"); clearTimeout(t); t=setTimeout(()=>saved.classList.remove("show"),1200); }
+    };
+    ng.oninput=persist; nt.oninput=persist;
+  }
+}
+
+function renderFavorites(){
+  const wrap=$("#favWrap"), box=$("#favs");
+  if(!wrap||!box) return;
+  const all=getFavs();
+  const favs=all.filter(k=>{ const [m,d]=k.split("/"); return MACHINES[m]&&MACHINES[m].drinks[d]; });
+  if(favs.length!==all.length) setFavs(favs);
+  if(!favs.length){ wrap.hidden=true; box.innerHTML=""; return; }
+  wrap.hidden=false; box.innerHTML="";
+  for(const k of favs){
+    const [m,dk]=k.split("/"); const d=MACHINES[m].drinks[dk];
+    const b=document.createElement("button");
+    b.className="fav-chip"; b.type="button";
+    b.innerHTML=`<span class="fc-star" aria-hidden="true">★</span>${d.name}<span class="fc-m">${MACHINES[m].name}</span>`;
+    b.onclick=()=>jumpTo(m,dk);
+    box.appendChild(b);
+  }
+}
+function jumpTo(m,dk){
+  state.machine=m; state.drink=dk; save();
+  renderMachines(); renderDrinks(); renderRecipe();
+  const r=$("#recipe"); if(r) window.scrollTo({top:r.getBoundingClientRect().top+window.scrollY-72, behavior:"smooth"});
+}
+function surprise(){
+  const ms=Object.keys(MACHINES), m=ms[Math.floor(Math.random()*ms.length)];
+  const ds=Object.keys(MACHINES[m].drinks), dk=ds[Math.floor(Math.random()*ds.length)];
+  jumpTo(m,dk);
 }
 
 /* --------------------------- step player --------------------------- */
@@ -865,7 +1026,40 @@ function restore(){
       if(s.drink && MACHINES[s.machine].drinks[s.drink]) state.drink=s.drink; } }catch(e){}
 }
 
-restore(); renderMachines(); renderDrinks(); renderRecipe();
+/* --------------------------- PWA: install + offline --------------------------- */
+const isStandalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+let deferredPrompt = null;
+const banner = $("#installBanner");
+function showBanner(html, withBtn){
+  if(!banner || isStandalone || localStorage.getItem("espresso.installDismissed")) return;
+  $("#ibTxt").innerHTML = html;
+  $("#ibBtn").hidden = !withBtn;
+  banner.hidden = false;
+}
+window.addEventListener("beforeinstallprompt",(e)=>{
+  e.preventDefault(); deferredPrompt = e;
+  showBanner("Install <b>Espresso</b> — one tap, works offline.", true);
+});
+if(banner){
+  $("#ibBtn").onclick = async ()=>{
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null; banner.hidden = true;
+  };
+  $("#ibX").onclick = ()=>{ banner.hidden = true; localStorage.setItem("espresso.installDismissed","1"); };
+  // iOS never fires beforeinstallprompt — show the manual hint instead
+  if(isiOS && !isStandalone){ showBanner("Add to your Home Screen: tap <b>Share</b> then <b>Add to Home Screen</b>.", false); }
+}
+window.addEventListener("appinstalled",()=>{ if(banner) banner.hidden = true; });
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
+}
+
+const surpriseBtn=$("#surprise"); if(surpriseBtn) surpriseBtn.onclick=surprise;
+
+restore(); renderFavorites(); renderMachines(); renderDrinks(); renderRecipe();
 </script>
 </body>
 </html>
