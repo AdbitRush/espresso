@@ -179,6 +179,83 @@
 
   footer{text-align:center;color:var(--ink-soft);font-size:.74rem;margin-top:26px;line-height:1.6}
   footer a{color:var(--crema)}
+
+  /* ---- animated step player ---- */
+  .player{margin:4px 20px 0;border:1px solid var(--hair);border-radius:15px;overflow:hidden;background:var(--card-2)}
+  .stage{position:relative;aspect-ratio:22/13;display:grid;place-items:center;
+      background:radial-gradient(130% 130% at 50% 8%,color-mix(in oklab,var(--crema) 13%,var(--card)),var(--card-2))}
+  .stage svg{width:74%;height:82%;display:block}
+  .stage .scene{animation:sceneIn .45s cubic-bezier(.2,.7,.3,1)}
+  @keyframes sceneIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+  .pctl{display:flex;align-items:center;gap:9px;padding:12px 12px 6px}
+  .pnav{flex:none;width:42px;height:42px;border:1px solid var(--hair);background:var(--card);border-radius:11px;
+      color:var(--ink);font-size:1.35rem;line-height:1;cursor:pointer;display:grid;place-items:center;
+      transition:border-color .15s,color .15s,transform .12s;font-family:inherit}
+  .pnav:hover:not(:disabled){border-color:var(--crema);color:var(--crema)}
+  .pnav:active:not(:disabled){transform:scale(.92)}
+  .pnav:disabled{opacity:.32;cursor:default}
+  .pnav:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .pmid{flex:1;min-width:0}
+  .prow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .pn{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--crema);font-weight:700}
+  .pauto{border:1px solid var(--hair);background:var(--card);color:var(--ink-soft);border-radius:999px;
+      font-size:.66rem;font-weight:600;letter-spacing:.04em;padding:3px 10px;cursor:pointer;font-family:inherit;
+      display:flex;align-items:center;gap:5px;transition:all .15s}
+  .pauto:hover{color:var(--crema);border-color:var(--crema)}
+  .pauto[aria-pressed="true"]{background:var(--crema);color:#fff;border-color:var(--crema)}
+  .pauto:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .ptext{margin:4px 0 0;font-size:.93rem;line-height:1.42}
+  .ptext b{color:var(--ink);font-weight:600}
+  .ptext .hl{color:var(--crema);font-weight:600;font-family:"JetBrains Mono",monospace;font-size:.9em}
+  .dots{display:flex;gap:6px;justify-content:center;padding:2px 0 12px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--hair);cursor:pointer;transition:transform .2s,background .2s}
+  .dots i.on{background:var(--crema);transform:scale(1.3)}
+  .dots i.done{background:color-mix(in oklab,var(--crema) 45%,var(--hair))}
+
+  .allsteps{margin:8px 20px 0}
+  .allsteps>summary{cursor:pointer;font-size:.78rem;color:var(--ink-soft);font-weight:600;
+      list-style:none;display:flex;align-items:center;gap:6px;padding:6px 0;user-select:none}
+  .allsteps>summary::-webkit-details-marker{display:none}
+  .allsteps>summary::before{content:"▸";color:var(--crema);transition:transform .2s;display:inline-block}
+  .allsteps[open]>summary::before{transform:rotate(90deg)}
+  .allsteps ol.steps{padding:6px 0 0}
+
+  /* scene primitives */
+  .scene .ln{fill:none;stroke:var(--ink);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+  .scene .lnS{fill:none;stroke:var(--ink-soft);stroke-width:4;stroke-linecap:round}
+  .scene .cr{fill:var(--crema)}
+  .scene .crL{fill:color-mix(in oklab,var(--crema) 40%,transparent)}
+  .scene .cd{fill:var(--card)}
+  .scene .ink{fill:var(--ink)}
+  .scene .wt{fill:color-mix(in oklab,var(--crema) 22%,var(--card))}
+  .scene .flame{fill:var(--copper)}
+  .scene [class*="a-"]{transform-box:fill-box}
+  .a-drip{animation:drip 1.1s ease-in infinite}
+  .a-steam{animation:steam 2.2s ease-out infinite}
+  .a-fall{animation:fall 1s ease-in infinite}
+  .a-press{animation:press 1.8s ease-in-out infinite;transform-origin:center}
+  .a-plunge{animation:plunge 1.9s ease-in-out infinite alternate;transform-origin:top}
+  .a-bubble{animation:bubble 1.8s ease-in infinite}
+  .a-spin{animation:spin 1.1s linear infinite;transform-origin:center}
+  .a-shk{animation:shk .32s ease-in-out infinite;transform-origin:center}
+  .a-tick{animation:spin 3s linear infinite;transform-origin:center}
+  .a-sway{animation:sway 2.6s ease-in-out infinite;transform-origin:top center}
+  .a-fill{animation:fillUp 2.6s ease-out infinite;transform-origin:bottom}
+  @keyframes drip{0%{transform:translateY(-4px);opacity:0}18%{opacity:1}100%{transform:translateY(44px);opacity:0}}
+  @keyframes steam{0%{transform:translateY(2px) scaleX(.9);opacity:0}30%{opacity:.65}100%{transform:translateY(-26px) scaleX(1.25);opacity:0}}
+  @keyframes fall{0%{transform:translateY(-8px);opacity:0}25%{opacity:1}100%{transform:translateY(40px);opacity:0}}
+  @keyframes press{0%,100%{transform:translateY(-6px)}55%{transform:translateY(6px)}}
+  @keyframes plunge{0%{transform:translateY(-2px)}100%{transform:translateY(30px)}}
+  @keyframes bubble{0%{transform:translateY(2px) scale(.5);opacity:0}30%{opacity:.85}100%{transform:translateY(-30px) scale(1);opacity:0}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes shk{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+  @keyframes sway{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+  @keyframes fillUp{0%{transform:scaleY(.05)}100%{transform:scaleY(1)}}
+  @media (prefers-reduced-motion:reduce){
+    .scene [class*="a-"]{animation:none !important}
+    .stage .scene{animation:none}
+  }
 </style>
 </head>
 <body>
@@ -215,13 +292,13 @@
 ----------------------------------------------------------------*/
 const BASE_GEAR = {
   scale:  {i:"⚖️", n:"0.1 g pocket scale", w:"Weigh dose in and shot out — the only way grind changes mean anything."},
-  beans:  {i:"🫘", n:"Fresh beans, rested 5–14 days", w:"Off-gassing settles after roast; stale beans won't crema no matter the grind."},
+  beans:  {i:"🌰", n:"Fresh beans, rested 5–14 days", w:"Off-gassing settles after roast; stale beans won't crema no matter the grind."},
   water:  {i:"💧", n:"Filtered water", w:"Half the cup is water. Tap scale ruins taste and clogs the boiler."},
 };
 
 const DEDICA_GEAR = {
   tamp51: {i:"🔨", n:"51 mm tamper", w:"The Dedica is 51 mm, not 58 — the plastic tamper it ships with is undersized.", star:"key"},
-  wdt:    {i:"🪡", n:"WDT distribution tool", w:"Stir the grounds with fine needles before tamping — kills channeling even in pressurized baskets."},
+  wdt:    {i:"🧷", n:"WDT distribution tool", w:"Stir the grounds with fine needles before tamping — kills channeling even in pressurized baskets."},
   funnel: {i:"⭕", n:"51 mm dosing funnel", w:"Grind straight into the basket with zero mess on the rim."},
   pitcher:{i:"🥛", n:"350 ml steel milk jug", w:"You can't texture milk in the plastic cup — a cold steel pitcher is essential for the wand."},
   therm:  {i:"🌡️", n:"Milk thermometer / temp strip", w:"Dedica's wand has no auto-stop. Pull at 60–65 °C or you scald the milk sweet spot."},
@@ -235,7 +312,7 @@ const MOKA_GEAR = {
 };
 
 const COLD_GEAR = {
-  jar:    {i:"🫙", n:"1 L jar or French press", w:"Any lidded jar works to steep; a French press doubles as the plunge-filter.", star:"key"},
+  jar:    {i:"🏺", n:"1 L jar or French press", w:"Any lidded jar works to steep; a French press doubles as the plunge-filter.", star:"key"},
   filter: {i:"☕", n:"Paper filter / fine mesh", w:"Coarse grounds slip through metal mesh — a paper pass makes it crystal clear, not silty."},
   bottle: {i:"🍾", n:"Sealed fridge bottle", w:"Concentrate keeps ~1 week sealed and cold. Airtight = it stays fresh, doesn't taste flat."},
   ice:    {i:"🧊", n:"Big ice cubes", w:"Large cubes melt slower so the drink dilutes gently instead of turning to water."},
@@ -392,7 +469,7 @@ const MACHINES = {
     },
   },
   moka:{
-    name:"Moka pot", sub:"Makineta · stovetop", ic:"🫖",
+    name:"Moka pot", sub:"Makineta · stovetop", ic:"🍵",
     drinks:{
       moka:{
         name:"Moka coffee", tag:"Rich stovetop brew · no pressure needed",
@@ -492,7 +569,7 @@ const MACHINES = {
     },
   },
   filter:{
-    name:"Filter", sub:"V60 · French press", ic:"🫗",
+    name:"Filter", sub:"V60 · French press", ic:"💧",
     drinks:{
       v60:{
         name:"V60 pour-over", tag:"Clean & bright · 1:16, ~20 g → 320 g",
@@ -525,6 +602,84 @@ const MACHINES = {
     },
   },
 };
+
+/* ------------------- animated step scenes (inline SVG) ------------------- */
+const SCENES={
+  grind:`<svg class="scene" viewBox="0 0 220 150"><path class="cd" d="M82 24h56l-7 22h-42z"/><path class="ln" d="M82 24h56l-7 22h-42z"/>
+    <ellipse class="cr" cx="102" cy="34" rx="6" ry="4.2"/><ellipse class="cr" cx="120" cy="31" rx="6" ry="4.2"/><ellipse class="cr" cx="111" cy="38" rx="6" ry="4.2"/>
+    <rect class="cd" x="88" y="46" width="44" height="38" rx="6"/><rect class="ln" x="88" y="46" width="44" height="38" rx="6" fill="none"/>
+    <circle class="ink a-spin" cx="110" cy="65" r="9"/><circle class="cd" cx="110" cy="65" r="3"/>
+    <path class="ln" d="M104 84v9M116 84v9"/>
+    <circle class="cr a-fall" cx="110" cy="100" r="2.6"/><circle class="cr a-fall" style="animation-delay:.35s" cx="106" cy="100" r="2.3"/><circle class="cr a-fall" style="animation-delay:.7s" cx="114" cy="100" r="2.3"/>
+    <path class="cd" d="M90 118h40v6a20 8 0 0 1-40 0z"/><path class="ln" d="M90 118h40v6a20 8 0 0 1-40 0z" fill="none"/><path class="ln" d="M130 121h28"/></svg>`,
+  tamp:`<svg class="scene" viewBox="0 0 220 150"><g class="a-press"><rect class="ink" x="102" y="24" width="16" height="26" rx="4"/><rect class="cr" x="88" y="50" width="44" height="12" rx="4"/></g>
+    <path class="cd" d="M84 74h52v10a26 10 0 0 1-52 0z"/><path class="ln" d="M84 74h52v10a26 10 0 0 1-52 0z" fill="none"/>
+    <rect class="crL" x="90" y="70" width="40" height="8" rx="3"/><path class="ln" d="M136 78h30l6 10"/></svg>`,
+  shot:`<svg class="scene" viewBox="0 0 220 150"><rect class="ink" x="86" y="28" width="48" height="14" rx="4"/><path class="ln" d="M134 35h26"/>
+    <path class="ink" d="M96 42h12v8h-12zM112 42h12v8h-12z"/>
+    <rect class="cr a-drip" x="100" y="58" width="3.4" height="12" rx="1.7"/><rect class="cr a-drip" style="animation-delay:.3s" x="117" y="58" width="3.4" height="12" rx="1.7"/>
+    <rect class="cr a-drip" style="animation-delay:.6s" x="100" y="58" width="3.4" height="12" rx="1.7"/>
+    <path class="cd" d="M88 92h48v20a24 14 0 0 1-48 0z"/><path class="ln" d="M88 92h48v22a24 14 0 0 1-48 0z" fill="none"/>
+    <ellipse class="cr" cx="112" cy="94" rx="23" ry="6"/><path class="ln" d="M136 98q20 2 20 16t-20 16"/></svg>`,
+  steam:`<svg class="scene" viewBox="0 0 220 150"><path class="lnS a-steam" d="M104 44q-7-10 0-19"/><path class="lnS a-steam" style="animation-delay:.7s" d="M118 44q7-10 0-19"/><path class="lnS a-steam" style="animation-delay:1.3s" d="M111 40q-6-9 0-17"/>
+    <path class="ln" d="M150 40l-30 18"/><path class="ink" d="M147 36l8 6-6 8-8-6z"/>
+    <path class="cd" d="M78 58h52l-6 46h-40z"/><path class="ln" d="M78 58h52l-6 46h-40z" fill="none"/><ellipse class="cr" cx="104" cy="60" rx="26" ry="5"/>
+    <path class="ln" d="M130 66q16 0 16 14t-14 14"/></svg>`,
+  pour:`<svg class="scene" viewBox="0 0 220 150"><g transform="rotate(24 96 44)"><path class="cd" d="M74 30h44l-5 30h-34z"/><path class="ln" d="M74 30h44l-5 30h-34z" fill="none"/><ellipse class="cr" cx="96" cy="32" rx="22" ry="4"/></g>
+    <path class="cr a-drip" d="M120 56c1 6 1 10 0 14" stroke="var(--crema)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path class="cd" d="M96 96h48v18a24 12 0 0 1-48 0z"/><path class="ln" d="M96 96h48v20a24 12 0 0 1-48 0z" fill="none"/><ellipse class="cr" cx="120" cy="98" rx="23" ry="5"/></svg>`,
+  water:`<svg class="scene" viewBox="0 0 220 150"><g transform="rotate(20 92 40)"><path class="cd" d="M70 26h40v26h-40z" rx="4"/><rect class="ln" x="70" y="26" width="40" height="26" rx="5" fill="none"/><path class="ln" d="M108 30q16 0 16 12"/></g>
+    <path class="lnS a-drip" d="M120 52v14" stroke-width="4"/>
+    <rect class="cd" x="98" y="72" width="44" height="46" rx="6"/><rect class="wt a-fill" x="101" y="78" width="38" height="37" rx="4"/><rect class="ln" x="98" y="72" width="44" height="46" rx="6" fill="none"/></svg>`,
+  bloom:`<svg class="scene" viewBox="0 0 220 150"><path class="ln" d="M84 46h52l-22 40h-8z"/><path class="cr" d="M92 54h36l-15 26h-6z"/>
+    <circle class="crL a-bubble" cx="104" cy="66" r="4"/><circle class="crL a-bubble" style="animation-delay:.6s" cx="116" cy="62" r="3.4"/><circle class="crL a-bubble" style="animation-delay:1.1s" cx="110" cy="70" r="3"/>
+    <path class="ln" d="M108 100v8"/><path class="cd" d="M92 108h32v8a16 8 0 0 1-32 0z"/><path class="ln" d="M92 108h32v8a16 8 0 0 1-32 0z" fill="none"/></svg>`,
+  spiral:`<svg class="scene" viewBox="0 0 220 150"><g transform="rotate(22 78 40)"><rect class="cd" x="56" y="26" width="40" height="26" rx="6"/><rect class="ln" x="56" y="26" width="40" height="26" rx="6" fill="none"/><path class="ln" d="M96 32q18 1 20 12"/></g>
+    <path class="lnS a-drip" d="M116 52v16" stroke-width="4"/>
+    <path class="ln" d="M86 74h52l-22 40h-8z"/><path class="cr" d="M94 82h36l-15 26h-6z"/>
+    <path class="ln" d="M110 128v6"/></svg>`,
+  plunge:`<svg class="scene" viewBox="0 0 220 150"><rect class="cd" x="86" y="46" width="48" height="66" rx="6"/><rect class="cr" x="89" y="74" width="42" height="35" rx="4"/>
+    <g class="a-plunge"><rect class="ink" x="106" y="20" width="8" height="34" rx="4"/><rect class="ink" x="88" y="52" width="44" height="7" rx="3"/></g>
+    <rect class="ln" x="86" y="46" width="48" height="66" rx="6" fill="none"/><path class="ln" d="M134 60q14 4 14 18t-14 16"/><rect class="ink" x="82" y="112" width="56" height="7" rx="3"/></svg>`,
+  moka:`<svg class="scene" viewBox="0 0 220 150"><circle class="crL a-bubble" cx="132" cy="44" r="3.4"/><circle class="crL a-bubble" style="animation-delay:.7s" cx="136" cy="40" r="3"/>
+    <path class="ink" d="M128 46h12l-3 10h-6z"/><path class="cd" d="M96 46h34l-4 12h-26z"/><path class="ln" d="M96 46h34l-4 12h-26z" fill="none"/><path class="ln" d="M124 44l8-6"/>
+    <path class="cd" d="M92 58h40l-6 40h-28z"/><path class="ln" d="M92 58h40l-6 40h-28z" fill="none"/><path class="ln" d="M132 66q10 2 10 10"/>
+    <path class="ln" d="M96 98h32"/><path class="flame a-sway" d="M104 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/>
+    <path class="flame a-sway" style="animation-delay:.4s" d="M118 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/></svg>`,
+  steep:`<svg class="scene" viewBox="0 0 220 150"><path class="lnS" d="M150 34l7 4-7 4M154 38h-14"/><path class="lnS" d="M64 30v14M57 37h14M60 33l8 8M60 41l8-8"/>
+    <rect class="cd" x="88" y="40" width="44" height="70" rx="8"/><rect class="cr" x="91" y="66" width="38" height="41" rx="4"/><rect class="crL" x="91" y="60" width="38" height="8"/>
+    <circle class="cd a-bubble" style="animation-duration:3s" cx="104" cy="92" r="2.6"/><circle class="cd a-bubble" style="animation-duration:3.4s;animation-delay:1.2s" cx="116" cy="96" r="2.2"/>
+    <rect class="ln" x="88" y="40" width="44" height="70" rx="8" fill="none"/><rect class="ink" x="96" y="32" width="28" height="10" rx="3"/></svg>`,
+  strain:`<svg class="scene" viewBox="0 0 220 150"><path class="ln" d="M84 34h52l-20 30h-12z"/><path class="cr" d="M92 40h36l-13 20h-10z"/>
+    <path class="cr a-drip" d="M110 66v10" stroke="var(--crema)" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <path class="cd" d="M90 84h40v22a20 10 0 0 1-40 0z"/><path class="ln" d="M90 84h40v24a20 10 0 0 1-40 0z" fill="none"/><rect class="cr" x="94" y="98" width="32" height="12" rx="2"/></svg>`,
+  iced:`<svg class="scene" viewBox="0 0 220 150"><path class="cr a-drip" x="108" d="M110 34v14" stroke="var(--crema)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path class="cd" d="M92 54h40l-5 58h-30z"/><path class="wt" d="M95 74h34l-4 36h-26z"/>
+    <rect class="cd" x="99" y="62" width="13" height="13" rx="2" transform="rotate(12 105 68)"/><rect class="cd" x="112" y="76" width="13" height="13" rx="2" transform="rotate(-14 118 82)"/><rect class="cd" x="101" y="88" width="12" height="12" rx="2" transform="rotate(20 107 94)"/>
+    <path class="ln" d="M92 54h40l-6 58h-28z" fill="none"/><path class="ln" d="M99 62h13v13M112 76h13v13" opacity=".5"/></svg>`,
+  shake:`<svg class="scene" viewBox="0 0 220 150"><g class="a-shk"><path class="cd" d="M96 40h28l4 54a18 12 0 0 1-36 0z"/><path class="cr" d="M97 70h26l2 22a14 9 0 0 1-30 0z"/><path class="ln" d="M96 40h28l4 54a18 12 0 0 1-36 0z" fill="none"/><rect class="ink" x="98" y="28" width="24" height="14" rx="4"/>
+    <circle class="crL" cx="105" cy="80" r="2.5"/><circle class="crL" cx="116" cy="86" r="2.5"/><circle class="crL" cx="110" cy="92" r="2.5"/></g></svg>`,
+  serve:`<svg class="scene" viewBox="0 0 220 150"><path class="lnS a-steam" d="M100 52q-7-10 0-19"/><path class="lnS a-steam" style="animation-delay:.7s" d="M114 52q7-10 0-19"/><path class="lnS a-steam" style="animation-delay:1.3s" d="M107 48q-6-9 0-16"/>
+    <rect class="cd" x="74" y="60" width="70" height="42" rx="12"/><ellipse class="cr" cx="109" cy="64" rx="34" ry="7"/><path class="ln" d="M144 68q22 2 22 17t-22 17"/>
+    <rect class="ln" x="74" y="60" width="70" height="42" rx="14" fill="none"/><rect class="cr" x="82" y="108" width="56" height="8" rx="4"/></svg>`,
+};
+const SCENE_RULES=[
+  [/shake|shaker/,'shake'],[/plunger|plunge/,'plunge'],[/bloom/,'bloom'],
+  [/spiral|drawdown/,'spiral'],[/gurgle|\bassemble\b|medium heat|stovetop|moka pot/,'moka'],
+  [/steep|fridge|seal and/,'steep'],[/rinse/,'water'],
+  [/strain|paper filter|through .*mesh|double-strain/,'strain'],
+  [/\bice\b|iced|over the ice|tall glass with/,'iced'],
+  [/steam|texture it|microfoam|stretch/,'steam'],[/grind/,'grind'],
+  [/\btamp\b|wdt|distribut|level the bed/,'tamp'],
+  [/pull a|shot|first drip|espresso over|brew a|blank shot/,'shot'],
+  [/top with|pour.{0,12}milk|cold milk|spoon.*foam|dollop/,'pour'],
+  [/boil water|fill.*water|add.*water|combine with|off the boil|water just/,'water'],
+];
+function sceneFor(step){
+  const t=step.toLowerCase();
+  for(const [re,name] of SCENE_RULES){ if(re.test(t)) return name; }
+  return 'serve';
+}
 
 /* --------------------------- render --------------------------- */
 const state={ machine:null, drink:null };
@@ -559,7 +714,7 @@ function renderDrinks(){
 }
 
 function renderRecipe(){
-  stopTimer();
+  stopTimer(); stopAuto();
   if(!state.machine || !state.drink){ rEl.innerHTML=""; return; }
   const d=MACHINES[state.machine].drinks[state.drink];
   const gearHTML=d.gear.map(x=>`<li><span class="gi" aria-hidden="true">${x.i}</span>
@@ -582,13 +737,66 @@ function renderRecipe(){
     <p class="dial-note"><b>Dial in →</b><span>${d.dial}</span></p>
 
     <div class="sec-t">Steps</div>
+    ${playerHTML(d.steps)}
     ${timerHTML(d.timer)}
-    <ol class="steps">${d.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+    <details class="allsteps"><summary>All steps as a list</summary>
+      <ol class="steps">${d.steps.map(s=>`<li>${s}</li>`).join("")}</ol></details>
     ${milkHTML}
     <div class="sec-t" style="margin-top:22px">Gear that helps</div>
     <div class="gear"><ul>${gearHTML}</ul></div>
   </div>`;
+  wirePlayer(d.steps);
   wireTimer(d.timer);
+}
+
+/* --------------------------- step player --------------------------- */
+let pSteps=[], pScenes=[], pIdx=0, pAuto=false, pTimer=null;
+function playerHTML(steps){
+  pSteps=steps; pScenes=steps.map(sceneFor); pIdx=0;
+  const dots=steps.map((_,i)=>`<i data-i="${i}" class="${i===0?'on':''}"></i>`).join("");
+  return `<div class="player">
+    <div class="stage" id="stage">${SCENES[pScenes[0]]}</div>
+    <div class="pctl">
+      <button class="pnav" id="pprev" type="button" aria-label="Previous step" disabled>‹</button>
+      <div class="pmid">
+        <div class="prow"><span class="pn" id="pn">Step 1 / ${steps.length}</span>
+          <button class="pauto" id="pauto" type="button" aria-pressed="false">▶ Auto</button></div>
+        <p class="ptext" id="ptext">${steps[0]}</p>
+      </div>
+      <button class="pnav" id="pnext" type="button" aria-label="Next step"${steps.length<2?' disabled':''}>›</button>
+    </div>
+    <div class="dots" id="dots">${dots}</div>
+  </div>`;
+}
+function setStep(i){
+  pIdx=Math.max(0,Math.min(pSteps.length-1,i));
+  const stage=$("#stage"); if(!stage) return;
+  stage.innerHTML=SCENES[pScenes[pIdx]]||SCENES.serve;
+  $("#ptext").innerHTML=pSteps[pIdx];
+  $("#pn").textContent=`Step ${pIdx+1} / ${pSteps.length}`;
+  $("#pprev").disabled=pIdx===0;
+  $("#pnext").disabled=pIdx===pSteps.length-1;
+  [...$("#dots").children].forEach((el,j)=>{
+    el.className = j===pIdx?"on":(j<pIdx?"done":"");
+  });
+}
+function stopAuto(){ if(pTimer){ clearInterval(pTimer); pTimer=null; } pAuto=false;
+  const b=$("#pauto"); if(b){ b.setAttribute("aria-pressed","false"); b.textContent="▶ Auto"; } }
+function wirePlayer(steps){
+  if(!steps||!steps.length) return;
+  const prev=$("#pprev"), next=$("#pnext"), auto=$("#pauto"), dots=$("#dots");
+  prev.onclick=()=>{ stopAuto(); setStep(pIdx-1); };
+  next.onclick=()=>{ stopAuto(); setStep(pIdx+1); };
+  dots.onclick=e=>{ const i=e.target.dataset.i; if(i!=null){ stopAuto(); setStep(+i); } };
+  auto.onclick=()=>{
+    if(pAuto){ stopAuto(); return; }
+    pAuto=true; auto.setAttribute("aria-pressed","true"); auto.textContent="⏸ Auto";
+    if(pIdx>=pSteps.length-1) setStep(0);
+    pTimer=setInterval(()=>{
+      if(pIdx>=pSteps.length-1){ stopAuto(); return; }
+      setStep(pIdx+1);
+    },3800);
+  };
 }
 
 /* ----------------------------- timer ----------------------------- */
