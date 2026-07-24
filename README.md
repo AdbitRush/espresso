@@ -41,7 +41,9 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 - **Share / deep links** — every drink has its own URL (`…/#dedica/cappuccino`); the share button uses the native share sheet on mobile or copies the link. Opening a shared link lands right on that recipe.
 - **Gear that helps** per drink — with the *why*, and the 51 mm tamper flagged as essential.
 - **Installable PWA** — add to your home screen, runs fullscreen and **offline** (service worker + app icons).
-- Light / dark coffee theme, remembers your last pick.
+- **Bilingual EN / עברית** with full RTL — every drink, step, and gear item translated; toggle in the header.
+- **QR code** on the page — scan from desktop to open it on your phone (`make_qr.py` regenerates it).
+- Light / dark coffee theme, remembers your last pick + language.
 
 ## Install on your phone
 

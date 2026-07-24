@@ -1,10 +1,10 @@
 /* Espresso PWA service worker.
    - Page/HTML: network-first (fresh when online, cached fallback offline)
    - Everything else (icons, fonts): stale-while-revalidate */
-const V = "espresso-v2";
+const V = "espresso-v3";
 const SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
-  "./favicon.svg", "./favicon-32.png",
+  "./favicon.svg", "./favicon-32.png", "./qr.svg",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png",
 ];
 

@@ -90,6 +90,19 @@
       transition:transform .15s ease,color .15s ease}
   .theme-btn:hover{color:var(--crema);transform:rotate(-12deg)}
   .theme-btn:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
+  .head-actions{display:flex;gap:8px;align-items:center;flex:none}
+  .lang-btn{width:auto;min-width:44px;padding:0 13px;font-size:.8rem;font-weight:600;letter-spacing:.01em}
+  .lang-btn:hover{transform:none}
+
+  /* ---- RTL (Hebrew) ---- */
+  [dir="rtl"] ol.steps{padding:6px 0 0}
+  [dir="rtl"] ol.steps li{padding:0 40px 16px 0}
+  [dir="rtl"] ol.steps li::before{left:auto;right:0}
+  [dir="rtl"] ol.steps li:not(:last-child)::after{left:auto;right:13px}
+  [dir="rtl"] .note-field input,[dir="rtl"] .note-field textarea{text-align:right}
+  [dir="rtl"] .qr-link{direction:ltr;display:inline-block}
+  [dir="rtl"] .cell .v{direction:ltr;unicode-bidi:plaintext}
+  [dir="rtl"] .theme-btn:hover{transform:none}
 
   /* ---- install banner ---- */
   .install-banner{display:flex;align-items:center;gap:10px;margin:-4px 0 20px;
@@ -261,6 +274,20 @@
   .gear .star{color:var(--crema);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
       border:1px solid var(--crema);border-radius:5px;padding:1px 5px;margin-left:6px;white-space:nowrap}
 
+  /* ---- QR card ---- */
+  .qr-card{display:flex;align-items:center;gap:16px;margin-top:26px;padding:16px;
+      background:var(--card);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow)}
+  .qr-frame{flex:none;background:#fff;border-radius:12px;padding:9px;line-height:0;
+      box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+  .qr-frame img{display:block;width:120px;height:120px;image-rendering:pixelated}
+  .qr-txt{min-width:0}
+  .qr-h{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;margin:0}
+  .qr-s{font-size:.8rem;color:var(--ink-soft);margin:4px 0 8px;line-height:1.4}
+  .qr-link{font-family:"JetBrains Mono",monospace;font-size:.76rem;color:var(--crema);
+      text-decoration:none;word-break:break-all}
+  .qr-link:hover{text-decoration:underline}
+  @media (max-width:420px){.qr-card{flex-direction:column;text-align:center}}
+
   footer{text-align:center;color:var(--ink-soft);font-size:.74rem;margin-top:26px;line-height:1.6}
   footer a{color:var(--crema)}
 
@@ -360,7 +387,10 @@
         <p>Grind &amp; recipe guide · your kit</p>
       </div>
     </div>
-    <button class="theme-btn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+    <div class="head-actions">
+      <button class="theme-btn lang-btn" id="langBtn" type="button" aria-label="Switch language">עברית</button>
+      <button class="theme-btn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+    </div>
   </header>
 
   <div class="install-banner" id="installBanner" hidden>
@@ -370,24 +400,34 @@
   </div>
 
   <section id="favWrap" hidden>
-    <p class="label">★ Favorites</p>
+    <p class="label" id="lblFavs">★ Favorites</p>
     <div class="favs" id="favs" role="group" aria-label="Favorite drinks"></div>
   </section>
 
-  <p class="label">1 · Machine</p>
+  <p class="label" id="lblMachine">1 · Machine</p>
   <div class="machines" id="machines" role="group" aria-label="Choose machine"></div>
 
   <div class="label-row">
-    <p class="label">2 · Drink</p>
+    <p class="label" id="lblDrink">2 · Drink</p>
     <button class="mini" id="surprise" type="button">🎲 Surprise me</button>
   </div>
   <div class="drinks" id="drinks" role="group" aria-label="Choose drink"></div>
 
   <div id="recipe"></div>
 
+  <section class="qr-card" aria-label="Open on your phone">
+    <div class="qr-frame"><img src="qr.svg" width="128" height="128"
+      alt="QR code to open Espresso on your phone" /></div>
+    <div class="qr-txt">
+      <p class="qr-h">Open on your phone</p>
+      <p class="qr-s">Scan with your camera — then Add to Home Screen to install it.</p>
+      <a class="qr-link" href="https://espresso.178-105-148-72.sslip.io/">espresso.178-105-148-72.sslip.io</a>
+    </div>
+  </section>
+
   <footer>
-    VS3 dial runs ~0–20 (finer = lower). Numbers are <b>starting points</b> — taste, then nudge.<br />
-    Built for Or's kitchen · <a href="https://github.com/AdbitRush/espresso">github.com/AdbitRush/espresso</a>
+    <span id="footNote">VS3 dial runs ~0–20 (finer = lower). Numbers are <b>starting points</b> — taste, then nudge.</span><br />
+    <span id="footBuilt">Built for Or's kitchen · <a href="https://github.com/AdbitRush/espresso">github.com/AdbitRush/espresso</a></span>
   </footer>
 </div>
 
@@ -787,6 +827,224 @@ function sceneFor(step){
   return 'serve';
 }
 
+/* --------------------------- i18n (EN / HE) --------------------------- */
+let lang = "en";
+const UI = {
+  tagline:{en:"Grind & recipe guide · your kit", he:"מדריך טחינה ומתכונים · הערכה שלך"},
+  mLabel:{en:"1 · Machine", he:"1 · מכונה"},
+  dLabel:{en:"2 · Drink", he:"2 · משקה"},
+  favs:{en:"★ Favorites", he:"★ מועדפים"},
+  surprise:{en:"🎲 Surprise me", he:"🎲 הפתיעו אותי"},
+  pickMachine:{en:"Pick a machine first ↑", he:"בחרו מכונה קודם ↑"},
+  installTxt:{en:"Install <b>Espresso</b> — one tap, works offline.", he:"התקינו את <b>Espresso</b> — נקישה אחת, עובד גם לא-מקוון."},
+  installBtn:{en:"Install", he:"התקנה"},
+  iosHint:{en:"Add to your Home Screen: tap <b>Share</b> then <b>Add to Home Screen</b>.", he:"הוסיפו למסך הבית: הקישו <b>שיתוף</b> ואז <b>הוסף למסך הבית</b>."},
+  dialIn:{en:"Dial in →", he:"→ כיול"},
+  grindK:{en:"VS3 grind", he:"טחינת VS3"}, onDial:{en:"on dial", he:"בחוגה"},
+  doseK:{en:"Dose", he:"מנה"}, inU:{en:"in", he:"פנימה"},
+  yieldK:{en:"Yield", he:"תפוקה"}, outU:{en:"out", he:"החוצה"},
+  timeK:{en:"Time", he:"זמן"},
+  yourDialIn:{en:"Your dial-in", he:"הכיול שלכם"},
+  myGrind:{en:"My grind", he:"הטחינה שלי"},
+  notes:{en:"Notes", he:"הערות"},
+  notesPh:{en:"Bean, ratio, tweaks that worked…", he:"פולים, יחס, שינויים שעבדו…"},
+  saved:{en:"saved ✓", he:"נשמר ✓"},
+  steps:{en:"Steps", he:"שלבים"}, step:{en:"Step", he:"שלב"},
+  allSteps:{en:"All steps as a list", he:"כל השלבים כרשימה"},
+  milk:{en:"Milk", he:"חלב"}, milkSub:{en:"Texture & heat", he:"מרקם וחום"},
+  gear:{en:"Gear that helps", he:"ציוד שעוזר"},
+  keyTag:{en:"key", he:"חובה"},
+  target:{en:"target", he:"יעד"},
+  start:{en:"Start", he:"התחלה"}, stop:{en:"Stop", he:"עצירה"}, reset:{en:"Reset", he:"איפוס"},
+  auto:{en:"Auto", he:"אוטו'"},
+  shareTitle:{en:"Share this drink", he:"שיתוף המשקה"},
+  favTitle:{en:"Save to favorites", he:"שמירה למועדפים"},
+  copied:{en:"Link copied ✓", he:"הקישור הועתק ✓"},
+  copyFail:{en:"Couldn't copy this link", he:"לא הצלחתי להעתיק את הקישור"},
+  qrH:{en:"Open on your phone", he:"פתחו בטלפון"},
+  qrS:{en:"Scan with your camera — then Add to Home Screen to install it.", he:"סרקו עם המצלמה — ואז הוסיפו למסך הבית כדי להתקין."},
+  footer:{en:'VS3 dial runs ~0–20 (finer = lower). Numbers are <b>starting points</b> — taste, then nudge.', he:'חוגת ה-VS3 נעה ~0–20 (דק יותר = נמוך יותר). המספרים הם <b>נקודות התחלה</b> — לטעום, ואז לכוונן.'},
+  builtFor:{en:"Built for Or's kitchen", he:"נבנה למטבח של אור"},
+  langBtn:{en:"עברית", he:"EN"},
+};
+function tr(k){ const o=UI[k]||{}; return o[lang]||o.en||k; }
+
+const HE_MACHINES = {
+  dedica:{name:"דדיקה", sub:"מכונת אספרסו"},
+  moka:{name:"מקינטה", sub:"מקינטה · על הכיריים"},
+  cold:{name:"קולד ברו", sub:"ללא חום · השרייה"},
+  filter:{name:"פילטר", sub:"V60 · פרנץ' פרס"},
+};
+const HE_GEAR = {
+  "0.1 g pocket scale":{n:"משקל כיס 0.1 גרם", w:"שוקלים מנה פנימה ושוט החוצה — הדרך היחידה ששינויי טחינה באמת אומרים משהו."},
+  "Fresh beans, rested 5–14 days":{n:"פולים טריים, במנוחה 5–14 יום", w:"שחרור הגזים נרגע אחרי הקלייה; פולים ישנים לא ייצרו קרמה לא משנה הטחינה."},
+  "Filtered water":{n:"מים מסוננים", w:"חצי מהכוס זה מים. מים קשים הורסים טעם וסותמים את הבוילר."},
+  "51 mm tamper":{n:"טמפר 51 מ״מ", w:"הדדיקה היא 51 מ״מ, לא 58 — הטמפר הפלסטיק שמגיע איתה קטן מדי."},
+  "WDT distribution tool":{n:"כלי פיזור WDT", w:"מערבבים את הקפה במחטים דקות לפני הטמפינג — מונע ערוצים גם בסלים בלחץ."},
+  "51 mm dosing funnel":{n:"משפך מינון 51 מ״מ", w:"טוחנים ישר לתוך הסל בלי ללכלך את השוליים."},
+  "350 ml steel milk jug":{n:"כד חלב פלדה 350 מ״ל", w:"אי אפשר להקציף חלב בכוס הפלסטיק — כד פלדה קר הוא חובה למקציף."},
+  "Milk thermometer / temp strip":{n:"מדחום חלב / מדבקת חום", w:"למקציף של הדדיקה אין עצירה אוטומטית. מוציאים ב-60–65°C או שורפים את נקודת המתיקות."},
+  "Knock box":{n:"קופסת נקישה", w:"מוציאים את הפאק במכה אחת במקום לחפור בסל."},
+  "Spare silicone gasket":{n:"אטם סיליקון רזרבי", w:"הגומי מתקשה ודולף — רזרבי שומר על הלחץ (והקפה) במקום."},
+  "Handheld milk frother":{n:"מקציף חלב ידני", w:"אין מקל קיטור כאן — מטרפה זולה מקציפה חלב חם למוקה קפוצ'ינו."},
+  "Small burner / trivet":{n:"להבה קטנה / רשת", w:"להבה גדולה שמלקקת את הצדדים שורפת את הסיר. שומרים את הבסיס על טבעת קטנה."},
+  "1 L jar or French press":{n:"צנצנת 1 ליטר או פרנץ' פרס", w:"כל צנצנת עם מכסה מתאימה להשרייה; פרנץ' פרס משמש גם כמסננת."},
+  "Paper filter / fine mesh":{n:"פילטר נייר / רשת דקה", w:"פולים גסים חומקים דרך רשת מתכת — מעבר בנייר עושה את זה צלול, לא בוצי."},
+  "Sealed fridge bottle":{n:"בקבוק אטום למקרר", w:"הקונצנטרט שומר ~שבוע אטום וקר. אטום = נשאר טרי, לא שטוח."},
+  "Big ice cubes":{n:"קוביות קרח גדולות", w:"קוביות גדולות נמסות לאט כך שהמשקה מדולל בעדינות במקום להפוך למים."},
+  "V60 dripper + paper filters":{n:"מחזיק V60 + פילטרים", w:"הקונוס + הנייר הם מה שנותן לפור-אובר את הכוס הנקייה והבהירה."},
+  "French press (350–1000 ml)":{n:"פרנץ' פרס (350–1000 מ״ל)", w:"השרייה עם רשת מתכת — בלי נייר, אז יותר גוף ושמנים בכוס."},
+  "Gooseneck kettle":{n:"קומקום צוואר ברבור", w:"הזרבובית הדקה נותנת את המזיגה האיטית והמכוונת שצריך לחילוץ אחיד."},
+  "Cocktail shaker or lidded jar":{n:"שייקר או צנצנת עם מכסה", w:"ניעור אספרסו חזק עם קרח הופך שייקרטו לקצף משיי."},
+};
+const HE_TIMER = {"Shot time":"זמן שוט","On the heat":"על האש","Total brew":"זמן חליטה","Steep":"השרייה"};
+const VAL_HE = [
+  [/fill basket/i,"מילוי סל"],[/full pot/i,"סיר מלא"],[/use concentrate/i,"קונצנטרט"],
+  [/pot \+ water/i,"סיר + מים"],[/pot \+ milk/i,"סיר + חלב"],[/tonic \+ ice/i,"טוניק + קרח"],
+  [/1:1 milk/i,"1:1 חלב"],[/ \+ water/i," + מים"],[/ water/i," מים"],
+  [/over ice/i,"על קרח"],[/in fridge/i,"במקרר"],[/\biced\b/i,"קר"],
+  [/low.{0,3}med heat/i,"אש נמוכה"],[/warm milk/i,"חלב חם"],[/ milk/i," חלב"],
+  [/ min\b/i," דק'"],[/ h\b/i," שע'"],[/ s\b/i," שנ'"],
+];
+function tv(s){ if(lang!=="he"||!s) return s; let r=s; for(const [re,he] of VAL_HE) r=r.replace(re,he); return r; }
+
+const HE_DRINKS = {
+  "dedica/espresso":{name:"אספרסו", tag:"השוט הבסיסי · 1:2 ב-25–30 שנ'",
+    dial:"מהיר וחיוור מדי → לכו <b>דק יותר</b> (2.2). נחנק / מטפטף לנצח → <b>גס יותר</b> (2.9).",
+    steps:["מדליקים ומחממים <b>לפחות 3 דק'</b>. נועלים את הפורטהפילטר הריק ומריצים שוט סרק לחימום הראש והכוס.",
+      "טוחנים <span class='hl'>14 g</span> לתוך הסל הכפול ב-VS3 <span class='hl'>2.5</span>.",
+      "נותנים ערבוב <b>WDT</b> מהיר, מיישרים את המצע, וטמפרים <b>בעדינות ואחיד</b> — סלים בלחץ לא צריכים כוח.",
+      "נועלים, שמים את הכוס החמה מתחת, ומתחילים את השוט מיד.",
+      "מכוונים ל-<span class='hl'>~28 g החוצה ב-25–30 שנ'</span> מהטיפה הראשונה. חמוץ = דק יותר; מר וחריף = גס יותר."]},
+  "dedica/americano":{name:"אמריקנו", tag:"אספרסו מדולל במים חמים",
+    dial:"אותו שוט כמו אספרסו. אם יוצא דליל, פחות מים — לא טחינה דקה יותר.",
+    steps:["מחלצים דאבל רגיל: <span class='hl'>14 g פנימה → 28 g החוצה</span> ב-VS3 <span class='hl'>2.5</span>.",
+      "ממלאים את הכוס ב-<span class='hl'>120–180 ml</span> מים חמים <b>קודם</b>.",
+      "מוזגים את השוט <b>מעל</b> המים — כך הקרמה צפה במקום להתרסק.",
+      "מכוונים עוצמה עם כמות המים, לא עם הטחינה."]},
+  "dedica/cappuccino":{name:"קפוצ'ינו", tag:"1:1:1 — שוט, חלב, קצף",
+    dial:"מכווננים את השוט כמו אספרסו; האופי מגיע מ<b>כובע קצף עבה של ס״מ</b>.",
+    milk:"ממלאים את כד הפלדה 1/3 בחלב קר. מנקים את המקל, ואז <b>מותחים 4–5 שנ'</b> על פני השטח (שריקה) לבניית קצף, שוקעים לחימום ל-<b>60–65°C</b>, מנגבים ומנקים.",
+    steps:["מחלצים דאבל אספרסו לכוס 150–180 מ״ל.",
+      "מקציפים חלב עם <b>קצף עבה</b> — הרבה מתיחה על פני השטח.",
+      "מוזגים בערך ל-<span class='hl'>1/3 אספרסו · 1/3 חלב · 1/3 קצף</span>.",
+      "מחזיקים את הקצף עם כף, מוזגים את החלב, ומסיימים עם כובע הקצף."]},
+  "dedica/latte":{name:"לאטה", tag:"דאבל שוט טובע בחלב משיי",
+    dial:"נפח חלב גדול מסתיר שוט חלש — שומרים את הדאבל <b>הדוק (1:2)</b> שיחתוך.",
+    milk:"ממלאים כד ~1/2 בחלב קר. <b>מתיחה קצרה 2–3 שנ'</b> ואז שוקעים — רוצים <b>מיקרו-קצף דק</b>, לא כובע קצף.",
+    steps:["מחלצים דאבל אספרסו לכוס גבוהה 220–250 מ״ל.",
+      "מקציפים <span class='hl'>~180 ml</span> חלב למיקרו-קצף מבריק כמו צבע.",
+      "מסובבים את הכד, מוזגים מגובה לערבוב, ואז יורדים קרוב לסיום.",
+      "מכוונים לשכבת קצף דקה של <b>~5 מ״מ</b> למעלה."]},
+  "dedica/flatwhite":{name:"פלאט וייט", tag:"קטן, חזק, מיקרו-קצף מבריק",
+    dial:"מחלצים קצת <b>יותר הדוק (1:1.8)</b> לבסיס נועז יותר מתחת לחלב. טחינה ~2.3.",
+    milk:"רק <b>מתיחה של 1–2 שנ'</b> — הפלאט וייט מוגדר על ידי קצף הדוק, מבריק וכמעט לא קיים.",
+    steps:["מחלצים <b>דאבל הדוק</b>: 14 g → ~26 g ב-VS3 <span class='hl'>2.3</span>.",
+      "מקציפים <span class='hl'>~120 ml</span> חלב למיקרו-קצף משיי, מעט אוויר.",
+      "מוזגים לכוס <span class='hl'>150–170 ml</span> ליחס קפה-חלב גבוה.",
+      "שומרים את הקצף מתחת ל-<b>~5 מ״מ</b> — חלק, בלי פסגות יבשות."]},
+  "dedica/cortado":{name:"קורטדו", tag:"חלקים שווים אספרסו וחלב חם",
+    dial:"משקה מאוזן 1:1 — שוט נקי ומתקתק זוהר כאן. טחינה רגילה.",
+    milk:"בקושי ממרקמים: <b>מתיחה של שנייה מקס</b>. חלב חם, כמעט בלי קצף — צריך להישאר שטוח ומשיי.",
+    steps:["מחלצים דאבל אספרסו לכוס קטנה <span class='hl'>90–120 ml</span>.",
+      "מקציפים <b>נפח שווה</b> של חלב (~60 מ״ל) כמעט בלי קצף.",
+      "מוזגים ל-<span class='hl'>1:1</span> — אספרסו לחלב חם.",
+      "מגישים קטן; זה נועד לשתייה בזמן שחם."]},
+  "dedica/macchiato":{name:"מקיאטו", tag:"אספרסו 'מוכתם' בטיפת קצף",
+    dial:"זה 95% אספרסו, אז לשוט אין איפה להתחבא — מכווננים אותו נקי קודם.",
+    milk:"צריך רק <b>כף קצף</b>. מקציפים מעט חלב עם מתיחה טובה ומשתמשים בשכבה העליונה.",
+    steps:["מחלצים דאבל אספרסו לכוס קטנה.","מקציפים מעט חלב לקצף נוקשה.",
+      "מניחים <b>טיפה אחת</b> של קצף במרכז הקרמה.","זהו — סימן של חלב, לא משקה חלב."]},
+  "dedica/icedlatte":{name:"לאטה קר", tag:"שוט חם על קרח + חלב קר",
+    dial:"קרח וחלב קר מדללים מהר — מחלצים את השוט קצת <b>יותר הדוק (1:1.8)</b> שעדיין יחתוך.",
+    steps:["ממלאים כוס גבוהה ב<b>קוביות קרח גדולות</b>.",
+      "מחלצים דאבל אספרסו (14 g → ~28 g ב-VS3 <span class='hl'>2.5</span>) <b>ישר על הקרח</b> — ההלם הקר שומר אותו בהיר, לא מבושל.",
+      "מוסיפים <span class='hl'>~150 ml</span> חלב קר.",
+      "מערבבים. מוסיפים סירופ <b>לפני</b> החלב אם רוצים מתוק — אחרת לא יימס בקור."]},
+  "dedica/icedamericano":{name:"אמריקנו קר", tag:"אספרסו, מים קרים, הרבה קרח",
+    dial:"אותו שוט כמו אספרסו. ארוך ומרענן — מכוונים עם מים, לא עם הטחינה.",
+    steps:["ממלאים כוס גבוהה בקרח ו-<span class='hl'>~150 ml</span> מים קרים.",
+      "מחלצים דאבל אספרסו <b>מעל</b> כך שהקרמה צפה.",
+      "מערבבים פעם אחת. מאריכים עם עוד מים לפי הטעם."]},
+  "dedica/shakerato":{name:"אספרסו שייקרטו", tag:"אספרסו קר בניעור — משיי, מוקצף, בלי חלב",
+    dial:"קלאסיקה איטלקית של קיץ. שוט מתוק יותר מתנער לקצף עבה יותר.",
+    steps:["מחלצים דאבל אספרסו, ואם רוצים מתוק, מערבבים <b>כפית סוכר בזמן שחם</b> שיימס.",
+      "ממלאים שייקר בקרח, מוסיפים את השוט.",
+      "<b>מנערים חזק 15–20 שנ'</b> — עד שהחוץ מכוסה כפור.",
+      "מסננים (בלי קרח) לכוס מצוננת. שותים קודם את הקצף למעלה."]},
+  "moka/moka":{name:"קפה מוקה", tag:"משקה עשיר על הכיריים · בלי לחץ",
+    dial:"מר / מקרטע → טוחנים <b>גס יותר</b> (5.5) ומנמיכים אש. חלש וחמוץ → <b>דק יותר</b> (4.2).",
+    steps:["<b>מרתיחים מים בנפרד</b> וממלאים את הבסיס עד <b>מתחת לשסתום הביטחון</b> — התחלה חמה מונעת מהקפה להתבשל ולהפוך מתכתי.",
+      "ממלאים את סל המשפך בקפה ב-VS3 <span class='hl'>4.8</span>, מיישרים — <b>בלי לטמפר</b>.",
+      "מרכיבים (הבסיס חם — משתמשים במגבת) ומניחים על אש <b>נמוכה–בינונית</b>, מכסה פתוח.",
+      "כשהקפה עולה ושומעים את <b>הגרגור הראשון</b>, מורידים מהאש.",
+      "מקררים את הבסיס תחת ברז קר כדי <b>לעצור את החילוץ</b>, מערבבים ומוזגים."]},
+  "moka/mokaamericano":{name:"אמריקנו מוקה", tag:"תמצית מוקה מוארכת במים חמים",
+    dial:"מכינים כמו מוקה רגיל; מאריכים עם מים לפי הטעם במקום לשנות טחינה.",
+    steps:["מכינים מקינטה מלאה כרגיל (VS3 <span class='hl'>4.8</span>, התחלה חמה).",
+      "מוסיפים <span class='hl'>100–150 ml</span> מים חמים לספל.",
+      "מוזגים את קפה המוקה פנימה — הוא חזק מטבעו, אז סופג מים טוב.",
+      "מכוונים עם עוד מים במקום לטחון מחדש."]},
+  "moka/mokacap":{name:"קפוצ'ינו מוקה", tag:"שוט מהכיריים + חלב מוקצף ביד",
+    dial:"אין מקל קיטור, אז מקציפים ביד. חלב מלא מקציף הכי עבה.",
+    milk:"מחממים ~120 מ״ל חלב במיקרוגל או בסיר ל-<b>~60°C</b>, ואז <b>מקציפים 20–30 שנ'</b> עד שמכפיל ומבריק.",
+    steps:["מכינים מקינטה חזקה (VS3 <span class='hl'>4.8</span>).",
+      "מחממים ומקציפים את החלב ביד עד עבה ואוורירי.",
+      "מוזגים את קפה המוקה לכוס, ואז מכפילים ומוזגים את הקצף למעלה.",
+      "מפזרים קקאו אם רוצים — הגוף של המוקה נושא חלב יפהפה."]},
+  "cold/concentrate":{name:"קונצנטרט קולד ברו", tag:"בסיס חזק 1:5 · מדללים לפי הטעם",
+    dial:"כוס גרגרית / בוצית → טוחנים <b>גס יותר</b> (16). חלש ומימי → משרים <b>יותר זמן</b>, לא דק יותר.",
+    steps:["טוחנים <span class='hl'>100 g</span> גס ב-VS3 <span class='hl'>13</span> — כמו מלח ים גס, בלי אבקה.",
+      "מערבבים עם <span class='hl'>500 ml</span> מים קרים מסוננים בצנצנת. מערבבים כך <b>שכל גרגר רטוב</b>.",
+      "אוטמים ומשרים במקרר <span class='hl'>16 שעות</span> (14 לקליל, 18 לעז).",
+      "מסננים דרך פילטר נייר או רשת, ואז שוב לצלילות.",
+      "זה ה<b>קונצנטרט</b> — מדללים <span class='hl'>1:1</span> במים או חלב על קרח. שומר ~שבוע אטום."]},
+  "cold/smooth":{name:"קולד ברו חלק", tag:"מוכן לשתייה · עדין 1:8",
+    dial:"לכוס עגולה יותר, כמו תה. חד מדי → גס יותר + השרייה קצרה; שטוח → +2 שעות.",
+    steps:["טוחנים <span class='hl'>80 g</span> ב-VS3 <span class='hl'>15</span> (קצת יותר גס מהקונצנטרט לכוס נקייה מוכנה לשתייה).",
+      "מוסיפים <span class='hl'>650 ml</span> מים קרים, מערבבים עד רוויה מלאה.",
+      "משרים <span class='hl'>14 שעות</span> במקרר.",
+      "מסננים פעמיים ומוזגים <b>ישר על קרח</b> — בלי דילול."]},
+  "cold/icedlatte":{name:"לאטה קולד ברו קר", tag:"קונצנטרט + חלב קר על קרח",
+    dial:"משתמש בקונצנטרט המוכן שלכם. רוצים חזק יותר? פחות חלב, לא טחינה דקה יותר.",
+    steps:["ממלאים כוס גבוהה ב<b>קוביות קרח גדולות</b>.",
+      "מוזגים <span class='hl'>~120 ml</span> קונצנטרט קולד ברו על הקרח.",
+      "מוסיפים <span class='hl'>~120 ml</span> חלב קר (שיבולת שועל מקציף יפה בקור).",
+      "ממתיקים בסירופ אם רוצים — נמס טוב בקור כי הוא נוזלי."]},
+  "cold/tonic":{name:"קולד ברו טוניק", tag:"תוסס, הדרי, מעיר אתכם",
+    dial:"משקה ארוך ומרענן. האיזון הוא קונצנטרט-לטוניק, בערך 1:2.",
+    steps:["ממלאים כוס בקרח ומוזגים <span class='hl'>~150 ml</span> מי טוניק.",
+      "מוזגים לאט <span class='hl'>~70 ml</span> קונצנטרט קולד ברו <b>על גב כפית</b> שיצור שכבות.",
+      "מוסיפים סחיטת <b>לימון או תפוז</b>.",
+      "מערבבים פעם אחת בשולחן — התוסס + הקפה זו כל המטרה."]},
+  "filter/v60":{name:"פור-אובר V60", tag:"נקי ובהיר · 1:16, ~20 g → 320 g",
+    dial:"מתנקז מהר מדי וטעים חלש → טוחנים <b>דק יותר</b> (5.5). נתקע / נהיה מר → <b>גס יותר</b> (7.5).",
+    steps:["שוטפים את פילטר הנייר במים חמים כדי להעלים את טעם הנייר ולחמם את הכלי — ואז שופכים את המים.",
+      "טוחנים <span class='hl'>20 g</span> ב-VS3 <span class='hl'>6.5</span> לתוך הקונוס ויוצרים בור קטן במרכז.",
+      "<b>פריחה:</b> מוזגים <span class='hl'>~50 g</span> מים, מסובבים בעדינות, ומחכים <b>30–45 שנ'</b> שהגז ישתחרר.",
+      "מוזגים בספירלות איטיות ל-<span class='hl'>320 g</span> סה״כ ב-2–3 מזיגות, שומרים על מצע ישר ומים הרחק מהנייר.",
+      "מסיימים את הניקוז בסביבות <span class='hl'>2:45–3:15</span>. סיבוב אחרון למצע שטוח."]},
+  "filter/frenchpress":{name:"פרנץ' פרס", tag:"גוף מלא · השרייה · 1:15, ~30 g → 450 g",
+    dial:"בוצי / עכור → טוחנים <b>גס יותר</b> (13) ולא מערבבים יותר מדי. חלש וחמוץ → <b>דק יותר</b> (9).",
+    steps:["מחממים את הפרס. טוחנים <span class='hl'>30 g</span> גס ב-VS3 <span class='hl'>11</span> ומוסיפים פנימה.",
+      "מוזגים את כל <span class='hl'>450 g</span> המים מיד אחרי הרתיחה, מתחילים טיימר, ומערבבים את הקרום ב-<b>4 דק'</b>.",
+      "מקלפים את הקצף והגרגרים הצפים מלמעלה עם שתי כפות — זה מה שהורג את הבוציות.",
+      "נותנים להשרות ל-<span class='hl'>~8 דק'</span>, ואז לוחצים את הבוכנה <b>לאט ואחיד</b>.",
+      "מוזגים <b>הכול</b> לספלים או קנקן שיפסיק לחלץ ולעולם לא יהפוך מר."]},
+};
+function machineT(key,m){ return lang==="he"&&HE_MACHINES[key] ? HE_MACHINES[key] : {name:m.name,sub:m.sub}; }
+function drinkName(mkey,dkey,d){ const h=HE_DRINKS[mkey+"/"+dkey]; return (lang==="he"&&h&&h.name)||d.name; }
+function drinkT(mkey,dkey,d){
+  const h=(lang==="he"&&HE_DRINKS[mkey+"/"+dkey])||{};
+  return {
+    name:h.name||d.name, tag:h.tag||d.tag, dial:h.dial||d.dial,
+    steps:(h.steps&&h.steps.length===d.steps.length)?h.steps:d.steps,
+    milk:d.milk?(h.milk||d.milk):null,
+    dose:tv(d.dose), yield:tv(d.yield), time:tv(d.time), temp:tv(d.temp),
+  };
+}
+function gearT(x){ const h=lang==="he"&&HE_GEAR[x.n]; return {i:x.i, n:(h&&h.n)||x.n, w:(h&&h.w)||x.w, star:x.star}; }
+
 /* --------------------------- render --------------------------- */
 const state={ machine:null, drink:null };
 const $=s=>document.querySelector(s);
@@ -798,8 +1056,9 @@ function renderMachines(){
     const b=document.createElement("button");
     b.className="machine"; b.type="button";
     b.setAttribute("aria-pressed", state.machine===key);
+    const mt=machineT(key,m);
     b.innerHTML=`<span class="ic" aria-hidden="true">${m.ic}</span>
-      <span class="mn">${m.name}</span><span class="ms">${m.sub}</span>`;
+      <span class="mn">${mt.name}</span><span class="ms">${mt.sub}</span>`;
     b.onclick=()=>{ state.machine=key; state.drink=null; save(); renderMachines(); renderDrinks(); renderRecipe(); };
     mEl.appendChild(b);
   }
@@ -807,13 +1066,13 @@ function renderMachines(){
 
 function renderDrinks(){
   dEl.innerHTML="";
-  if(!state.machine){ dEl.innerHTML=`<span style="color:var(--ink-soft);font-size:.85rem">Pick a machine first ↑</span>`; return; }
+  if(!state.machine){ dEl.innerHTML=`<span style="color:var(--ink-soft);font-size:.85rem">${tr("pickMachine")}</span>`; return; }
   const drinks=MACHINES[state.machine].drinks;
   for(const [key,d] of Object.entries(drinks)){
     const b=document.createElement("button");
     b.className="chip"; b.type="button";
     b.setAttribute("aria-pressed", state.drink===key);
-    b.innerHTML=`${isFav(state.machine+"/"+key)?'<span class="cstar" aria-hidden="true">★</span>':''}${d.name}`;
+    b.innerHTML=`${isFav(state.machine+"/"+key)?'<span class="cstar" aria-hidden="true">★</span>':''}${drinkName(state.machine,key,d)}`;
     b.onclick=()=>{ state.drink=key; save(); renderDrinks(); renderRecipe(); };
     dEl.appendChild(b);
   }
@@ -823,58 +1082,59 @@ function renderRecipe(){
   stopTimer(); stopAuto();
   if(!state.machine || !state.drink){ rEl.innerHTML=""; return; }
   const d=MACHINES[state.machine].drinks[state.drink];
-  const gearHTML=d.gear.map(x=>`<li><span class="gi" aria-hidden="true">${x.i}</span>
-      <div><div class="gn">${x.n}${x.star?`<span class="star">${x.star}</span>`:""}</div>
-      <div class="gw">${x.w}</div></div></li>`).join("");
-  const milkHTML=d.milk?`<div class="sec-t">Milk</div><div class="milk-box">
-      <div class="mt">Texture &amp; heat</div>${d.milk}</div>`:"";
+  const t=drinkT(state.machine,state.drink,d);
+  const gearHTML=d.gear.map(x=>{ const g=gearT(x); return `<li><span class="gi" aria-hidden="true">${g.i}</span>
+      <div><div class="gn">${g.n}${g.star?`<span class="star">${tr("keyTag")}</span>`:""}</div>
+      <div class="gw">${g.w}</div></div></li>`; }).join("");
+  const milkHTML=t.milk?`<div class="sec-t">${tr("milk")}</div><div class="milk-box">
+      <div class="mt">${tr("milkSub")}</div>${t.milk}</div>`:"";
 
   const fkey=state.machine+"/"+state.drink;
   const fav=isFav(fkey);
   rEl.innerHTML=`<div class="recipe">
     <div class="rhead">
-      <div class="rh-t"><h2>${d.name}</h2><p class="sub">${d.tag}</p></div>
+      <div class="rh-t"><h2>${t.name}</h2><p class="sub">${t.tag}</p></div>
       <div class="rh-actions">
-        <button class="fav-btn" id="shareBtn" type="button" aria-label="Share this drink" title="Share this drink">
+        <button class="fav-btn" id="shareBtn" type="button" aria-label="${tr("shareTitle")}" title="${tr("shareTitle")}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
             <path d="M12 3v11"/><path d="M8 7l4-4 4 4"/><path d="M6 12v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7"/></svg>
         </button>
         <button class="fav-btn${fav?" on":""}" id="favBtn" type="button"
-          aria-pressed="${fav}" aria-label="Save to favorites" title="Save to favorites">${fav?"★":"☆"}</button>
+          aria-pressed="${fav}" aria-label="${tr("favTitle")}" title="${tr("favTitle")}">${fav?"★":"☆"}</button>
       </div>
     </div>
     <div class="readout" role="group" aria-label="Recipe numbers">
-      <div class="cell grind"><div class="k">VS3 grind</div><div class="v">${d.grind}</div><div class="u">on dial</div></div>
-      <div class="cell"><div class="k">Dose</div><div class="v">${d.dose}</div><div class="u">in</div></div>
-      <div class="cell"><div class="k">Yield</div><div class="v">${d.yield}</div><div class="u">out</div></div>
-      <div class="cell"><div class="k">Time</div><div class="v">${d.time}</div><div class="u">${d.temp}</div></div>
+      <div class="cell grind"><div class="k">${tr("grindK")}</div><div class="v">${d.grind}</div><div class="u">${tr("onDial")}</div></div>
+      <div class="cell"><div class="k">${tr("doseK")}</div><div class="v">${t.dose}</div><div class="u">${tr("inU")}</div></div>
+      <div class="cell"><div class="k">${tr("yieldK")}</div><div class="v">${t.yield}</div><div class="u">${tr("outU")}</div></div>
+      <div class="cell"><div class="k">${tr("timeK")}</div><div class="v">${t.time}</div><div class="u">${t.temp}</div></div>
     </div>
-    <p class="dial-note"><b>Dial in →</b><span>${d.dial}</span></p>
+    <p class="dial-note"><b>${tr("dialIn")}</b><span>${t.dial}</span></p>
 
-    <div class="sec-t">Your dial-in</div>
+    <div class="sec-t">${tr("yourDialIn")}</div>
     <div class="notes">
       <div class="notes-grid">
         <div class="note-field" style="flex:0 0 116px">
-          <label>My grind</label>
+          <label>${tr("myGrind")}</label>
           <input id="noteGrind" inputmode="decimal" maxlength="6" placeholder="${d.grind}" />
         </div>
         <div class="note-field">
-          <label>Notes <span class="note-saved" id="noteSaved">saved ✓</span></label>
-          <textarea id="noteText" maxlength="500" placeholder="Bean, ratio, tweaks that worked…"></textarea>
+          <label>${tr("notes")} <span class="note-saved" id="noteSaved">${tr("saved")}</span></label>
+          <textarea id="noteText" maxlength="500" placeholder="${tr("notesPh")}"></textarea>
         </div>
       </div>
     </div>
 
-    <div class="sec-t">Steps</div>
-    ${playerHTML(d.steps)}
+    <div class="sec-t">${tr("steps")}</div>
+    ${playerHTML(t.steps, d.steps)}
     ${timerHTML(d.timer)}
-    <details class="allsteps"><summary>All steps as a list</summary>
-      <ol class="steps">${d.steps.map(s=>`<li>${s}</li>`).join("")}</ol></details>
+    <details class="allsteps"><summary>${tr("allSteps")}</summary>
+      <ol class="steps">${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol></details>
     ${milkHTML}
-    <div class="sec-t" style="margin-top:22px">Gear that helps</div>
+    <div class="sec-t" style="margin-top:22px">${tr("gear")}</div>
     <div class="gear"><ul>${gearHTML}</ul></div>
   </div>`;
-  wirePlayer(d.steps);
+  wirePlayer(t.steps);
   wireTimer(d.timer);
   wireRecipeExtras(fkey);
 }
@@ -928,7 +1188,7 @@ function renderFavorites(){
     const [m,dk]=k.split("/"); const d=MACHINES[m].drinks[dk];
     const b=document.createElement("button");
     b.className="fav-chip"; b.type="button";
-    b.innerHTML=`<span class="fc-star" aria-hidden="true">★</span>${d.name}<span class="fc-m">${MACHINES[m].name}</span>`;
+    b.innerHTML=`<span class="fc-star" aria-hidden="true">★</span>${drinkName(m,dk,d)}<span class="fc-m">${machineT(m,MACHINES[m]).name}</span>`;
     b.onclick=()=>jumpTo(m,dk);
     box.appendChild(b);
   }
@@ -946,16 +1206,16 @@ function surprise(){
 
 /* --------------------------- step player --------------------------- */
 let pSteps=[], pScenes=[], pIdx=0, pAuto=false, pTimer=null;
-function playerHTML(steps){
-  pSteps=steps; pScenes=steps.map(sceneFor); pIdx=0;
+function playerHTML(steps, sceneSteps){
+  pSteps=steps; pScenes=(sceneSteps||steps).map(sceneFor); pIdx=0;
   const dots=steps.map((_,i)=>`<i data-i="${i}" class="${i===0?'on':''}"></i>`).join("");
   return `<div class="player">
     <div class="stage" id="stage">${SCENES[pScenes[0]]}</div>
     <div class="pctl">
       <button class="pnav" id="pprev" type="button" aria-label="Previous step" disabled>‹</button>
       <div class="pmid">
-        <div class="prow"><span class="pn" id="pn">Step 1 / ${steps.length}</span>
-          <button class="pauto" id="pauto" type="button" aria-pressed="false">▶ Auto</button></div>
+        <div class="prow"><span class="pn" id="pn">${tr("step")} 1 / ${steps.length}</span>
+          <button class="pauto" id="pauto" type="button" aria-pressed="false">▶ ${tr("auto")}</button></div>
         <p class="ptext" id="ptext">${steps[0]}</p>
       </div>
       <button class="pnav" id="pnext" type="button" aria-label="Next step"${steps.length<2?' disabled':''}>›</button>
@@ -968,7 +1228,7 @@ function setStep(i){
   const stage=$("#stage"); if(!stage) return;
   stage.innerHTML=SCENES[pScenes[pIdx]]||SCENES.serve;
   $("#ptext").innerHTML=pSteps[pIdx];
-  $("#pn").textContent=`Step ${pIdx+1} / ${pSteps.length}`;
+  $("#pn").textContent=`${tr("step")} ${pIdx+1} / ${pSteps.length}`;
   $("#pprev").disabled=pIdx===0;
   $("#pnext").disabled=pIdx===pSteps.length-1;
   [...$("#dots").children].forEach((el,j)=>{
@@ -976,7 +1236,7 @@ function setStep(i){
   });
 }
 function stopAuto(){ if(pTimer){ clearInterval(pTimer); pTimer=null; } pAuto=false;
-  const b=$("#pauto"); if(b){ b.setAttribute("aria-pressed","false"); b.textContent="▶ Auto"; } }
+  const b=$("#pauto"); if(b){ b.setAttribute("aria-pressed","false"); b.textContent="▶ "+tr("auto"); } }
 function wirePlayer(steps){
   if(!steps||!steps.length) return;
   const prev=$("#pprev"), next=$("#pnext"), auto=$("#pauto"), dots=$("#dots");
@@ -985,7 +1245,7 @@ function wirePlayer(steps){
   dots.onclick=e=>{ const i=e.target.dataset.i; if(i!=null){ stopAuto(); setStep(+i); } };
   auto.onclick=()=>{
     if(pAuto){ stopAuto(); return; }
-    pAuto=true; auto.setAttribute("aria-pressed","true"); auto.textContent="⏸ Auto";
+    pAuto=true; auto.setAttribute("aria-pressed","true"); auto.textContent="⏸ "+tr("auto");
     if(pIdx>=pSteps.length-1) setStep(0);
     pTimer=setInterval(()=>{
       if(pIdx>=pSteps.length-1){ stopAuto(); return; }
@@ -999,12 +1259,14 @@ let tHandle=null, tStart=0, tTarget=0, tLabel="";
 function timerHTML(t){
   if(!t) return "";
   tTarget=t.target; tLabel=t.label;
-  const tg = t.target>=60 ? `${Math.round(t.target/60)} min` : `${t.target}s`;
+  const unit = lang==="he" ? (t.target>=60?"דק'":"שנ'") : (t.target>=60?"min":"s");
+  const tg = t.target>=60 ? `${Math.round(t.target/60)} ${unit}` : `${t.target}${lang==="he"?" ":""}${unit}`;
+  const label = (lang==="he"&&HE_TIMER[t.label])||t.label;
   return `<div class="timer">
     <div class="disp" id="disp">0:00</div>
-    <div class="meta"><div class="tt">${t.label}</div><div class="tgt">target · ${tg}</div></div>
-    <button class="tbtn" id="tstart" type="button">Start</button>
-    <button class="tbtn rst" id="treset" type="button">Reset</button>
+    <div class="meta"><div class="tt">${label}</div><div class="tgt">${tr("target")} · ${tg}</div></div>
+    <button class="tbtn" id="tstart" type="button">${tr("start")}</button>
+    <button class="tbtn rst" id="treset" type="button">${tr("reset")}</button>
   </div>`;
 }
 function fmt(s){ const m=Math.floor(s/60); const ss=s%60; return `${m}:${String(ss).padStart(2,"0")}`; }
@@ -1012,8 +1274,8 @@ function wireTimer(t){
   if(!t) return;
   const disp=$("#disp"), start=$("#tstart"), reset=$("#treset");
   start.onclick=()=>{
-    if(tHandle){ stopTimer(); start.textContent="Start"; return; }
-    tStart=Date.now(); start.textContent="Stop";
+    if(tHandle){ stopTimer(); start.textContent=tr("start"); return; }
+    tStart=Date.now(); start.textContent=tr("stop");
     tHandle=setInterval(()=>{
       const el=Math.floor((Date.now()-tStart)/1000);
       disp.textContent=fmt(el);
@@ -1021,11 +1283,11 @@ function wireTimer(t){
       disp.classList.toggle("over", el>=tTarget);
     },200);
   };
-  reset.onclick=()=>{ stopTimer(); disp.textContent="0:00"; disp.className="disp"; if(start) start.textContent="Start"; };
+  reset.onclick=()=>{ stopTimer(); disp.textContent="0:00"; disp.className="disp"; if(start) start.textContent=tr("start"); };
 }
 function stopTimer(){ if(tHandle){ clearInterval(tHandle); tHandle=null; } }
 
-/* --------------------------- theme + persist --------------------------- */
+/* --------------------------- theme + language --------------------------- */
 const themeBtn=$("#theme");
 function applyTheme(t){ if(t) document.documentElement.setAttribute("data-theme",t); }
 themeBtn.onclick=()=>{
@@ -1034,6 +1296,29 @@ themeBtn.onclick=()=>{
   const next=cur==="dark"?"light":"dark";
   applyTheme(next); localStorage.setItem("espresso.theme",next);
 };
+
+function applyLang(){
+  const html=document.documentElement;
+  html.setAttribute("lang", lang);
+  html.setAttribute("dir", lang==="he"?"rtl":"ltr");
+  // static chrome
+  const set=(sel,val)=>{ const el=$(sel); if(el) el.innerHTML=val; };
+  set(".brand p", tr("tagline"));
+  set("#lblMachine", tr("mLabel"));
+  set("#lblDrink", tr("dLabel"));
+  set("#lblFavs", tr("favs"));
+  set("#surprise", tr("surprise"));
+  set(".qr-h", tr("qrH"));
+  set(".qr-s", tr("qrS"));
+  const foot=$("#footNote"); if(foot) foot.innerHTML=tr("footer");
+  const built=$("#footBuilt"); if(built) built.innerHTML=tr("builtFor")+' · <a href="https://github.com/AdbitRush/espresso">github.com/AdbitRush/espresso</a>';
+  const lb=$("#langBtn"); if(lb) lb.textContent=tr("langBtn");
+  if(bannerMode) showBanner(bannerMode, bannerMode==="install");
+  // dynamic content
+  renderMachines(); renderDrinks(); renderFavorites(); renderRecipe();
+}
+const langBtn=$("#langBtn");
+if(langBtn) langBtn.onclick=()=>{ lang = lang==="he"?"en":"he"; localStorage.setItem("espresso.lang", lang); applyLang(); };
 function save(){ localStorage.setItem("espresso.sel", JSON.stringify(state)); updateHash(); }
 function updateHash(){
   const h = state.machine ? "#"+state.machine+(state.drink?"/"+state.drink:"") : location.pathname;
@@ -1051,6 +1336,7 @@ function fromHash(){
 }
 function restore(){
   applyTheme(localStorage.getItem("espresso.theme"));
+  lang = localStorage.getItem("espresso.lang")==="he" ? "he" : "en";
   const h=fromHash();
   if(h){ state.machine=h.machine; state.drink=h.drink; return; }
   try{ const s=JSON.parse(localStorage.getItem("espresso.sel")||"{}");
@@ -1077,7 +1363,7 @@ async function shareDrink(){
     catch(e){ if(e && e.name==="AbortError") return; }
   }
   if(navigator.clipboard){
-    try{ await navigator.clipboard.writeText(url); toast("Link copied ✓"); return; }catch(e){}
+    try{ await navigator.clipboard.writeText(url); toast(tr("copied")); return; }catch(e){}
   }
   // legacy fallback
   try{
@@ -1085,8 +1371,8 @@ async function shareDrink(){
     ta.value=url; ta.setAttribute("readonly",""); ta.style.cssText="position:fixed;top:0;left:0;opacity:0";
     document.body.appendChild(ta); ta.select();
     const ok=document.execCommand("copy"); document.body.removeChild(ta);
-    toast(ok?"Link copied ✓":"Couldn't copy this link");
-  }catch(e){ toast("Couldn't copy this link"); }
+    toast(ok?tr("copied"):tr("copyFail"));
+  }catch(e){ toast(tr("copyFail")); }
 }
 window.addEventListener("hashchange",()=>{
   const h=fromHash();
@@ -1100,16 +1386,18 @@ window.addEventListener("hashchange",()=>{
 const isStandalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 let deferredPrompt = null;
+let bannerMode = null;
 const banner = $("#installBanner");
-function showBanner(html, withBtn){
+function showBanner(mode, withBtn){
   if(!banner || isStandalone || localStorage.getItem("espresso.installDismissed")) return;
-  $("#ibTxt").innerHTML = html;
-  $("#ibBtn").hidden = !withBtn;
+  bannerMode = mode;
+  $("#ibTxt").innerHTML = mode==="ios" ? tr("iosHint") : tr("installTxt");
+  const btn=$("#ibBtn"); btn.hidden = !withBtn; btn.textContent = tr("installBtn");
   banner.hidden = false;
 }
 window.addEventListener("beforeinstallprompt",(e)=>{
   e.preventDefault(); deferredPrompt = e;
-  showBanner("Install <b>Espresso</b> — one tap, works offline.", true);
+  showBanner("install", true);
 });
 if(banner){
   $("#ibBtn").onclick = async ()=>{
@@ -1120,7 +1408,7 @@ if(banner){
   };
   $("#ibX").onclick = ()=>{ banner.hidden = true; localStorage.setItem("espresso.installDismissed","1"); };
   // iOS never fires beforeinstallprompt — show the manual hint instead
-  if(isiOS && !isStandalone){ showBanner("Add to your Home Screen: tap <b>Share</b> then <b>Add to Home Screen</b>.", false); }
+  if(isiOS && !isStandalone){ showBanner("ios", false); }
 }
 window.addEventListener("appinstalled",()=>{ if(banner) banner.hidden = true; });
 if("serviceWorker" in navigator){
@@ -1129,7 +1417,7 @@ if("serviceWorker" in navigator){
 
 const surpriseBtn=$("#surprise"); if(surpriseBtn) surpriseBtn.onclick=surprise;
 
-restore(); renderFavorites(); renderMachines(); renderDrinks(); renderRecipe();
+restore(); applyLang();
 </script>
 </body>
 </html>
