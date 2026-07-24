@@ -1,5 +1,7 @@
-/* Espresso PWA service worker — offline app shell + stale-while-revalidate. */
-const V = "espresso-v1";
+/* Espresso PWA service worker.
+   - Page/HTML: network-first (fresh when online, cached fallback offline)
+   - Everything else (icons, fonts): stale-while-revalidate */
+const V = "espresso-v2";
 const SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./favicon.svg", "./favicon-32.png",
@@ -21,20 +23,27 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
-  const sameOrigin = req.url.startsWith(self.location.origin);
-  const isFont = req.url.includes("fonts.googleapis.com") || req.url.includes("fonts.gstatic.com");
-  if (!sameOrigin && !isFont) return; // let anything else hit the network normally
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === self.location.origin;
+  const isFont = /fonts\.(googleapis|gstatic)\.com$/.test(url.host);
+  if (!sameOrigin && !isFont) return;
 
+  const isDoc = req.mode === "navigate" || req.destination === "document";
+  if (isDoc) {
+    // network-first so an updated app shows up immediately when online
+    e.respondWith(
+      fetch(req)
+        .then((res) => { const c = res.clone(); caches.open(V).then((x) => x.put(req, c)); return res; })
+        .catch(() => caches.match(req).then((r) => r || caches.match("./index.html")))
+    );
+    return;
+  }
+
+  // stale-while-revalidate for assets
   e.respondWith(
     caches.match(req).then((cached) => {
       const network = fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(V).then((c) => c.put(req, copy));
-          }
-          return res;
-        })
+        .then((res) => { if (res && res.status === 200) { const c = res.clone(); caches.open(V).then((x) => x.put(req, c)); } return res; })
         .catch(() => cached);
       return cached || network;
     })

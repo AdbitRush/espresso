@@ -38,6 +38,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 - **★ Favorites** — star any drink; a quick-access strip pins them at the top (kept in local storage).
 - **Your dial-in** — save your own grind number + notes per drink (e.g. bean, ratio, tweaks).
 - **🎲 Surprise me** — jumps to a random drink.
+- **Share / deep links** — every drink has its own URL (`…/#dedica/cappuccino`); the share button uses the native share sheet on mobile or copies the link. Opening a shared link lands right on that recipe.
 - **Gear that helps** per drink — with the *why*, and the 51 mm tamper flagged as essential.
 - **Installable PWA** — add to your home screen, runs fullscreen and **offline** (service worker + app icons).
 - Light / dark coffee theme, remembers your last pick.

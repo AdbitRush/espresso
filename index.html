@@ -163,6 +163,15 @@
 
   .rhead{padding:20px 20px 4px;display:flex;align-items:flex-start;gap:12px}
   .rhead .rh-t{flex:1;min-width:0}
+  .rh-actions{display:flex;gap:8px;flex:none}
+  .fav-btn svg{display:block}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));
+      transform:translateX(-50%) translateY(12px);background:var(--ink);color:var(--ground);
+      padding:11px 20px;border-radius:999px;font-size:.85rem;font-weight:600;font-family:inherit;
+      box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:60}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .rhead h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.6rem;letter-spacing:-.015em;margin:0;
       text-wrap:balance;line-height:1.05}
   .rhead .sub{color:var(--ink-soft);font-size:.86rem;margin:5px 0 0}
@@ -825,8 +834,14 @@ function renderRecipe(){
   rEl.innerHTML=`<div class="recipe">
     <div class="rhead">
       <div class="rh-t"><h2>${d.name}</h2><p class="sub">${d.tag}</p></div>
-      <button class="fav-btn${fav?" on":""}" id="favBtn" type="button"
-        aria-pressed="${fav}" aria-label="Save to favorites" title="Save to favorites">${fav?"★":"☆"}</button>
+      <div class="rh-actions">
+        <button class="fav-btn" id="shareBtn" type="button" aria-label="Share this drink" title="Share this drink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <path d="M12 3v11"/><path d="M8 7l4-4 4 4"/><path d="M6 12v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7"/></svg>
+        </button>
+        <button class="fav-btn${fav?" on":""}" id="favBtn" type="button"
+          aria-pressed="${fav}" aria-label="Save to favorites" title="Save to favorites">${fav?"★":"☆"}</button>
+      </div>
     </div>
     <div class="readout" role="group" aria-label="Recipe numbers">
       <div class="cell grind"><div class="k">VS3 grind</div><div class="v">${d.grind}</div><div class="u">on dial</div></div>
@@ -878,6 +893,7 @@ function getNote(k){ try{ return JSON.parse(localStorage.getItem(noteKey(k))||"{
 function setNote(k,o){ localStorage.setItem(noteKey(k), JSON.stringify(o)); }
 
 function wireRecipeExtras(fkey){
+  const shareBtn=$("#shareBtn"); if(shareBtn) shareBtn.onclick=shareDrink;
   const favBtn=$("#favBtn");
   if(favBtn){
     favBtn.onclick=()=>{
@@ -1018,13 +1034,67 @@ themeBtn.onclick=()=>{
   const next=cur==="dark"?"light":"dark";
   applyTheme(next); localStorage.setItem("espresso.theme",next);
 };
-function save(){ localStorage.setItem("espresso.sel", JSON.stringify(state)); }
+function save(){ localStorage.setItem("espresso.sel", JSON.stringify(state)); updateHash(); }
+function updateHash(){
+  const h = state.machine ? "#"+state.machine+(state.drink?"/"+state.drink:"") : location.pathname;
+  if((location.hash||location.pathname)!==h) history.replaceState(null,"",h);
+}
+function fromHash(){
+  const raw=decodeURIComponent((location.hash||"").replace(/^#/,"")).trim();
+  if(!raw) return null;
+  const [m,d]=raw.split("/");
+  if(m && MACHINES[m]){
+    if(d && MACHINES[m].drinks[d]) return {machine:m,drink:d};
+    return {machine:m,drink:null};
+  }
+  return null;
+}
 function restore(){
   applyTheme(localStorage.getItem("espresso.theme"));
+  const h=fromHash();
+  if(h){ state.machine=h.machine; state.drink=h.drink; return; }
   try{ const s=JSON.parse(localStorage.getItem("espresso.sel")||"{}");
     if(s.machine && MACHINES[s.machine]){ state.machine=s.machine;
       if(s.drink && MACHINES[s.machine].drinks[s.drink]) state.drink=s.drink; } }catch(e){}
 }
+
+/* --------------------------- share + toast --------------------------- */
+let toastT=null;
+function toast(msg){
+  let el=$("#toast");
+  if(!el){ el=document.createElement("div"); el.id="toast"; el.className="toast"; document.body.appendChild(el); }
+  el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("show"),1900);
+}
+async function shareDrink(){
+  if(!state.machine||!state.drink) return;
+  const d=MACHINES[state.machine].drinks[state.drink];
+  const url=location.origin+location.pathname+"#"+state.machine+"/"+state.drink;
+  const data={ title:"Espresso — "+d.name,
+    text:`${d.name} — VS3 grind ${d.grind}, ${d.dose} → ${d.yield}`, url };
+  if(navigator.share){
+    try{ await navigator.share(data); return; }
+    catch(e){ if(e && e.name==="AbortError") return; }
+  }
+  if(navigator.clipboard){
+    try{ await navigator.clipboard.writeText(url); toast("Link copied ✓"); return; }catch(e){}
+  }
+  // legacy fallback
+  try{
+    const ta=document.createElement("textarea");
+    ta.value=url; ta.setAttribute("readonly",""); ta.style.cssText="position:fixed;top:0;left:0;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    const ok=document.execCommand("copy"); document.body.removeChild(ta);
+    toast(ok?"Link copied ✓":"Couldn't copy this link");
+  }catch(e){ toast("Couldn't copy this link"); }
+}
+window.addEventListener("hashchange",()=>{
+  const h=fromHash();
+  if(h && (h.machine!==state.machine || h.drink!==state.drink)){
+    state.machine=h.machine; state.drink=h.drink;
+    renderMachines(); renderDrinks(); renderRecipe();
+  }
+});
 
 /* --------------------------- PWA: install + offline --------------------------- */
 const isStandalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
