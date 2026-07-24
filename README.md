@@ -43,7 +43,7 @@ VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). Pick your **basket** 
 - **★ Favorites** — star any drink; a quick-access strip pins them at the top (per user).
 - **Your recipe** — override any number per drink (grind, dose, yield, time) with your own preference; a **− / +** grind stepper nudges finer/coarser (0.1 steps) as you dial by taste; the readout shows your value with a green dot; **↺ Reset to default** clears it. Saved per drink + user and **synced across devices**. Plus free notes.
 - **Basket-specific shot animation** — the unpressurized basket shows a bottomless-portafilter pour (converging streams) instead of the two-spout shot.
-- **Rate this cup** — a 1–5 **star quality rating** plus a one-tap taste log (sour / just right / bitter) per shot. Tracks avg/best over all cups; after a couple it spots the pattern and suggests a grind change with a one-tap **Apply** (sour→finer, bitter→coarser, step scaled to the brew method), or tells you it's dialed in.
+- **Rate this cup** — a 1–5 **star quality rating** plus a one-tap taste log (sour / just right / bitter) per shot, and a **grind-trend sparkline** (each shot marked by its taste colour) so you can see how your grind is converging. Tracks avg/best over all cups; after a couple it spots the pattern and suggests a grind change with a one-tap **Apply** (sour→finer, bitter→coarser, step scaled to the brew method), or tells you it's dialed in.
 - **🎲 Surprise me** — jumps to a random drink.
 - **Share / deep links** — every drink has its own URL (`…/#dedica/cappuccino`); the share button uses the native share sheet on mobile or copies the link. Opening a shared link lands right on that recipe.
 - **Gear that helps** per drink — with the *why*, and the 51 mm tamper flagged as essential.

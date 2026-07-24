@@ -376,6 +376,11 @@
   .cups-clear{background:none;border:none;color:var(--ink-soft);font-size:.72rem;cursor:pointer;
       text-decoration:underline;font-family:inherit;padding:2px 4px}
   .cups-clear:hover{color:var(--crema)}
+  .spark{margin-top:13px}
+  .spark-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+  .spark-range{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--crema);font-weight:600}
+  .spark-frame{background:var(--card-2);border:1px solid var(--hair);border-radius:9px;padding:4px 8px}
+  .spark-frame svg{width:100%;height:40px;display:block}
 
   /* ---- QR card ---- */
   .qr-card{display:flex;align-items:center;gap:16px;margin-top:26px;padding:16px;
@@ -1134,6 +1139,7 @@ const UI = {
   tBitter:{en:"🔥 Bitter / harsh", he:"🔥 מר / חריף"},
   logged:{en:"Logged ✓", he:"נרשם ✓"},
   recentCups:{en:"Recent cups", he:"כוסות אחרונות"},
+  grindTrend:{en:"Grind trend", he:"מגמת טחינה"},
   clearLog:{en:"clear", he:"ניקוי"},
   sugDialed:{en:"Dialed in — keep it right here. ✓", he:"מכוון — השאירו בדיוק כאן. ✓"},
   sugMore:{en:"Log a couple more cups to spot the pattern.", he:"רשמו עוד כמה כוסות כדי לזהות מגמה."},
@@ -1709,6 +1715,21 @@ function fmtAgo(ts){
   return Math.floor(s/86400)+(lang==="he"?" י'":"d");
 }
 const TASTE_ICON={sour:"🍋",good:"✅",bitter:"🔥"};
+const TASTE_COLOR={good:"var(--led)",sour:"var(--warn)",bitter:"#c0392b"};
+function sparklineHTML(log){
+  const rows=log.slice(-14).map(e=>({g:parseFloat(String(e.grind).replace(",",".")),taste:e.taste})).filter(r=>!isNaN(r.g));
+  if(rows.length<2) return "";
+  const gs=rows.map(r=>r.g); let min=Math.min(...gs), max=Math.max(...gs);
+  if(max-min<0.2){ min-=0.2; max+=0.2; }
+  const W=300,pad=8, x=i=> pad + i*(W-2*pad)/(rows.length-1), y=g=> 36-(g-min)/(max-min)*28;
+  const line=rows.map((r,i)=>x(i).toFixed(1)+","+y(r.g).toFixed(1)).join(" ");
+  const ticks=rows.map((r,i)=>`<line x1="${x(i).toFixed(1)}" y1="${(y(r.g)-4).toFixed(1)}" x2="${x(i).toFixed(1)}" y2="${(y(r.g)+4).toFixed(1)}" stroke="${TASTE_COLOR[r.taste]||"var(--ink-soft)"}" stroke-width="2.6" stroke-linecap="round"/>`).join("");
+  return `<div class="spark">
+    <div class="spark-top"><span class="cups-lbl">${tr("grindTrend")}</span><span class="spark-range">${rows[0].g} → ${rows[rows.length-1].g}</span></div>
+    <div class="spark-frame"><svg viewBox="0 0 ${W} 44" preserveAspectRatio="none" aria-hidden="true">
+      <polyline points="${line}" fill="none" stroke="var(--crema)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>${ticks}</svg></div>
+  </div>`;
+}
 function reviewHTML(key,d){
   const log=getLog(key), recent=log.slice(-6).reverse();
   const chips=recent.map(e=>`<span class="cup-chip"><b>${e.grind}</b>${e.stars?` <span class="cs">${"★".repeat(e.stars)}</span>`:""} ${TASTE_ICON[e.taste]||""} <i>${fmtAgo(e.t)}</i></span>`).join("");
@@ -1739,6 +1760,7 @@ function reviewHTML(key,d){
       </div>
       ${sugHTML}
       ${statsHTML}
+      ${sparklineHTML(log)}
       ${recent.length?`<div class="cups-row"><span class="cups-lbl">${tr("recentCups")}</span>${chips}
         <button class="cups-clear" type="button">${tr("clearLog")}</button></div>`:""}
     </div>`;
