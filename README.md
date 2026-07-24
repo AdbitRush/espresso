@@ -20,8 +20,11 @@ Varia's own reference: **espresso ≈ #4, filter ≈ #9–10**. Coarser than 9.9
 
 | Drink | Machine | Grind (dial) | Dose → Yield | Time |
 |---|---|---|---|---|
-| Espresso / milk drinks | Dedica | **4.0** | 14 g → 28 g | 25–30 s |
-| Flat white (tighter) | Dedica | **3.8** | 14 g → 26 g | 25–30 s |
+| Espresso / cappuccino / macchiato (1:2) | Dedica | **4.0** | 14 g → 28 g | 25–30 s |
+| Latte | Dedica | **3.9** | 14 g → 28 g | 25–30 s |
+| Flat white / cortado (ristretto) | Dedica | **3.6–3.7** | 14 g → 26 g | 25–30 s |
+| Iced latte / shakerato | Dedica | **3.8–3.9** | 14 g → 28 g | 25–30 s |
+| Americano / iced americano (long) | Dedica | **4.3–4.4** | 14 g → 28 g+ | 25–30 s |
 | Moka coffee | Moka pot | **6.0** | fill basket → full pot | ~4–5 min |
 | V60 pour-over | Filter | **9.0** | 20 g → 320 g | ~3 min |
 | French press | Filter | **11** (turn 2 · 1.0) | 30 g → 450 g | ~8 min |

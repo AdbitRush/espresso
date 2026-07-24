@@ -456,6 +456,10 @@
   @keyframes shk{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
   @keyframes sway{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
   @keyframes fillUp{0%{transform:scaleY(.05)}100%{transform:scaleY(1)}}
+  .a-artwiggle{animation:artwiggle 1.5s ease-in-out infinite}
+  .a-artgrow{animation:artgrow 3.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+  @keyframes artwiggle{0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+  @keyframes artgrow{0%{opacity:0;transform:scale(.5)}35%{opacity:1;transform:scale(1)}84%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.08)}}
   @media (prefers-reduced-motion:reduce){
     .scene [class*="a-"]{animation:none !important}
     .stage .scene{animation:none}
@@ -607,11 +611,11 @@ const MACHINES = {
       },
       americano:{
         name:"Americano", tag:"Espresso loosened with hot water",
-        grind:"4.0", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
-        dial:"Same shot as espresso. If it tastes thin, use <b>less water</b>, not a finer grind.",
+        grind:"4.4", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
+        dial:"A longer drink — grind a hair <b>coarser</b> (4.4) than a straight shot; adjust strength with water.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
-          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>4.0</span>.",
+          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>4.4</span>.",
           "Fill the cup with <span class='hl'>120–180 ml</span> hot water <b>first</b>.",
           "Pour the shot <b>on top</b> of the water — this floats the crema instead of blasting it away.",
           "Adjust strength with the water volume, not the grind.",
@@ -634,7 +638,7 @@ const MACHINES = {
       },
       latte:{
         name:"Latte", tag:"Double shot drowned in silky milk",
-        grind:"4.0", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"3.9", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"Big milk volume hides a weak shot — keep the double <b>tight (1:2)</b> so it cuts through.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Fill jug ~1/2 with cold milk. Short <b>2–3 s stretch</b> then submerge — you want <b>thin microfoam</b>, not a foam cap.",
@@ -648,12 +652,12 @@ const MACHINES = {
       },
       flatwhite:{
         name:"Flat white", tag:"Small, strong, glossy microfoam",
-        grind:"3.8", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
-        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk. Grind ~3.8.",
+        grind:"3.6", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
+        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk. Grind ~3.6.",
         timer:{label:"Shot time", target:26, mode:"up"},
         milk:"Only a <b>1–2 s stretch</b> — the flat white is defined by tight, shiny, barely-there foam folded fully into the milk.",
         steps:[
-          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>3.8</span>.",
+          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>3.6</span>.",
           "Steam <span class='hl'>~120 ml</span> milk to silky microfoam, minimal air.",
           "Pour into a <span class='hl'>150–170 ml</span> cup for a high coffee-to-milk ratio.",
           "Keep the foam under <b>~5 mm</b> — smooth, no dry peaks.",
@@ -662,8 +666,8 @@ const MACHINES = {
       },
       cortado:{
         name:"Cortado", tag:"Equal parts espresso & warm milk",
-        grind:"4.0", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
-        dial:"Balanced 1:1 drink — a clean, slightly sweet shot shines here. Standard grind.",
+        grind:"3.7", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
+        dial:"Grind a touch <b>finer</b> (3.7) for a tight, sweet 1:1 base.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Barely texture it: <b>1 s stretch max</b>. Warm milk, almost no foam — it should stay flat and silky.",
         steps:[
@@ -690,12 +694,12 @@ const MACHINES = {
       },
       icedlatte:{
         name:"Iced latte", tag:"Hot shot shocked over ice + cold milk",
-        grind:"4.0", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
+        grind:"3.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
         dial:"Ice + cold milk dilute fast — pull the shot a touch <b>tighter (1:1.8)</b> so it still cuts through.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
           "Fill a tall glass with <b>big ice cubes</b>.",
-          "Pull a double espresso (14 g → ~28 g at VS3 <span class='hl'>4.0</span>) <b>straight onto the ice</b> — the cold shock keeps it bright, not stewed.",
+          "Pull a double espresso (14 g → ~28 g at VS3 <span class='hl'>3.8</span>) <b>straight onto the ice</b> — the cold shock keeps it bright, not stewed.",
           "Top with <span class='hl'>~150 ml</span> cold milk.",
           "Stir. Add syrup <b>before</b> the milk if you want it sweet — it won't dissolve once cold otherwise.",
         ],
@@ -703,7 +707,7 @@ const MACHINES = {
       },
       icedamericano:{
         name:"Iced americano", tag:"Espresso, cold water, plenty of ice",
-        grind:"4.0", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
+        grind:"4.3", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
         dial:"Same shot as espresso. Long &amp; refreshing — adjust with water, not the grind.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
@@ -715,7 +719,7 @@ const MACHINES = {
       },
       shakerato:{
         name:"Espresso shakerato", tag:"Shaken iced espresso — silky, frothy, no milk",
-        grind:"4.0", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"iced",
+        grind:"3.9", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"iced",
         dial:"An Italian summer classic. A sweeter shot shakes into a thicker foam.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
@@ -1006,8 +1010,16 @@ const SCENES={
   serve:`<svg class="scene" viewBox="0 0 220 150"><path class="lnS a-steam" d="M100 52q-7-10 0-19"/><path class="lnS a-steam" style="animation-delay:.7s" d="M114 52q7-10 0-19"/><path class="lnS a-steam" style="animation-delay:1.3s" d="M107 48q-6-9 0-16"/>
     <rect class="cd" x="74" y="60" width="70" height="42" rx="12"/><ellipse class="cr" cx="109" cy="64" rx="34" ry="7"/><path class="ln" d="M144 68q22 2 22 17t-22 17"/>
     <rect class="ln" x="74" y="60" width="70" height="42" rx="14" fill="none"/><rect class="cr" x="82" y="108" width="56" height="8" rx="4"/></svg>`,
+  artpour:`<svg class="scene" viewBox="0 0 220 150">
+    <ellipse class="cd" cx="108" cy="104" rx="52" ry="31"/><ellipse class="cr" cx="108" cy="104" rx="44" ry="24"/>
+    <ellipse class="ln" cx="108" cy="104" rx="52" ry="31" fill="none"/><path class="ln" d="M158 94q17 3 17 13t-17 13"/>
+    <g class="a-artgrow"><path class="cd" d="M108 84c-15 12-15 30 0 40c15-10 15-28 0-40z"/><path class="ln" d="M108 90v34" stroke-width="3"/>
+      <path class="ln" d="M108 100l-8 5M108 108l-8 5M108 100l8 5M108 108l8 5" stroke-width="2.5"/></g>
+    <g class="a-artwiggle"><g transform="rotate(26 150 34)"><path class="cd" d="M132 20h34l-4 26h-26z"/><path class="ln" d="M132 20h34l-4 26h-26z" fill="none"/><path class="ln" d="M166 25q13 2 13 12"/></g>
+      <path class="a-drip" d="M150 50c1 8 1 14 0 20" stroke="var(--cd,#fff)" stroke-width="4" fill="none" stroke-linecap="round" style="stroke:var(--card)"/></g></svg>`,
 };
 const SCENE_RULES=[
+  [/rosetta|heart:|wiggle|thin stream|drop the pitcher|wide cup|cut .*through/,'artpour'],
   [/shake|shaker|frother|whisk/,'shake'],[/plunger|plunge|french press:/,'plunge'],[/bloom/,'bloom'],
   [/spiral|drawdown/,'spiral'],[/gurgle|\bassemble\b|medium heat|stovetop|moka pot/,'moka'],
   [/steep|fridge|seal and/,'steep'],[/rinse/,'water'],
@@ -1171,8 +1183,8 @@ const HE_DRINKS = {
       "נועלים, שמים את הכוס החמה מתחת, ומתחילים את השוט מיד.",
       "מכוונים ל-<span class='hl'>~28 g החוצה ב-25–30 שנ'</span> מהטיפה הראשונה. חמוץ = דק יותר; מר וחריף = גס יותר."]},
   "dedica/americano":{name:"אמריקנו", tag:"אספרסו מדולל במים חמים",
-    dial:"אותו שוט כמו אספרסו. אם יוצא דליל, פחות מים — לא טחינה דקה יותר.",
-    steps:["מחלצים דאבל רגיל: <span class='hl'>14 g פנימה → 28 g החוצה</span> ב-VS3 <span class='hl'>4.0</span>.",
+    dial:"משקה ארוך — טוחנים <b>קצת גס יותר</b> (4.4) משוט רגיל; מכוונים עוצמה עם מים.",
+    steps:["מחלצים דאבל רגיל: <span class='hl'>14 g פנימה → 28 g החוצה</span> ב-VS3 <span class='hl'>4.4</span>.",
       "ממלאים את הכוס ב-<span class='hl'>120–180 ml</span> מים חמים <b>קודם</b>.",
       "מוזגים את השוט <b>מעל</b> המים — כך הקרמה צפה במקום להתרסק.",
       "מכוונים עוצמה עם כמות המים, לא עם הטחינה."]},
@@ -1191,14 +1203,14 @@ const HE_DRINKS = {
       "מסובבים את הכד, מוזגים מגובה לערבוב, ואז יורדים קרוב לסיום.",
       "מכוונים לשכבת קצף דקה של <b>~5 מ״מ</b> למעלה."]},
   "dedica/flatwhite":{name:"פלאט וייט", tag:"קטן, חזק, מיקרו-קצף מבריק",
-    dial:"מחלצים קצת <b>יותר הדוק (1:1.8)</b> לבסיס נועז יותר מתחת לחלב. טחינה ~3.8.",
+    dial:"מחלצים קצת <b>יותר הדוק (1:1.8)</b> לבסיס נועז יותר מתחת לחלב. טחינה ~3.6.",
     milk:"רק <b>מתיחה של 1–2 שנ'</b> — הפלאט וייט מוגדר על ידי קצף הדוק, מבריק וכמעט לא קיים.",
-    steps:["מחלצים <b>דאבל הדוק</b>: 14 g → ~26 g ב-VS3 <span class='hl'>3.8</span>.",
+    steps:["מחלצים <b>דאבל הדוק</b>: 14 g → ~26 g ב-VS3 <span class='hl'>3.6</span>.",
       "מקציפים <span class='hl'>~120 ml</span> חלב למיקרו-קצף משיי, מעט אוויר.",
       "מוזגים לכוס <span class='hl'>150–170 ml</span> ליחס קפה-חלב גבוה.",
       "שומרים את הקצף מתחת ל-<b>~5 מ״מ</b> — חלק, בלי פסגות יבשות."]},
   "dedica/cortado":{name:"קורטדו", tag:"חלקים שווים אספרסו וחלב חם",
-    dial:"משקה מאוזן 1:1 — שוט נקי ומתקתק זוהר כאן. טחינה רגילה.",
+    dial:"טוחנים <b>קצת דק יותר</b> (3.7) לבסיס 1:1 הדוק ומתקתק.",
     milk:"בקושי ממרקמים: <b>מתיחה של שנייה מקס</b>. חלב חם, כמעט בלי קצף — צריך להישאר שטוח ומשיי.",
     steps:["מחלצים דאבל אספרסו לכוס קטנה <span class='hl'>90–120 ml</span>.",
       "מקציפים <b>נפח שווה</b> של חלב (~60 מ״ל) כמעט בלי קצף.",
@@ -1212,7 +1224,7 @@ const HE_DRINKS = {
   "dedica/icedlatte":{name:"לאטה קר", tag:"שוט חם על קרח + חלב קר",
     dial:"קרח וחלב קר מדללים מהר — מחלצים את השוט קצת <b>יותר הדוק (1:1.8)</b> שעדיין יחתוך.",
     steps:["ממלאים כוס גבוהה ב<b>קוביות קרח גדולות</b>.",
-      "מחלצים דאבל אספרסו (14 g → ~28 g ב-VS3 <span class='hl'>4.0</span>) <b>ישר על הקרח</b> — ההלם הקר שומר אותו בהיר, לא מבושל.",
+      "מחלצים דאבל אספרסו (14 g → ~28 g ב-VS3 <span class='hl'>3.8</span>) <b>ישר על הקרח</b> — ההלם הקר שומר אותו בהיר, לא מבושל.",
       "מוסיפים <span class='hl'>~150 ml</span> חלב קר.",
       "מערבבים. מוסיפים סירופ <b>לפני</b> החלב אם רוצים מתוק — אחרת לא יימס בקור."]},
   "dedica/icedamericano":{name:"אמריקנו קר", tag:"אספרסו, מים קרים, הרבה קרח",
