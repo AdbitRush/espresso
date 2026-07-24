@@ -919,6 +919,30 @@ const MACHINES = {
         ],
         gear:g([MOKA_GEAR.frother, DEDICA_GEAR.pitcher]),
       },
+      latteart:{
+        name:"Latte art (heart & rosetta)", tag:"Once your microfoam is silky",
+        spec:"Glossy microfoam · wide cup · steady hand",
+        steps:[
+          "Start with <b>glossy microfoam</b> (latte texture) and a fresh shot with good crema, in a wide cup.",
+          "Pour a thin stream from a <b>height</b> into the centre to fill and mix, keeping the white foam held back.",
+          "When the cup is about <b>⅔ full</b>, drop the pitcher <b>close</b> to the surface so the foam floats up as a white spot.",
+          "<b>Heart:</b> keep pouring in one spot to grow a round blob, then <b>cut straight through it</b> in a quick line to the far edge.",
+          "<b>Rosetta:</b> gently <b>wiggle the pitcher side-to-side</b> as you slowly pull back, then cut through the middle to finish.",
+        ],
+        gear:g([DEDICA_GEAR.pitcher, DEDICA_GEAR.therm]),
+      },
+      alt:{
+        name:"Milk alternatives", tag:"Oat, almond, soy — how they foam",
+        spec:"Barista oat foams best · heat gentler (~55–60 °C)",
+        steps:[
+          "<b>Barista oat</b> is the closest to dairy — it foams thick and stable and is naturally sweet. Best all-rounder.",
+          "<b>Soy</b> foams well but can <b>split</b> with hot or acidic espresso — steam a little cooler and pour it soon.",
+          "<b>Almond</b> makes a thinner foam and splits more easily — go gentle on heat; a barista blend helps a lot.",
+          "<b>All alternatives:</b> heat a touch <b>less</b> (~55–60 °C). They scorch and turn bitter faster than dairy.",
+          "Look for <b>“barista” editions</b> — they add stabilisers so the foam holds and doesn't curdle.",
+        ],
+        gear:g([DEDICA_GEAR.pitcher, DEDICA_GEAR.therm, MOKA_GEAR.frother]),
+      },
     },
   },
 };
@@ -1291,6 +1315,20 @@ const HE_DRINKS = {
       "<b>מטרפה ידנית:</b> מקציפים 20–30 שנ', עולים לפני השטח כדי לקפל אוויר עד הכפלה.",
       "<b>פרנץ' פרס:</b> ממלאים חצי, ואז שואבים את הבוכנה מעלה-מטה ~30 שנ' עד סמיך וכפול.",
       "מקישים ומסובבים כדי לסדר את הבועות, ואז מכפילים בכף על הקפה."]},
+  "milkfoam/latteart":{name:"אמנות חלב (לב ורוזטה)", tag:"אחרי שהמיקרו-קצף משיי",
+    spec:"מיקרו-קצף מבריק · כוס רחבה · יד יציבה",
+    steps:["מתחילים עם <b>מיקרו-קצף מבריק</b> (מרקם לאטה) ושוט טרי עם קרמה טובה, בכוס רחבה.",
+      "מוזגים זרם דק מ<b>גובה</b> למרכז כדי למלא ולערבב, שומרים את הקצף הלבן מאחור.",
+      "כשהכוס בערך <b>⅔ מלאה</b>, יורדים <b>קרוב</b> לפני השטח כך שהקצף הלבן צף כנקודה.",
+      "<b>לב:</b> ממשיכים למזוג בנקודה אחת כדי לגדל עיגול, ואז <b>חותכים ישר דרכו</b> בקו מהיר לקצה.",
+      "<b>רוזטה:</b> מנענעים בעדינות <b>את הכד מצד לצד</b> תוך משיכה אחורה איטית, ואז חותכים דרך האמצע לסיום."]},
+  "milkfoam/alt":{name:"תחליפי חלב", tag:"שיבולת שועל, שקדים, סויה — איך מקציפים",
+    spec:"שיבולת שועל בריסטה מקציף הכי טוב · חום עדין (~55–60°C)",
+    steps:["<b>שיבולת שועל בריסטה</b> הכי קרוב לחלב — מקציף עבה ויציב ומתוק טבעית. הכי מומלץ.",
+      "<b>סויה</b> מקציף טוב אבל עלול <b>להיפרד</b> עם אספרסו חם או חומצי — מקציפים קצת יותר קר ומוזגים מהר.",
+      "<b>שקדים</b> נותן קצף דק ונפרד יותר בקלות — עדינים עם החום; תערובת בריסטה מאוד עוזרת.",
+      "<b>לכל התחליפים:</b> מחממים קצת <b>פחות</b> (~55–60°C). הם נשרפים ומרירים מהר יותר מחלב.",
+      "מחפשים <b>גרסאות “בריסטה”</b> — הן מוסיפות מייצבים כך שהקצף מחזיק ולא נקרש."]},
 };
 function machineT(key,m){ return lang==="he"&&HE_MACHINES[key] ? HE_MACHINES[key] : {name:m.name,sub:m.sub}; }
 function drinkName(mkey,dkey,d){ const h=HE_DRINKS[mkey+"/"+dkey]; return (lang==="he"&&h&&h.name)||d.name; }

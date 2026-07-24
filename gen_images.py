@@ -55,6 +55,8 @@ DRINKS = {
     "milkfoam_latte": "pouring glossy silky microfoam into a latte forming latte art, a leaf or heart, close up",
     "milkfoam_flatwhite": "a flat white in a small cup with tight shiny microfoam and fine latte art",
     "milkfoam_handfroth": "a glass of warm milk being frothed by a handheld electric milk frother, airy foam forming",
+    "milkfoam_latteart": "a barista pouring a rosetta latte art into a coffee cup, top-down close up, elegant white fern pattern",
+    "milkfoam_alt": "a frothy oat milk latte in a glass beside a plain carton of barista oat milk, plant-based, warm tones",
 }
 
 def generate(key, subject):
