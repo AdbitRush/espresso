@@ -14,25 +14,24 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 | **Cold brew** | Immersion | No machine — very coarse grind, 14–16 h fridge steep, then strain. |
 | **Filter** | V60 / French press | Manual brews off the grinder — medium (V60) to coarse (press). |
 
-## Grind quick-reference (Varia VS3 — dial 0–9.9 per full turn)
+## Grind quick-reference (Varia VS3 — dial 0–9.9, finer = lower)
 
-Varia's own reference: **espresso ≈ #4, filter ≈ #9–10**. Coarser than 9.9 means one more full turn (e.g. `13` = turn 2, dial 3).
+Calibrated to a real Dedica espresso setting of **~0.8** (espresso is a very fine grind, near the bottom of the dial). Coarser methods climb from there.
 
 | Drink | Machine | Grind (dial) | Dose → Yield | Time |
 |---|---|---|---|---|
-| Espresso / cappuccino / macchiato (1:2) | Dedica | **4.0** | 14 g → 28 g | 25–30 s |
-| Latte | Dedica | **3.9** | 14 g → 28 g | 25–30 s |
-| Flat white / cortado (ristretto) | Dedica | **3.6–3.7** | 14 g → 26 g | 25–30 s |
-| Iced latte / shakerato | Dedica | **3.8–3.9** | 14 g → 28 g | 25–30 s |
-| Americano / iced americano (long) | Dedica | **4.3–4.4** | 14 g → 28 g+ | 25–30 s |
-| Moka coffee | Moka pot | **6.0** | fill basket → full pot | ~4–5 min |
-| V60 pour-over | Filter | **9.0** | 20 g → 320 g | ~3 min |
-| French press | Filter | **11** (turn 2 · 1.0) | 30 g → 450 g | ~8 min |
-| Cold brew concentrate | Immersion | **13** (turn 2 · 3.0) | 100 g → 500 ml | 16 h steep |
-| Smooth cold brew | Immersion | **15** (turn 2 · 5.0) | 80 g → 650 ml | 14 h steep |
+| Espresso / cappuccino / macchiato | Dedica | **0.8** | 14 g → 28 g | 25–30 s |
+| Latte / cortado / iced / shakerato | Dedica | **0.7** | — | 25–30 s |
+| Flat white (ristretto) | Dedica | **0.6** | 14 g → 26 g | 25–30 s |
+| Americano / iced americano (long) | Dedica | **1.0–1.1** | 14 g → 28 g+ | 25–30 s |
+| Moka coffee | Moka pot | **3.0** | fill basket → full pot | ~4–5 min |
+| V60 pour-over | Filter | **4.5** | 20 g → 320 g | ~3 min |
+| French press | Filter | **6.5** | 30 g → 450 g | ~8 min |
+| Cold brew | Immersion | **8.5–9.0** | 100 g → 500 ml | 14–16 h |
 
-> These are **starting points**. Taste, then nudge: sour & fast → **finer** (lower);
-> bitter, slow or choking → **coarser** (higher). The Dedica's **pressurized** basket is forgiving around #4.
+> These are **starting points** — taste, then nudge: sour & fast → **finer** (lower);
+> bitter, slow or choking → **coarser** (higher). Espresso ≈ 0.8 is confirmed; the coarser
+> numbers are estimates to dial to your own taste.
 
 ## Features
 
