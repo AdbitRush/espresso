@@ -6,7 +6,7 @@ it to open Espresso on their phone. Run after the URL changes.
 import qrcode
 from qrcode.image.svg import SvgPathImage
 
-URL = "https://espresso.178-105-148-72.sslip.io/"
+URL = "https://adbitrush.github.io/espresso/"
 
 qr = qrcode.QRCode(
     version=None,
