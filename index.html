@@ -244,6 +244,10 @@
   .note-field input:focus,.note-field textarea:focus{outline:none;border-color:var(--crema)}
   .note-saved{font-size:.7rem;color:var(--led);font-weight:600;opacity:0;transition:opacity .3s}
   .note-saved.show{opacity:1}
+  .custom-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  @media (max-width:460px){.custom-grid{grid-template-columns:repeat(2,1fr)}}
+  .readout .v.mine::after{content:"•";color:var(--led);font-size:.62em;vertical-align:super;margin-inline-start:2px;
+      text-shadow:0 0 6px var(--led)}
 
   /* readout strip */
   .readout{margin:16px 20px 0;background:var(--readout-bg);border-radius:13px;padding:15px 8px;
@@ -985,6 +989,13 @@ const SCENES={
     <rect class="cr a-drip" style="animation-delay:.6s" x="100" y="58" width="3.4" height="12" rx="1.7"/>
     <path class="cd" d="M88 92h48v20a24 14 0 0 1-48 0z"/><path class="ln" d="M88 92h48v22a24 14 0 0 1-48 0z" fill="none"/>
     <ellipse class="cr" cx="112" cy="94" rx="23" ry="6"/><path class="ln" d="M136 98q20 2 20 16t-20 16"/></svg>`,
+  shotbl:`<svg class="scene" viewBox="0 0 220 150">
+    <rect class="ink" x="80" y="30" width="56" height="9" rx="2"/><path class="ln" d="M136 34h26"/>
+    <path class="cd" d="M84 39h48l-5 15h-38z"/><path class="ln" d="M84 39h48l-5 15h-38z" fill="none"/>
+    <path d="M92 54L107 76M100 54L107 76M108 54V76M116 54L109 76M124 54L109 76" stroke="var(--crema)" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/>
+    <rect class="cr a-drip" x="105.5" y="78" width="5" height="15" rx="2.5"/>
+    <path class="cd" d="M84 94h48v20a24 14 0 0 1-48 0z"/><path class="ln" d="M84 94h48v22a24 14 0 0 1-48 0z" fill="none"/>
+    <ellipse class="cr" cx="108" cy="96" rx="23" ry="6"/><path class="ln" d="M132 100q20 2 20 16t-20 16"/></svg>`,
   steam:`<svg class="scene" viewBox="0 0 220 150"><path class="lnS a-steam" d="M104 44q-7-10 0-19"/><path class="lnS a-steam" style="animation-delay:.7s" d="M118 44q7-10 0-19"/><path class="lnS a-steam" style="animation-delay:1.3s" d="M111 40q-6-9 0-17"/>
     <path class="ln" d="M150 40l-30 18"/><path class="ink" d="M147 36l8 6-6 8-8-6z"/>
     <path class="cd" d="M78 58h52l-6 46h-40z"/><path class="ln" d="M78 58h52l-6 46h-40z" fill="none"/><ellipse class="cr" cx="104" cy="60" rx="26" ry="5"/>
@@ -1048,9 +1059,10 @@ const SCENE_RULES=[
   [/top with|pour.{0,12}milk|cold milk|spoon.*foam|dollop/,'pour'],
   [/boil water|fill.*water|add.*water|combine with|off the boil|water just/,'water'],
 ];
+let blShot=false;  // true when Dedica + unpressurized basket → bottomless-portafilter shot scene
 function sceneFor(step){
   const t=step.toLowerCase();
-  for(const [re,name] of SCENE_RULES){ if(re.test(t)) return name; }
+  for(const [re,name] of SCENE_RULES){ if(re.test(t)) return (name==="shot"&&blShot)?"shotbl":name; }
   return 'serve';
 }
 
@@ -1079,6 +1091,7 @@ const UI = {
   yieldK:{en:"Yield", he:"תפוקה"}, outU:{en:"out", he:"החוצה"},
   timeK:{en:"Time", he:"זמן"},
   yourDialIn:{en:"Your dial-in", he:"הכיול שלכם"},
+  yourRecipe:{en:"Your recipe (override any number)", he:"המתכון שלכם (שנו כל מספר)"},
   myGrind:{en:"My grind", he:"הטחינה שלי"},
   notes:{en:"Notes", he:"הערות"},
   notesPh:{en:"Bean, ratio, tweaks that worked…", he:"פולים, יחס, שינויים שעבדו…"},
@@ -1448,6 +1461,7 @@ function renderRecipe(){
   stopTimer(); stopAuto(); pendingStars=0;
   if(!state.machine || !state.drink){ rEl.innerHTML=""; return; }
   const d=MACHINES[state.machine].drinks[state.drink];
+  blShot = (state.machine==="dedica" && basket==="unpressurized");
   if(state.machine==="milkfoam"){ renderMilk(d); return; }
   const t=drinkT(state.machine,state.drink,d);
   const dg = (state.machine==="dedica" && basket==="unpressurized" && d.grindU) ? d.grindU : d.grind;
@@ -1461,6 +1475,8 @@ function renderRecipe(){
 
   const fkey=state.machine+"/"+state.drink;
   const fav=isFav(fkey);
+  const N=getNote(fkey);
+  const eGrind=N.grind||dg, eDose=N.dose||t.dose, eYield=N.yield||t.yield, eTime=N.time||t.time;
   rEl.innerHTML=`<div class="recipe">
     <div class="hero"><img loading="lazy" alt="" src="images/${state.machine}_${state.drink}.jpg"
       onerror="this.closest('.hero').remove()" /></div>
@@ -1481,24 +1497,24 @@ function renderRecipe(){
       <button class="bt-opt${basket==="unpressurized"?" on":""}" data-b="unpressurized" type="button">${tr("bMod")}</button>
     </div>` : ""}
     <div class="readout" role="group" aria-label="Recipe numbers">
-      <div class="cell grind"><div class="k">${tr("grindK")}</div><div class="v">${dg}</div><div class="u">${grindUnit(dg)}</div></div>
-      <div class="cell"><div class="k">${tr("doseK")}</div><div class="v">${t.dose}</div><div class="u">${tr("inU")}</div></div>
-      <div class="cell"><div class="k">${tr("yieldK")}</div><div class="v">${t.yield}</div><div class="u">${tr("outU")}</div></div>
-      <div class="cell"><div class="k">${tr("timeK")}</div><div class="v">${t.time}</div><div class="u">${t.temp}</div></div>
+      <div class="cell grind"><div class="k">${tr("grindK")}</div><div class="v${N.grind?" mine":""}" id="rGrind">${eGrind}</div><div class="u">${grindUnit(eGrind)}</div></div>
+      <div class="cell"><div class="k">${tr("doseK")}</div><div class="v${N.dose?" mine":""}" id="rDose">${eDose}</div><div class="u">${tr("inU")}</div></div>
+      <div class="cell"><div class="k">${tr("yieldK")}</div><div class="v${N.yield?" mine":""}" id="rYield">${eYield}</div><div class="u">${tr("outU")}</div></div>
+      <div class="cell"><div class="k">${tr("timeK")}</div><div class="v${N.time?" mine":""}" id="rTime">${eTime}</div><div class="u">${t.temp}</div></div>
     </div>
     <p class="dial-note"><b>${tr("dialIn")}</b><span>${t.dial}</span></p>
 
-    <div class="sec-t">${tr("yourDialIn")}</div>
+    <div class="sec-t">${tr("yourRecipe")}</div>
     <div class="notes">
-      <div class="notes-grid">
-        <div class="note-field" style="flex:0 0 116px">
-          <label>${tr("myGrind")}</label>
-          <input id="noteGrind" inputmode="decimal" maxlength="6" placeholder="${d.grind}" />
-        </div>
-        <div class="note-field">
-          <label>${tr("notes")} <span class="note-saved" id="noteSaved">${tr("saved")}</span></label>
-          <textarea id="noteText" maxlength="500" placeholder="${tr("notesPh")}"></textarea>
-        </div>
+      <div class="custom-grid">
+        <div class="note-field"><label>${tr("grindK")}</label><input id="cGrind" inputmode="decimal" maxlength="8" placeholder="${dg}" /></div>
+        <div class="note-field"><label>${tr("doseK")}</label><input id="cDose" maxlength="12" placeholder="${t.dose}" /></div>
+        <div class="note-field"><label>${tr("yieldK")}</label><input id="cYield" maxlength="14" placeholder="${t.yield}" /></div>
+        <div class="note-field"><label>${tr("timeK")}</label><input id="cTime" maxlength="12" placeholder="${t.time}" /></div>
+      </div>
+      <div class="note-field" style="margin-top:9px">
+        <label>${tr("notes")} <span class="note-saved" id="noteSaved">${tr("saved")}</span></label>
+        <textarea id="noteText" maxlength="500" placeholder="${tr("notesPh")}"></textarea>
       </div>
     </div>
 
@@ -1546,15 +1562,21 @@ function wireRecipeExtras(fkey){
       renderFavorites(); renderDrinks();
     };
   }
-  const ng=$("#noteGrind"), nt=$("#noteText"), saved=$("#noteSaved");
-  if(ng&&nt){
-    const cur=getNote(fkey); ng.value=cur.grind||""; nt.value=cur.text||"";
-    let t=null;
-    const persist=()=>{
-      setNote(fkey,{grind:ng.value.trim(), text:nt.value});
-      if(saved){ saved.classList.add("show"); clearTimeout(t); t=setTimeout(()=>saved.classList.remove("show"),1200); }
-    };
-    ng.oninput=persist; nt.oninput=persist;
+  const cGrind=$("#cGrind"), cDose=$("#cDose"), cYield=$("#cYield"), cTime=$("#cTime"), nt=$("#noteText"), saved=$("#noteSaved");
+  if(cGrind&&nt){
+    const cur=getNote(fkey);
+    cGrind.value=cur.grind||""; cDose.value=cur.dose||""; cYield.value=cur.yield||""; cTime.value=cur.time||""; nt.value=cur.text||"";
+    let ft=null;
+    const flash=()=>{ if(saved){ saved.classList.add("show"); clearTimeout(ft); ft=setTimeout(()=>saved.classList.remove("show"),1200); } };
+    const bind=(inp,key,cellId)=>{ inp.oninput=()=>{
+      const o=getNote(fkey), v=inp.value.trim();
+      if(v) o[key]=v; else delete o[key];
+      setNote(fkey,o);
+      const cell=$("#"+cellId); if(cell){ cell.textContent=v||inp.placeholder; cell.classList.toggle("mine", !!v); }
+      flash();
+    }; };
+    bind(cGrind,"grind","rGrind"); bind(cDose,"dose","rDose"); bind(cYield,"yield","rYield"); bind(cTime,"time","rTime");
+    nt.oninput=()=>{ const o=getNote(fkey); o.text=nt.value; setNote(fkey,o); flash(); };
   }
 }
 
@@ -1703,7 +1725,9 @@ function wireReview(key,d){
   });
   const ab=box.querySelector(".sug-btn");
   if(ab) ab.onclick=()=>{ const to=ab.dataset.to; setNote(key,{...getNote(key),grind:to});
-    const ng=$("#noteGrind"); if(ng) ng.value=to; toast(tr("saved")); renderReview(key,d); };
+    const cg=$("#cGrind"); if(cg) cg.value=to;
+    const rg=$("#rGrind"); if(rg){ rg.textContent=to; rg.classList.add("mine"); }
+    toast(tr("saved")); renderReview(key,d); };
   const clr=box.querySelector(".cups-clear");
   if(clr) clr.onclick=()=>{ clearLog(key); renderReview(key,d); };
 }
