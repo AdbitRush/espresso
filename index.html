@@ -169,6 +169,10 @@
   .chip[aria-pressed="true"] .cstar{color:var(--crema-bright)}
 
   /* ---- recipe card ---- */
+  .hero{line-height:0;position:relative;background:var(--card-2)}
+  .hero img{width:100%;height:180px;object-fit:cover;display:block}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(180deg,transparent 62%,color-mix(in oklab,var(--card) 78%,transparent))}
   .recipe{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow);
       overflow:hidden;animation:rise .4s cubic-bezier(.2,.7,.3,1)}
   @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -1092,6 +1096,8 @@ function renderRecipe(){
   const fkey=state.machine+"/"+state.drink;
   const fav=isFav(fkey);
   rEl.innerHTML=`<div class="recipe">
+    <div class="hero"><img loading="lazy" alt="" src="images/${state.machine}_${state.drink}.jpg"
+      onerror="this.closest('.hero').remove()" /></div>
     <div class="rhead">
       <div class="rh-t"><h2>${t.name}</h2><p class="sub">${t.tag}</p></div>
       <div class="rh-actions">
