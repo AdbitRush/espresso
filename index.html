@@ -24,7 +24,7 @@
     --crema:#b0631e; --crema-bright:#d5872a; --copper:#8c4d20;
     --led:#2c7a4c; --warn:#b26a12;
     --readout-bg:#20160e; --readout-ink:#f2c485; --readout-dim:#8a6a45;
-    --bg-veil:color-mix(in oklab, var(--ground) 85%, transparent); --bg-photo:url("images/bg.jpg");
+    --bg-veil:color-mix(in oklab, var(--ground) 60%, transparent); --bg-photo:url("images/bg.jpg");
     --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 30px rgba(80,50,20,.08);
     --r:16px;
   }
@@ -35,7 +35,7 @@
       --crema:#e0a45b; --crema-bright:#f0b667; --copper:#c9834a;
       --led:#4fc98a; --warn:#e6a748;
       --readout-bg:#0c0805; --readout-ink:#f3c986; --readout-dim:#7a5f43;
-      --bg-veil:transparent; --bg-photo:none;
+      --bg-veil:color-mix(in oklab, var(--ground) 80%, transparent); --bg-photo:url("images/bg.jpg");
       --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
     }
   }
@@ -45,7 +45,7 @@
     --crema:#b0631e; --crema-bright:#d5872a; --copper:#8c4d20;
     --led:#2c7a4c; --warn:#b26a12;
     --readout-bg:#20160e; --readout-ink:#f2c485; --readout-dim:#8a6a45;
-    --bg-veil:color-mix(in oklab, var(--ground) 85%, transparent); --bg-photo:url("images/bg.jpg");
+    --bg-veil:color-mix(in oklab, var(--ground) 60%, transparent); --bg-photo:url("images/bg.jpg");
     --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 30px rgba(80,50,20,.08);
   }
   :root[data-theme="dark"]{
@@ -54,7 +54,7 @@
     --crema:#e0a45b; --crema-bright:#f0b667; --copper:#c9834a;
     --led:#4fc98a; --warn:#e6a748;
     --readout-bg:#0c0805; --readout-ink:#f3c986; --readout-dim:#7a5f43;
-    --bg-veil:transparent; --bg-photo:none;
+    --bg-veil:color-mix(in oklab, var(--ground) 80%, transparent); --bg-photo:url("images/bg.jpg");
     --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.5);
   }
 
@@ -253,6 +253,14 @@
   .cell .u{font-size:.58rem;color:var(--readout-dim);margin-top:3px;letter-spacing:.04em}
   .cell.grind .v{font-size:1.55rem}
   .cell.grind .k{color:var(--readout-ink);opacity:.75}
+
+  .basket-toggle{display:flex;align-items:center;gap:8px;margin:14px 20px 0;flex-wrap:wrap}
+  .bt-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);font-weight:600}
+  .bt-opt{background:var(--card-2);border:1px solid var(--hair);color:var(--ink-soft);border-radius:999px;
+      padding:5px 12px;font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s}
+  .bt-opt:hover{color:var(--ink);border-color:var(--crema)}
+  .bt-opt.on{background:var(--crema);color:#fff;border-color:var(--crema)}
+  .bt-opt:focus-visible{outline:2px solid var(--crema);outline-offset:2px}
 
   .dial-note{margin:11px 20px 0;font-size:.76rem;color:var(--ink-soft);display:flex;gap:7px;align-items:flex-start}
   .dial-note b{color:var(--crema);font-weight:600}
@@ -597,12 +605,12 @@ const MACHINES = {
     drinks:{
       espresso:{
         name:"Espresso", tag:"The foundation shot · 1:2 in 25–30 s",
-        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"~92 °C",
-        dial:"Too fast &amp; pale → go <b>finer</b> (2.2). Chokes / drips forever → go <b>coarser</b> (2.9).",
+        grind:"2.5", grindU:"0.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"~92 °C",
+        dial:"Too fast &amp; pale → go <b>finer</b>. Chokes / drips forever → go <b>coarser</b>.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
           "Power on and let it heat <b>at least 3 min</b>. Lock in the empty portafilter and run a blank shot to warm the group and your cup.",
-          "Grind <span class='hl'>14 g</span> into the double basket at VS3 <span class='hl'>2.5</span>.",
+          "Grind <span class='hl'>14 g</span> into the double basket at VS3 <span class='hl'>{{g}}</span>.",
           "Give it a quick <b>WDT stir</b>, level the bed, and tamp <b>gently &amp; even</b> — pressurized baskets don't need muscle.",
           "Lock in, put the warm cup underneath, and start the shot immediately.",
           "Aim for <span class='hl'>~28 g out in 25–30 s</span> from first drip. Sour = grind finer; harsh &amp; bitter = coarser.",
@@ -611,11 +619,11 @@ const MACHINES = {
       },
       americano:{
         name:"Americano", tag:"Espresso loosened with hot water",
-        grind:"2.9", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
-        dial:"A longer drink — grind a hair <b>coarser</b> (2.9) than a straight shot; adjust strength with water.",
+        grind:"2.9", grindU:"1.0", dose:"14 g", yield:"28 g + water", time:"25–30 s", temp:"~92 °C",
+        dial:"A longer drink — grind a hair <b>coarser</b> than a straight shot; adjust strength with water.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
-          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>2.9</span>.",
+          "Pull a standard double: <span class='hl'>14 g in → 28 g out</span> at VS3 <span class='hl'>{{g}}</span>.",
           "Fill the cup with <span class='hl'>120–180 ml</span> hot water <b>first</b>.",
           "Pour the shot <b>on top</b> of the water — this floats the crema instead of blasting it away.",
           "Adjust strength with the water volume, not the grind.",
@@ -624,7 +632,7 @@ const MACHINES = {
       },
       cappuccino:{
         name:"Cappuccino", tag:"1 : 1 : 1 — shot, milk, foam",
-        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"2.5", grindU:"0.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"Dial the shot as espresso; the character comes from a <b>thick 1 cm foam cap</b>.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Fill the steel jug 1/3 with cold milk. Purge the wand, then <b>stretch 4–5 s</b> at the surface (hissing) to build foam, submerge to <b>60–65 °C</b>, wipe &amp; purge.",
@@ -638,7 +646,7 @@ const MACHINES = {
       },
       latte:{
         name:"Latte", tag:"Double shot drowned in silky milk",
-        grind:"2.4", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"2.4", grindU:"0.7", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"Big milk volume hides a weak shot — keep the double <b>tight (1:2)</b> so it cuts through.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Fill jug ~1/2 with cold milk. Short <b>2–3 s stretch</b> then submerge — you want <b>thin microfoam</b>, not a foam cap.",
@@ -652,12 +660,12 @@ const MACHINES = {
       },
       flatwhite:{
         name:"Flat white", tag:"Small, strong, glossy microfoam",
-        grind:"2.2", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
-        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk. Grind ~2.2.",
+        grind:"2.2", grindU:"0.5", dose:"14 g", yield:"26 g", time:"25–30 s", temp:"60–63 °C milk",
+        dial:"Pull it a touch <b>tighter (1:1.8)</b> for a bolder base under the milk; grind a hair finer.",
         timer:{label:"Shot time", target:26, mode:"up"},
         milk:"Only a <b>1–2 s stretch</b> — the flat white is defined by tight, shiny, barely-there foam folded fully into the milk.",
         steps:[
-          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>2.2</span>.",
+          "Pull a <b>tight double</b>: 14 g → ~26 g at VS3 <span class='hl'>{{g}}</span>.",
           "Steam <span class='hl'>~120 ml</span> milk to silky microfoam, minimal air.",
           "Pour into a <span class='hl'>150–170 ml</span> cup for a high coffee-to-milk ratio.",
           "Keep the foam under <b>~5 mm</b> — smooth, no dry peaks.",
@@ -666,8 +674,8 @@ const MACHINES = {
       },
       cortado:{
         name:"Cortado", tag:"Equal parts espresso & warm milk",
-        grind:"2.3", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
-        dial:"Grind a touch <b>finer</b> (2.3) for a tight, sweet 1:1 base.",
+        grind:"2.3", grindU:"0.6", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"58–62 °C milk",
+        dial:"A touch <b>finer</b> than a straight shot for a tight, sweet 1:1 base.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"Barely texture it: <b>1 s stretch max</b>. Warm milk, almost no foam — it should stay flat and silky.",
         steps:[
@@ -680,7 +688,7 @@ const MACHINES = {
       },
       macchiato:{
         name:"Macchiato", tag:"Espresso 'stained' with a foam dollop",
-        grind:"2.5", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
+        grind:"2.5", grindU:"0.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"60–65 °C milk",
         dial:"It's 95% espresso, so the shot has nowhere to hide — dial it clean first.",
         timer:{label:"Shot time", target:28, mode:"up"},
         milk:"You only need a <b>spoonful of foam</b>. Steam a small amount of milk with a good stretch and use the top layer.",
@@ -694,12 +702,12 @@ const MACHINES = {
       },
       icedlatte:{
         name:"Iced latte", tag:"Hot shot shocked over ice + cold milk",
-        grind:"2.4", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
+        grind:"2.4", grindU:"0.7", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
         dial:"Ice + cold milk dilute fast — pull the shot a touch <b>tighter (1:1.8)</b> so it still cuts through.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
           "Fill a tall glass with <b>big ice cubes</b>.",
-          "Pull a double espresso (14 g → ~28 g at VS3 <span class='hl'>2.4</span>) <b>straight onto the ice</b> — the cold shock keeps it bright, not stewed.",
+          "Pull a double espresso (14 g → ~28 g at VS3 <span class='hl'>{{g}}</span>) <b>straight onto the ice</b> — the cold shock keeps it bright, not stewed.",
           "Top with <span class='hl'>~150 ml</span> cold milk.",
           "Stir. Add syrup <b>before</b> the milk if you want it sweet — it won't dissolve once cold otherwise.",
         ],
@@ -707,7 +715,7 @@ const MACHINES = {
       },
       icedamericano:{
         name:"Iced americano", tag:"Espresso, cold water, plenty of ice",
-        grind:"2.8", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
+        grind:"2.8", grindU:"0.9", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"over ice",
         dial:"Same shot as espresso. Long &amp; refreshing — adjust with water, not the grind.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
@@ -719,7 +727,7 @@ const MACHINES = {
       },
       shakerato:{
         name:"Espresso shakerato", tag:"Shaken iced espresso — silky, frothy, no milk",
-        grind:"2.4", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"iced",
+        grind:"2.4", grindU:"0.7", dose:"14 g", yield:"28 g", time:"25–30 s", temp:"iced",
         dial:"An Italian summer classic. A sweeter shot shakes into a thicker foam.",
         timer:{label:"Shot time", target:28, mode:"up"},
         steps:[
@@ -783,10 +791,10 @@ const MACHINES = {
     drinks:{
       concentrate:{
         name:"Cold brew concentrate", tag:"Strong 1:5 base · dilute to taste",
-        grind:"13", dose:"100 g", yield:"500 ml water", time:"16 h", temp:"in fridge",
-        dial:"Gritty / muddy cup → grind <b>coarser</b> (16). Weak &amp; watery → steep <b>longer</b>, not finer.",
+        grind:"9.0", dose:"100 g", yield:"500 ml water", time:"16 h", temp:"in fridge",
+        dial:"Gritty / muddy cup → grind <b>coarser</b> (9.5). Weak &amp; watery → steep <b>longer</b>, not finer.",
         steps:[
-          "Grind <span class='hl'>100 g</span> coarse at VS3 <span class='hl'>13</span> — think coarse sea salt, no fines.",
+          "Grind <span class='hl'>100 g</span> coarse at VS3 <span class='hl'>9.0</span> — think coarse sea salt, no fines.",
           "Combine with <span class='hl'>500 ml</span> cold filtered water in a jar. Stir so <b>every ground is wet</b>.",
           "Seal and steep in the fridge <span class='hl'>16 h</span> (14 h for lighter, 18 h for bolder).",
           "Strain through a paper filter or mesh, then a second time for clarity.",
@@ -796,10 +804,10 @@ const MACHINES = {
       },
       smooth:{
         name:"Smooth cold brew", tag:"Ready to drink · gentle 1:8",
-        grind:"15", dose:"80 g", yield:"650 ml water", time:"14 h", temp:"in fridge",
+        grind:"9.5", dose:"80 g", yield:"650 ml water", time:"14 h", temp:"in fridge",
         dial:"For a rounder, tea-like cup. Too sharp → coarser + shorter steep; flat → +2 h.",
         steps:[
-          "Grind <span class='hl'>80 g</span> at VS3 <span class='hl'>15</span> (a touch coarser than the concentrate for a clean ready-to-drink brew).",
+          "Grind <span class='hl'>80 g</span> at VS3 <span class='hl'>9.5</span> (a touch coarser than the concentrate for a clean ready-to-drink brew).",
           "Add <span class='hl'>650 ml</span> cold water, stir until fully saturated.",
           "Steep <span class='hl'>14 h</span> in the fridge.",
           "Double-strain and pour <b>straight over ice</b> — no dilution needed.",
@@ -808,7 +816,7 @@ const MACHINES = {
       },
       icedlatte:{
         name:"Iced cold-brew latte", tag:"Concentrate + cold milk over ice",
-        grind:"13", dose:"use concentrate", yield:"1:1 milk", time:"—", temp:"iced",
+        grind:"9.0", dose:"use concentrate", yield:"1:1 milk", time:"—", temp:"iced",
         dial:"Uses your ready concentrate. Want it stronger? Less milk, not a finer grind.",
         steps:[
           "Fill a tall glass with <b>big ice cubes</b>.",
@@ -820,7 +828,7 @@ const MACHINES = {
       },
       tonic:{
         name:"Cold-brew tonic", tag:"Fizzy, citrusy, wakes you up",
-        grind:"13", dose:"use concentrate", yield:"tonic + ice", time:"—", temp:"iced",
+        grind:"9.0", dose:"use concentrate", yield:"tonic + ice", time:"—", temp:"iced",
         dial:"A long, refreshing drink. Balance is concentrate-to-tonic, roughly 1:2.",
         steps:[
           "Fill a glass with ice and pour in <span class='hl'>~150 ml</span> tonic water.",
@@ -851,11 +859,11 @@ const MACHINES = {
       },
       frenchpress:{
         name:"French press", tag:"Full-bodied immersion · 1:15, ~30 g → 450 g",
-        grind:"11", dose:"30 g", yield:"450 g", time:"~8 min", temp:"94–96 °C",
-        dial:"Silty / muddy → grind <b>coarser</b> (13) &amp; don't over-stir. Weak &amp; sour → <b>finer</b> (9).",
+        grind:"8.0", dose:"30 g", yield:"450 g", time:"~8 min", temp:"94–96 °C",
+        dial:"Silty / muddy → grind <b>coarser</b> (8.5) &amp; don't over-stir. Weak &amp; sour → <b>finer</b> (7).",
         timer:{label:"Steep", target:480, mode:"up"},
         steps:[
-          "Warm the press. Grind <span class='hl'>30 g</span> coarse at VS3 <span class='hl'>11</span> and add it in.",
+          "Warm the press. Grind <span class='hl'>30 g</span> coarse at VS3 <span class='hl'>8.0</span> and add it in.",
           "Pour all <span class='hl'>450 g</span> water just off the boil, start the timer, and stir the crust at <b>4 min</b>.",
           "Skim the foam and floating grounds off the top with two spoons — this is what kills the silt.",
           "Let it steep to <span class='hl'>~8 min</span>, then press the plunger down <b>slowly and evenly</b>.",
@@ -1040,6 +1048,7 @@ function sceneFor(step){
 
 /* --------------------------- i18n (EN / HE) --------------------------- */
 let lang = "en";
+let basket = localStorage.getItem("espresso.basket") || "pressurized";
 const UI = {
   tagline:{en:"Grind & recipe guide · your kit", he:"מדריך טחינה ומתכונים · הערכה שלך"},
   mLabel:{en:"1 · Machine", he:"1 · מכונה"},
@@ -1052,6 +1061,9 @@ const UI = {
   iosHint:{en:"Add to your Home Screen: tap <b>Share</b> then <b>Add to Home Screen</b>.", he:"הוסיפו למסך הבית: הקישו <b>שיתוף</b> ואז <b>הוסף למסך הבית</b>."},
   dialIn:{en:"Dial in →", he:"→ כיול"},
   grindK:{en:"VS3 grind", he:"טחינת VS3"}, onDial:{en:"on dial", he:"בחוגה"},
+  basketLbl:{en:"Basket", he:"סל"},
+  bStock:{en:"Stock (pressurized)", he:"מקורי (בלחץ)"},
+  bMod:{en:"Unpressurized", he:"ללא לחץ"},
   turn2:{en:"turn 2 ·", he:"סיבוב 2 ·"},
   doseK:{en:"Dose", he:"מנה"}, inU:{en:"in", he:"פנימה"},
   yieldK:{en:"Yield", he:"תפוקה"}, outU:{en:"out", he:"החוצה"},
@@ -1075,7 +1087,7 @@ const UI = {
   copyFail:{en:"Couldn't copy this link", he:"לא הצלחתי להעתיק את הקישור"},
   qrH:{en:"Open on your phone", he:"פתחו בטלפון"},
   qrS:{en:"Scan with your camera — then Add to Home Screen to install it.", he:"סרקו עם המצלמה — ואז הוסיפו למסך הבית כדי להתקין."},
-  footer:{en:'VS3 dial 0–9.9 (finer = lower). Espresso ≈ <b>2.5</b> on the Dedica pressurized basket. Past 9.9 = one more full turn (13 = turn 2, dial 3). Starting points — taste, then nudge.', he:'חוגת ה-VS3 היא 0–9.9 (דק יותר = נמוך). אספרסו ≈ <b>2.5</b> עם הסל בלחץ של הדדיקה. מעבר ל-9.9 = עוד סיבוב מלא (13 = סיבוב 2, חוגה 3). נקודות התחלה — לטעום ולכוונן.'},
+  footer:{en:'VS3 dial 0–9.9 (finer = lower). Espresso ≈ <b>2.5</b> on the stock (pressurized) basket, ~<b>0.8</b> on an unpressurized one — pick your basket above. Starting points — taste, then nudge.', he:'חוגת ה-VS3 היא 0–9.9 (דק יותר = נמוך). אספרסו ≈ <b>2.5</b> עם הסל המקורי (בלחץ), ~<b>0.8</b> עם סל ללא לחץ — בחרו סל למעלה. נקודות התחלה — לטעום ולכוונן.'},
   builtFor:{en:"Built for Or's kitchen", he:"נבנה למטבח של אור"},
   langBtn:{en:"עברית", he:"EN"},
   rateTitle:{en:"Rate this cup", he:"דרגו את הכוס"},
@@ -1176,15 +1188,15 @@ function tv(s){ if(lang!=="he"||!s) return s; let r=s; for(const [re,he] of VAL_
 
 const HE_DRINKS = {
   "dedica/espresso":{name:"אספרסו", tag:"השוט הבסיסי · 1:2 ב-25–30 שנ'",
-    dial:"מהיר וחיוור מדי → לכו <b>דק יותר</b> (2.2). נחנק / מטפטף לנצח → <b>גס יותר</b> (2.9).",
+    dial:"מהיר וחיוור מדי → לכו <b>דק יותר</b>. נחנק / מטפטף לנצח → <b>גס יותר</b>.",
     steps:["מדליקים ומחממים <b>לפחות 3 דק'</b>. נועלים את הפורטהפילטר הריק ומריצים שוט סרק לחימום הראש והכוס.",
-      "טוחנים <span class='hl'>14 g</span> לתוך הסל הכפול ב-VS3 <span class='hl'>2.5</span>.",
+      "טוחנים <span class='hl'>14 g</span> לתוך הסל הכפול ב-VS3 <span class='hl'>{{g}}</span>.",
       "נותנים ערבוב <b>WDT</b> מהיר, מיישרים את המצע, וטמפרים <b>בעדינות ואחיד</b> — סלים בלחץ לא צריכים כוח.",
       "נועלים, שמים את הכוס החמה מתחת, ומתחילים את השוט מיד.",
       "מכוונים ל-<span class='hl'>~28 g החוצה ב-25–30 שנ'</span> מהטיפה הראשונה. חמוץ = דק יותר; מר וחריף = גס יותר."]},
   "dedica/americano":{name:"אמריקנו", tag:"אספרסו מדולל במים חמים",
-    dial:"משקה ארוך — טוחנים <b>קצת גס יותר</b> (2.9) משוט רגיל; מכוונים עוצמה עם מים.",
-    steps:["מחלצים דאבל רגיל: <span class='hl'>14 g פנימה → 28 g החוצה</span> ב-VS3 <span class='hl'>2.9</span>.",
+    dial:"משקה ארוך — טוחנים <b>קצת גס יותר</b> משוט רגיל; מכוונים עוצמה עם מים.",
+    steps:["מחלצים דאבל רגיל: <span class='hl'>14 g פנימה → 28 g החוצה</span> ב-VS3 <span class='hl'>{{g}}</span>.",
       "ממלאים את הכוס ב-<span class='hl'>120–180 ml</span> מים חמים <b>קודם</b>.",
       "מוזגים את השוט <b>מעל</b> המים — כך הקרמה צפה במקום להתרסק.",
       "מכוונים עוצמה עם כמות המים, לא עם הטחינה."]},
@@ -1203,14 +1215,14 @@ const HE_DRINKS = {
       "מסובבים את הכד, מוזגים מגובה לערבוב, ואז יורדים קרוב לסיום.",
       "מכוונים לשכבת קצף דקה של <b>~5 מ״מ</b> למעלה."]},
   "dedica/flatwhite":{name:"פלאט וייט", tag:"קטן, חזק, מיקרו-קצף מבריק",
-    dial:"מחלצים קצת <b>יותר הדוק (1:1.8)</b> לבסיס נועז יותר מתחת לחלב. טחינה ~2.2.",
+    dial:"מחלצים קצת <b>יותר הדוק (1:1.8)</b> לבסיס נועז יותר מתחת לחלב; טוחנים קצת יותר דק.",
     milk:"רק <b>מתיחה של 1–2 שנ'</b> — הפלאט וייט מוגדר על ידי קצף הדוק, מבריק וכמעט לא קיים.",
-    steps:["מחלצים <b>דאבל הדוק</b>: 14 g → ~26 g ב-VS3 <span class='hl'>2.2</span>.",
+    steps:["מחלצים <b>דאבל הדוק</b>: 14 g → ~26 g ב-VS3 <span class='hl'>{{g}}</span>.",
       "מקציפים <span class='hl'>~120 ml</span> חלב למיקרו-קצף משיי, מעט אוויר.",
       "מוזגים לכוס <span class='hl'>150–170 ml</span> ליחס קפה-חלב גבוה.",
       "שומרים את הקצף מתחת ל-<b>~5 מ״מ</b> — חלק, בלי פסגות יבשות."]},
   "dedica/cortado":{name:"קורטדו", tag:"חלקים שווים אספרסו וחלב חם",
-    dial:"טוחנים <b>קצת דק יותר</b> (2.3) לבסיס 1:1 הדוק ומתקתק.",
+    dial:"טוחנים <b>קצת דק יותר</b> משוט רגיל לבסיס 1:1 הדוק ומתקתק.",
     milk:"בקושי ממרקמים: <b>מתיחה של שנייה מקס</b>. חלב חם, כמעט בלי קצף — צריך להישאר שטוח ומשיי.",
     steps:["מחלצים דאבל אספרסו לכוס קטנה <span class='hl'>90–120 ml</span>.",
       "מקציפים <b>נפח שווה</b> של חלב (~60 מ״ל) כמעט בלי קצף.",
@@ -1224,7 +1236,7 @@ const HE_DRINKS = {
   "dedica/icedlatte":{name:"לאטה קר", tag:"שוט חם על קרח + חלב קר",
     dial:"קרח וחלב קר מדללים מהר — מחלצים את השוט קצת <b>יותר הדוק (1:1.8)</b> שעדיין יחתוך.",
     steps:["ממלאים כוס גבוהה ב<b>קוביות קרח גדולות</b>.",
-      "מחלצים דאבל אספרסו (14 g → ~28 g ב-VS3 <span class='hl'>2.4</span>) <b>ישר על הקרח</b> — ההלם הקר שומר אותו בהיר, לא מבושל.",
+      "מחלצים דאבל אספרסו (14 g → ~28 g ב-VS3 <span class='hl'>{{g}}</span>) <b>ישר על הקרח</b> — ההלם הקר שומר אותו בהיר, לא מבושל.",
       "מוסיפים <span class='hl'>~150 ml</span> חלב קר.",
       "מערבבים. מוסיפים סירופ <b>לפני</b> החלב אם רוצים מתוק — אחרת לא יימס בקור."]},
   "dedica/icedamericano":{name:"אמריקנו קר", tag:"אספרסו, מים קרים, הרבה קרח",
@@ -1259,15 +1271,15 @@ const HE_DRINKS = {
       "מוזגים את קפה המוקה לכוס, ואז מכפילים ומוזגים את הקצף למעלה.",
       "מפזרים קקאו אם רוצים — הגוף של המוקה נושא חלב יפהפה."]},
   "cold/concentrate":{name:"קונצנטרט קולד ברו", tag:"בסיס חזק 1:5 · מדללים לפי הטעם",
-    dial:"כוס גרגרית / בוצית → טוחנים <b>גס יותר</b> (16). חלש ומימי → משרים <b>יותר זמן</b>, לא דק יותר.",
-    steps:["טוחנים <span class='hl'>100 g</span> גס ב-VS3 <span class='hl'>13</span> — כמו מלח ים גס, בלי אבקה.",
+    dial:"כוס גרגרית / בוצית → טוחנים <b>גס יותר</b> (9.5). חלש ומימי → משרים <b>יותר זמן</b>, לא דק יותר.",
+    steps:["טוחנים <span class='hl'>100 g</span> גס ב-VS3 <span class='hl'>9.0</span> — כמו מלח ים גס, בלי אבקה.",
       "מערבבים עם <span class='hl'>500 ml</span> מים קרים מסוננים בצנצנת. מערבבים כך <b>שכל גרגר רטוב</b>.",
       "אוטמים ומשרים במקרר <span class='hl'>16 שעות</span> (14 לקליל, 18 לעז).",
       "מסננים דרך פילטר נייר או רשת, ואז שוב לצלילות.",
       "זה ה<b>קונצנטרט</b> — מדללים <span class='hl'>1:1</span> במים או חלב על קרח. שומר ~שבוע אטום."]},
   "cold/smooth":{name:"קולד ברו חלק", tag:"מוכן לשתייה · עדין 1:8",
     dial:"לכוס עגולה יותר, כמו תה. חד מדי → גס יותר + השרייה קצרה; שטוח → +2 שעות.",
-    steps:["טוחנים <span class='hl'>80 g</span> ב-VS3 <span class='hl'>15</span> (קצת יותר גס מהקונצנטרט לכוס נקייה מוכנה לשתייה).",
+    steps:["טוחנים <span class='hl'>80 g</span> ב-VS3 <span class='hl'>9.5</span> (קצת יותר גס מהקונצנטרט לכוס נקייה מוכנה לשתייה).",
       "מוסיפים <span class='hl'>650 ml</span> מים קרים, מערבבים עד רוויה מלאה.",
       "משרים <span class='hl'>14 שעות</span> במקרר.",
       "מסננים פעמיים ומוזגים <b>ישר על קרח</b> — בלי דילול."]},
@@ -1291,8 +1303,8 @@ const HE_DRINKS = {
       "מוזגים בספירלות איטיות ל-<span class='hl'>320 g</span> סה״כ ב-2–3 מזיגות, שומרים על מצע ישר ומים הרחק מהנייר.",
       "מסיימים את הניקוז בסביבות <span class='hl'>2:45–3:15</span>. סיבוב אחרון למצע שטוח."]},
   "filter/frenchpress":{name:"פרנץ' פרס", tag:"גוף מלא · השרייה · 1:15, ~30 g → 450 g",
-    dial:"בוצי / עכור → טוחנים <b>גס יותר</b> (13) ולא מערבבים יותר מדי. חלש וחמוץ → <b>דק יותר</b> (9).",
-    steps:["מחממים את הפרס. טוחנים <span class='hl'>30 g</span> גס ב-VS3 <span class='hl'>11</span> ומוסיפים פנימה.",
+    dial:"בוצי / עכור → טוחנים <b>גס יותר</b> (8.5) ולא מערבבים יותר מדי. חלש וחמוץ → <b>דק יותר</b> (7).",
+    steps:["מחממים את הפרס. טוחנים <span class='hl'>30 g</span> גס ב-VS3 <span class='hl'>8.0</span> ומוסיפים פנימה.",
       "מוזגים את כל <span class='hl'>450 g</span> המים מיד אחרי הרתיחה, מתחילים טיימר, ומערבבים את הקרום ב-<b>4 דק'</b>.",
       "מקלפים את הקצף והגרגרים הצפים מלמעלה עם שתי כפות — זה מה שהורג את הבוציות.",
       "נותנים להשרות ל-<span class='hl'>~8 דק'</span>, ואז לוחצים את הבוכנה <b>לאט ואחיד</b>.",
@@ -1427,6 +1439,8 @@ function renderRecipe(){
   const d=MACHINES[state.machine].drinks[state.drink];
   if(state.machine==="milkfoam"){ renderMilk(d); return; }
   const t=drinkT(state.machine,state.drink,d);
+  const dg = (state.machine==="dedica" && basket==="unpressurized" && d.grindU) ? d.grindU : d.grind;
+  t.steps = t.steps.map(s=>s.replace(/\{\{g\}\}/g, dg));
   const gearHTML=d.gear.map(x=>{ const g=gearT(x); return `<li><span class="gi" aria-hidden="true">${g.i}</span>
       <div><div class="gn">${g.n}${g.star?`<span class="star">${tr("keyTag")}</span>`:""}</div>
       <div class="gw">${g.w}</div></div></li>`; }).join("");
@@ -1449,8 +1463,13 @@ function renderRecipe(){
           aria-pressed="${fav}" aria-label="${tr("favTitle")}" title="${tr("favTitle")}">${fav?"★":"☆"}</button>
       </div>
     </div>
+    ${state.machine==="dedica" ? `<div class="basket-toggle" id="basketToggle" role="group" aria-label="${tr("basketLbl")}">
+      <span class="bt-lbl">${tr("basketLbl")}</span>
+      <button class="bt-opt${basket==="pressurized"?" on":""}" data-b="pressurized" type="button">${tr("bStock")}</button>
+      <button class="bt-opt${basket==="unpressurized"?" on":""}" data-b="unpressurized" type="button">${tr("bMod")}</button>
+    </div>` : ""}
     <div class="readout" role="group" aria-label="Recipe numbers">
-      <div class="cell grind"><div class="k">${tr("grindK")}</div><div class="v">${d.grind}</div><div class="u">${grindUnit(d.grind)}</div></div>
+      <div class="cell grind"><div class="k">${tr("grindK")}</div><div class="v">${dg}</div><div class="u">${grindUnit(dg)}</div></div>
       <div class="cell"><div class="k">${tr("doseK")}</div><div class="v">${t.dose}</div><div class="u">${tr("inU")}</div></div>
       <div class="cell"><div class="k">${tr("yieldK")}</div><div class="v">${t.yield}</div><div class="u">${tr("outU")}</div></div>
       <div class="cell"><div class="k">${tr("timeK")}</div><div class="v">${t.time}</div><div class="u">${t.temp}</div></div>
@@ -1501,6 +1520,9 @@ function getNote(k){ try{ return JSON.parse(localStorage.getItem(noteKey(k))||"{
 function setNote(k,o){ localStorage.setItem(noteKey(k), JSON.stringify(o)); scheduleSync(); }
 
 function wireRecipeExtras(fkey){
+  const bt=$("#basketToggle");
+  if(bt) bt.querySelectorAll(".bt-opt").forEach(b=>{ b.onclick=()=>{
+    basket=b.dataset.b; localStorage.setItem("espresso.basket",basket); renderRecipe(); }; });
   const shareBtn=$("#shareBtn"); if(shareBtn) shareBtn.onclick=shareDrink;
   const favBtn=$("#favBtn");
   if(favBtn){

@@ -16,7 +16,7 @@ No build, no dependencies. Just open `index.html` (or the live page) on your pho
 
 ## Grind quick-reference (Varia VS3 — dial 0–9.9, finer = lower)
 
-VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). The Dedica's **pressurized** basket favours the coarser end, so espresso ≈ **2.5**. Coarser methods climb from there; past 9.9 = a second full turn (`13` = turn 2, dial 3).
+VS3 espresso range is **0.2–3.3** (Honest Coffee Guide). Pick your **basket** in the app: **stock/pressurized → ~2.5**, **unpressurized (modded) → ~0.8**. Everything stays within the 0–9.9 dial.
 
 | Drink | Machine | Grind (dial) | Dose → Yield | Time |
 |---|---|---|---|---|
