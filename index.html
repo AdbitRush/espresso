@@ -310,7 +310,8 @@
   .timer .disp.over{color:var(--warn)}
   .timer .meta{flex:1;min-width:0}
   .timer .meta .tt{font-size:.78rem;color:var(--ink-soft)}
-  .timer .meta .tgt{font-size:.72rem;color:var(--crema);font-weight:600;font-family:"JetBrains Mono",monospace}
+  .timer .meta .tgt{font-size:.72rem;color:var(--crema);font-weight:600;display:flex;align-items:center;gap:.3em}
+  .timer .meta .tgt .tgt-val{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;unicode-bidi:isolate;direction:ltr}
   .tbtn{flex:none;border:none;border-radius:10px;padding:10px 16px;font-family:inherit;font-weight:600;
       font-size:.84rem;cursor:pointer;background:var(--crema);color:#fff;transition:filter .15s}
   .tbtn:hover{filter:brightness(1.06)}
@@ -736,8 +737,9 @@ const MACHINES = {
         steps:[
           "Fill a tall glass with <b>big ice cubes</b>.",
           "Pull a double espresso (14 g → ~28 g at VS3 <span class='hl'>{{g}}</span>) <b>straight onto the ice</b> — the cold shock keeps it bright, not stewed.",
+          "Want it sweet? Stir in syrup <b>now</b>, into the hot shot — it won't dissolve once everything's cold.",
           "Top with <span class='hl'>~150 ml</span> cold milk.",
-          "Stir. Add syrup <b>before</b> the milk if you want it sweet — it won't dissolve once cold otherwise.",
+          "Stir to combine.",
         ],
         gear:g([BASE_GEAR.beans,BASE_GEAR.scale,DEDICA_GEAR.tamp51,COLD_GEAR.ice]),
       },
@@ -1121,7 +1123,7 @@ const UI = {
   gear:{en:"Gear that helps", he:"ציוד שעוזר"},
   keyTag:{en:"key", he:"חובה"},
   target:{en:"target", he:"יעד"},
-  start:{en:"Start", he:"התחלה"}, stop:{en:"Stop", he:"עצירה"}, reset:{en:"Reset", he:"איפוס"},
+  start:{en:"Start", he:"התחלה"}, stop:{en:"Stop", he:"עצירה"}, reset:{en:"Reset", he:"איפוס"}, timerMode:{en:"Count up/down", he:"ספירה מעלה/מטה"},
   auto:{en:"Auto", he:"אוטו'"},
   shareTitle:{en:"Share this drink", he:"שיתוף המשקה"},
   favTitle:{en:"Save to favorites", he:"שמירה למועדפים"},
@@ -1280,8 +1282,9 @@ const HE_DRINKS = {
     dial:"קרח וחלב קר מדללים מהר — מחלצים את השוט קצת <b>יותר הדוק (1:1.8)</b> שעדיין יחתוך.",
     steps:["ממלאים כוס גבוהה ב<b>קוביות קרח גדולות</b>.",
       "מחלצים דאבל אספרסו (14 g → ~28 g ב-VS3 <span class='hl'>{{g}}</span>) <b>ישר על הקרח</b> — ההלם הקר שומר אותו בהיר, לא מבושל.",
+      "רוצים מתוק? מערבבים סירופ <b>עכשיו</b>, לתוך השוט החם — הוא לא יימס אחרי שהכל יתקרר.",
       "מוסיפים <span class='hl'>~150 ml</span> חלב קר.",
-      "מערבבים. מוסיפים סירופ <b>לפני</b> החלב אם רוצים מתוק — אחרת לא יימס בקור."]},
+      "מערבבים."]},
   "dedica/icedamericano":{name:"אמריקנו קר", tag:"אספרסו, מים קרים, הרבה קרח",
     dial:"אותו שוט כמו אספרסו. ארוך ומרענן — מכוונים עם מים, לא עם הטחינה.",
     steps:["ממלאים כוס גבוהה בקרח ו-<span class='hl'>~150 ml</span> מים קרים.",
@@ -1846,35 +1849,52 @@ function wirePlayer(steps){
 }
 
 /* ----------------------------- timer ----------------------------- */
-let tHandle=null, tStart=0, tTarget=0, tLabel="";
+let tHandle=null, tStart=0, tTarget=0, tLabel="", tMode=localStorage.getItem("espresso.timerMode")||"down";
 function timerHTML(t){
   if(!t) return "";
   tTarget=t.target; tLabel=t.label;
   const unit = lang==="he" ? (t.target>=60?"דק'":"שנ'") : (t.target>=60?"min":"s");
   const tg = t.target>=60 ? `${Math.round(t.target/60)} ${unit}` : `${t.target}${lang==="he"?" ":""}${unit}`;
   const label = (lang==="he"&&HE_TIMER[t.label])||t.label;
+  const dispInit = tMode==="down" ? fmt(t.target) : "0:00";
   return `<div class="timer">
-    <div class="disp" id="disp">0:00</div>
-    <div class="meta"><div class="tt">${label}</div><div class="tgt">${tr("target")} · ${tg}</div></div>
+    <div class="disp" id="disp">${dispInit}</div>
+    <div class="meta"><div class="tt">${label}</div><div class="tgt">${tr("target")} · <span class="tgt-val">${tg}</span></div></div>
     <button class="tbtn" id="tstart" type="button">${tr("start")}</button>
+    <button class="tbtn" id="tmode" type="button" aria-label="${tr("timerMode")}">${tMode==="down"?"⏷":"⏶"}</button>
     <button class="tbtn rst" id="treset" type="button">${tr("reset")}</button>
   </div>`;
 }
 function fmt(s){ const m=Math.floor(s/60); const ss=s%60; return `${m}:${String(ss).padStart(2,"0")}`; }
 function wireTimer(t){
   if(!t) return;
-  const disp=$("#disp"), start=$("#tstart"), reset=$("#treset");
+  const disp=$("#disp"), start=$("#tstart"), mode=$("#tmode"), reset=$("#treset");
   start.onclick=()=>{
     if(tHandle){ stopTimer(); start.textContent=tr("start"); return; }
     tStart=Date.now(); start.textContent=tr("stop");
     tHandle=setInterval(()=>{
       const el=Math.floor((Date.now()-tStart)/1000);
-      disp.textContent=fmt(el);
-      disp.classList.toggle("hot", el>0 && el<tTarget);
-      disp.classList.toggle("over", el>=tTarget);
+      if(tMode==="down"){
+        const remaining=Math.max(0,tTarget-el);
+        disp.textContent=fmt(remaining);
+        disp.classList.toggle("hot", remaining>0 && remaining<tTarget);
+        disp.classList.toggle("over", remaining===0);
+      }else{
+        disp.textContent=fmt(el);
+        disp.classList.toggle("hot", el>0 && el<tTarget);
+        disp.classList.toggle("over", el>=tTarget);
+      }
     },200);
   };
-  reset.onclick=()=>{ stopTimer(); disp.textContent="0:00"; disp.className="disp"; if(start) start.textContent=tr("start"); };
+  mode.onclick=()=>{
+    tMode=tMode==="down"?"up":"down";
+    localStorage.setItem("espresso.timerMode",tMode);
+    mode.textContent=tMode==="down"?"⏷":"⏶";
+    if(!tHandle){
+      disp.textContent=tMode==="down"?fmt(tTarget):"0:00";
+    }
+  };
+  reset.onclick=()=>{ stopTimer(); disp.textContent=tMode==="down"?fmt(tTarget):"0:00"; disp.className="disp"; if(start) start.textContent=tr("start"); };
 }
 function stopTimer(){ if(tHandle){ clearInterval(tHandle); tHandle=null; } }
 
