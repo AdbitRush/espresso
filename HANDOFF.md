@@ -23,21 +23,28 @@ and that's PIN-locked server-side (below).
 
 ## Deployment
 
-Two copies, **two separate deploys**, and only one of them is automatic.
+Two copies. `git push` deploys Pages in ~1 min; the VPS **pulls itself once a day**.
 
 ```bash
-git add -A && git commit -m "…" && git push          # Pages auto-deploys (~1 min)
-ssh root@178.105.148.72 "git -C /root/repos/espresso pull"   # the VPS does NOT
-# server.py changed? also: systemctl restart espresso
+git add -A && git commit -m "…" && git push     # Pages: automatic
+# want the VPS now instead of waiting for the nightly pull:
+ssh root@178.105.148.72 /root/bin/espresso-pull.sh
 ```
 
-⚠️ **The VPS never pulls by itself.** There is no cron, no webhook, no CI. On
-2026-07-30 it was found serving `fa3702a` while `main` was `88fac31` — five days
-stale, still showing the self-contradictory iced-latte step that `88fac31` fixed.
-Pages was current the whole time, so nothing looked broken. It has been pulled
-and restarted; both copies now serve byte-identical HTML.
+### The nightly pull
+| | |
+|---|---|
+| Script | `/root/bin/espresso-pull.sh` — pulls `--ff-only`, and **restarts the unit only if `server.py` changed** (`index.html` is read per request, `server.py` is held in memory) |
+| **Schedule** | `/etc/cron.d/espresso-pull` — **daily 04:17 UTC**. The file has one marked line to edit; examples for hourly / every-15-min are in the comment right above it |
+| Log | `/var/log/espresso-pull.log` — one line per actual change, plus any failure. Silent when there's nothing new |
 
-If you touch `index.html`, **verify both**:
+*Why it exists:* on 2026-07-30 the VPS was found serving `fa3702a` while `main`
+was `88fac31` — five days stale, still showing the self-contradictory iced-latte
+step that `88fac31` fixed. Pages was current the whole time, so nothing looked
+broken. Silent drift is this project's failure mode; the cron closes it.
+
+A same-day change still won't be live until 04:17 UTC. If you need it out now,
+run the script by hand (above), then **verify both copies match**:
 ```bash
 curl -s https://adbitrush.github.io/espresso/ | wc -c
 curl -s https://espresso.178-105-148-72.sslip.io/ | wc -c    # must match
@@ -117,11 +124,14 @@ real save/load as a live test.
 
 ## Open / next
 
-- [ ] **The VPS pull is manual.** Either accept it and always run the two-line
-      deploy, or add a pull (cron every 5 min, or a webhook) so the two copies
-      can't drift again. Silent drift is the failure mode here — Pages looks fine.
+- [x] ~~The VPS pull is manual~~ — fixed 2026-07-30: nightly cron at 04:17 UTC,
+      schedule editable in `/etc/cron.d/espresso-pull` (see Deployment).
 - [ ] Cloud sync has **zero real usage** (data dir empty). Do one save + load
       across two devices before trusting it.
+- [ ] **This repo is public.** Nothing secret is in it today, and the sync PIN
+      default (`3944`, documented in `GUIDE.md`) is client-side and therefore
+      public by nature anyway — but don't let a real credential land here. The
+      VPS admin details belong in the private repos.
 - [ ] No `UPGRADES.md`-driven work queued yet; the file exists as an empty inbox.
 - [ ] `sw.js` is still on `espresso-v4` — if the next change touches `images/`,
       remember it needs a bump.
