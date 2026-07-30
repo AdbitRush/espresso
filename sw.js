@@ -2,6 +2,7 @@
    - Page/HTML: network-first (fresh when online, cached fallback offline)
    - Everything else (icons, fonts): stale-while-revalidate */
 const V = "espresso-v4";
+const PREFIX = "espresso-";
 const SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
   "./favicon.svg", "./favicon-32.png", "./qr.svg", "./images/bg.jpg",
@@ -15,7 +16,11 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== V).map((k) => caches.delete(k))))
+      // Only our OWN generations: espresso, JokeStream and Golden Games are all
+      // served from adbitrush.github.io and Cache Storage is per-ORIGIN, so a
+      // blanket "delete everything that isn't mine" wiped the other apps' offline
+      // caches every time this one shipped an update.
+      .then((keys) => Promise.all(keys.filter((k) => k !== V && k.startsWith(PREFIX)).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
