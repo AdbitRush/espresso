@@ -816,6 +816,98 @@ const MACHINES = {
       },
     },
   },
+  bialetti:{
+    name:"Bialetti", sub:"Stainless steel moka pot · Option A", ic:"🍵",
+    drinks:{
+      moka:{
+        name:"Bialetti moka", tag:"Classic stovetop · strong & clean",
+        grind:"5.0", dose:"fill basket", yield:"full pot", time:"~4–5 min", temp:"low–med heat",
+        dial:"Bitter / sputtery → grind <b>coarser</b> (5.5) &amp; lower the heat. Weak &amp; sour → <b>finer</b> (4.0).",
+        timer:{label:"On the heat", target:270, mode:"up"},
+        steps:[
+          "<b>Boil water separately</b> and fill the base to just <b>below the safety valve</b> — starting hot means the grounds don't stew and go metallic.",
+          "Fill the funnel basket with grind at VS3 <span class='hl'>5.0</span>, level it off — <b>do not tamp</b>.",
+          "Assemble (the base is hot — use a towel) and set on <b>low–medium</b> heat, lid open.",
+          "When coffee rises and you hear the <b>first gurgle</b>, pull it off the heat.",
+          "Cool the base under the cold tap to <b>stop extraction</b>, stir, and pour.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,MOKA_GEAR.gasket,MOKA_GEAR.trivet,BASE_GEAR.water]),
+      },
+      mokaamericano:{
+        name:"Bialetti americano", tag:"Stretch with hot water",
+        grind:"5.0", dose:"fill basket", yield:"pot + water", time:"~4–5 min", temp:"low–med heat",
+        dial:"Brew as normal; stretch with water to taste rather than changing the grind.",
+        timer:{label:"On the heat", target:270, mode:"up"},
+        steps:[
+          "Brew a full Bialetti pot as usual (VS3 <span class='hl'>5.0</span>, hot start).",
+          "Add <span class='hl'>100–150 ml</span> hot water to a mug.",
+          "Pour the moka coffee in — it's naturally strong, so it takes water well.",
+          "Adjust with more water rather than re-grinding.",
+        ],
+        gear:g([BASE_GEAR.beans,MOKA_GEAR.gasket,MOKA_GEAR.trivet,BASE_GEAR.water]),
+      },
+      mokacap:{
+        name:"Bialetti cappuccino", tag:"Hand-frothed milk + stovetop",
+        grind:"5.0", dose:"fill basket", yield:"pot + milk", time:"~4–5 min", temp:"warm milk",
+        dial:"No wand, so froth by hand. Whole milk foams thickest.",
+        timer:{label:"On the heat", target:270, mode:"up"},
+        milk:"Warm ~120 ml milk in the microwave or a pan to <b>~60 °C</b>, then <b>frother-whisk 20–30 s</b> until doubled and glossy.",
+        steps:[
+          "Brew a strong Bialetti pot (VS3 <span class='hl'>5.0</span>).",
+          "Warm and froth the milk by hand until thick and airy.",
+          "Pour the moka coffee into a cup, then spoon and pour the foam on top.",
+          "Dust with cocoa if you like — the moka's body carries milk beautifully.",
+        ],
+        gear:g([BASE_GEAR.beans,MOKA_GEAR.frother,MOKA_GEAR.gasket,MOKA_GEAR.trivet]),
+      },
+    },
+  },
+  brikka:{
+    name:"Brikka", sub:"Pressure valve moka · Option B", ic:"⚡",
+    drinks:{
+      moka:{
+        name:"Brikka moka", tag:"Crema-like foam · richer body",
+        grind:"4.5", dose:"fill basket", yield:"full pot", time:"~3–4 min", temp:"low–med heat",
+        dial:"Bitter / sputtery → grind <b>coarser</b> (5.0) &amp; lower the heat. Weak &amp; sour → <b>finer</b> (3.5). The Brikka valve builds pressure — watch it closely.",
+        timer:{label:"On the heat", target:210, mode:"up"},
+        steps:[
+          "<b>Boil water separately</b> and fill the base to just <b>below the safety valve</b> — the Brikka valve needs hot water from the start.",
+          "Fill the funnel basket with a <b>slightly finer</b> grind at VS3 <span class='hl'>4.5</span>, level it off — <b>do not tamp</b>.",
+          "Assemble (the base is hot — use a towel) and set on <b>low–medium</b> heat, lid open. The valve needs time to build pressure.",
+          "When coffee rises with a <b>rich crema-like foam</b> and you hear the first gurgle, pull it off the heat immediately.",
+          "Cool the base under the cold tap to <b>stop extraction</b> — the Brikka keeps extracting longer due to the valve pressure. Stir and pour.",
+        ],
+        gear:g([BASE_GEAR.beans,BASE_GEAR.scale,MOKA_GEAR.gasket,MOKA_GEAR.trivet,BASE_GEAR.water]),
+      },
+      mokaamericano:{
+        name:"Brikka americano", tag:"Stretch the rich Brikka brew",
+        grind:"4.5", dose:"fill basket", yield:"pot + water", time:"~3–4 min", temp:"low–med heat",
+        dial:"Brew as normal Brikka; stretch with water to taste rather than changing the grind.",
+        timer:{label:"On the heat", target:210, mode:"up"},
+        steps:[
+          "Brew a full Brikka pot as usual (VS3 <span class='hl'>4.5</span>, hot start).",
+          "Add <span class='hl'>100–150 ml</span> hot water to a mug.",
+          "Pour the Brikka coffee in — the valve gives it more body, so it takes water beautifully.",
+          "Adjust with more water rather than re-grinding.",
+        ],
+        gear:g([BASE_GEAR.beans,MOKA_GEAR.gasket,MOKA_GEAR.trivet,BASE_GEAR.water]),
+      },
+      mokacap:{
+        name:"Brikka cappuccino", tag:"Stovetop crema + hand-frothed milk",
+        grind:"4.5", dose:"fill basket", yield:"pot + milk", time:"~3–4 min", temp:"warm milk",
+        dial:"The Brikka's richer base pairs beautifully with milk. Whole milk foams thickest.",
+        timer:{label:"On the heat", target:210, mode:"up"},
+        milk:"Warm ~120 ml milk in the microwave or a pan to <b>~60 °C</b>, then <b>frother-whisk 20–30 s</b> until doubled and glossy.",
+        steps:[
+          "Brew a strong Brikka pot (VS3 <span class='hl'>4.5</span>). The valve will give you a crema-like layer on top.",
+          "Warm and froth the milk by hand until thick and airy.",
+          "Pour the Brikka coffee into a cup, then spoon and pour the foam on top. The richer base carries milk beautifully.",
+          "Dust with cocoa if you like — the Brikka's body and crema make this special.",
+        ],
+        gear:g([BASE_GEAR.beans,MOKA_GEAR.frother,MOKA_GEAR.gasket,MOKA_GEAR.trivet]),
+      },
+    },
+  },
   cold:{
     name:"Cold brew", sub:"No heat · immersion", ic:"🧊",
     drinks:{
@@ -1039,6 +1131,17 @@ const SCENES={
     <path class="cd" d="M92 58h40l-6 40h-28z"/><path class="ln" d="M92 58h40l-6 40h-28z" fill="none"/><path class="ln" d="M132 66q10 2 10 10"/>
     <path class="ln" d="M96 98h32"/><path class="flame a-sway" d="M104 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/>
     <path class="flame a-sway" style="animation-delay:.4s" d="M118 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/></svg>`,
+  bialetti:`<svg class="scene" viewBox="0 0 220 150"><circle class="crL a-bubble" cx="132" cy="44" r="3.4"/><circle class="crL a-bubble" style="animation-delay:.7s" cx="136" cy="40" r="3"/>
+    <path class="ink" d="M128 46h12l-3 10h-6z"/><path class="cd" d="M98 46h30l-3 12h-24z" fill="url(#ss)"/><defs><linearGradient id="ss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--ink)" stop-opacity=".25"/><stop offset="1" stop-color="var(--ink)" stop-opacity=".1"/></linearGradient></defs><path class="ln" d="M98 46h30l-3 12h-24z" fill="none"/><path class="ln" d="M124 44l8-6"/>
+    <path class="cd" d="M94 58h36l-5 40h-26z"/><path class="ln" d="M94 58h36l-5 40h-26z" fill="none"/><path class="ln" d="M130 66q10 2 10 10"/>
+    <path class="ln" d="M96 98h32"/><path class="flame a-sway" d="M106 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/>
+    <path class="flame a-sway" style="animation-delay:.4s" d="M118 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/></svg>`,
+  brikka:`<svg class="scene" viewBox="0 0 220 150"><circle class="crL a-bubble" cx="132" cy="42" r="3.4"/><circle class="crL a-bubble" style="animation-delay:.5s" cx="136" cy="38" r="3"/><circle class="crL a-bubble" style="animation-delay:1.2s" cx="130" cy="46" r="2.5"/>
+    <path class="ink" d="M128 44h12l-3 10h-6z"/><rect class="cd" x="96" y="46" width="34" height="12" rx="2"/><path class="ln" d="M96 46h34v12h-34z" fill="none"/><path class="ln" d="M124 44l8-6"/>
+    <path class="cd" d="M92 58h40l-6 40h-28z"/><path class="ln" d="M92 58h40l-6 40h-28z" fill="none"/>
+    <ellipse class="cr" cx="112" cy="76" rx="16" ry="4"/><path class="ln" d="M132 66q10 2 10 10"/>
+    <path class="ln" d="M96 98h32"/><path class="flame a-sway" d="M104 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/>
+    <path class="flame a-sway" style="animation-delay:.4s" d="M118 100c-6 6-6 14 0 18 4-3 3-7 3-7 2 4 6 4 5 9 5-3 6-9 2-14-2 4-5 2-4-2-2 2-6 1-6-4z"/></svg>`,
   steep:`<svg class="scene" viewBox="0 0 220 150"><path class="lnS" d="M150 34l7 4-7 4M154 38h-14"/><path class="lnS" d="M64 30v14M57 37h14M60 33l8 8M60 41l8-8"/>
     <rect class="cd" x="88" y="40" width="44" height="70" rx="8"/><rect class="cr" x="91" y="66" width="38" height="41" rx="4"/><rect class="crL" x="91" y="60" width="38" height="8"/>
     <circle class="cd a-bubble" style="animation-duration:3s" cx="104" cy="92" r="2.6"/><circle class="cd a-bubble" style="animation-duration:3.4s;animation-delay:1.2s" cx="116" cy="96" r="2.2"/>
@@ -1066,7 +1169,7 @@ const SCENES={
 const SCENE_RULES=[
   [/rosetta|heart:|wiggle|thin stream|drop the pitcher|wide cup|cut .*through/,'artpour'],
   [/shake|shaker|frother|whisk/,'shake'],[/plunger|plunge|french press:/,'plunge'],[/bloom/,'bloom'],
-  [/spiral|drawdown/,'spiral'],[/gurgle|\bassemble\b|medium heat|stovetop|moka pot/,'moka'],
+  [/spiral|drawdown/,'spiral'],[/gurgle|\bassemble\b|medium heat|stovetop|moka pot|bialetti|brikka/,'moka'],
   [/steep|fridge|seal and/,'steep'],[/rinse/,'water'],
   [/strain|paper filter|through .*mesh|double-strain/,'strain'],
   [/\bice\b|iced|over the ice|tall glass with/,'iced'],
@@ -1194,6 +1297,8 @@ function migrateLegacy(){
 const HE_MACHINES = {
   dedica:{name:"דדיקה", sub:"מכונת אספרסו"},
   moka:{name:"מקינטה", sub:"מקינטה · על הכיריים"},
+  bialetti:{name:"ביאלטי", sub:"מקינטת נירוסטה · אופציה א"},
+  brikka:{name:"בריקה", sub:"מקינטה עם שסתום לחץ · אופציה ב"},
   cold:{name:"קולד ברו", sub:"ללא חום · השרייה"},
   filter:{name:"פילטר", sub:"V60 · פרנץ' פרס"},
   milkfoam:{name:"קצף חלב", sub:"קיטור והקצפה"},
@@ -1316,6 +1421,53 @@ const HE_DRINKS = {
       "מחממים ומקציפים את החלב ביד עד עבה ואוורירי.",
       "מוזגים את קפה המוקה לכוס, ואז מכפילים ומוזגים את הקצף למעלה.",
       "מפזרים קקאו אם רוצים — הגוף של המוקה נושא חלב יפהפה."]},
+  "moka/mokacap":{name:"קפוצ'ינו מוקה", tag:"שוט מהכיריים + חלב מוקצף ביד",
+    dial:"אין מקל קיטור, אז מקציפים ביד. חלב מלא מקציף הכי עבה.",
+    milk:"מחממים ~120 מ״ל חלב במיקרוגל או בסיר ל-<b>~60°C</b>, ואז <b>מקציפים 20–30 שנ'</b> עד שמכפיל ומבריק.",
+    steps:["מכינים מקינטה חזקה (VS3 <span class='hl'>5.0</span>).",
+      "מחממים ומקציפים את החלב ביד עד עבה ואוורירי.",
+      "מוזגים את קפה המוקה לכוס, ואז מכפילים ומוזגים את הקצף למעלה.",
+      "מפזרים קקאו אם רוצים — הגוף של המוקה נושא חלב יפהפה."]},
+  "bialetti/moka":{name:"מוקה ביאלטי", tag:"קלאסי על הכיריים — חזק ונקי",
+    dial:"מר / מקרטע → טוחנים <b>גס יותר</b> (5.5) ומנמיכים אש. חלש וחמוץ → <b>דק יותר</b> (4.0).",
+    steps:["<b>מרתיחים מים בנפרד</b> וממלאים את הבסיס עד <b>מתחת לשסתום הביטחון</b>.",
+      "ממלאים את סל המשפך בקפה ב-VS3 <span class='hl'>5.0</span>, מיישרים — <b>בלי לטמפר</b>.",
+      "מרכיבים ומניחים על אש <b>נמוכה–בינונית</b>, מכסה פתוח.",
+      "כשהקפה עולה ושומעים את <b>הגרגור הראשון</b>, מורידים מהאש.",
+      "מקררים את הבסיס תחת ברז קר כדי <b>לעצור את החילוץ</b>, מערבבים ומוזגים."]},
+  "bialetti/mokaamericano":{name:"אמריקנו ביאלטי", tag:"מוארך במים חמים",
+    dial:"מכינים כמו מוקה רגיל; מאריכים עם מים לפי הטעם.",
+    steps:["מכינים מקינטת ביאלטי מלאה (VS3 <span class='hl'>5.0</span>).",
+      "מוסיפים <span class='hl'>100–150 ml</span> מים חמים לספל.",
+      "מוזגים את הקפה פנימה — הוא חזק מטבעו, אז סופג מים טוב.",
+      "מכוונים עם עוד מים במקום לטחון מחדש."]},
+  "bialetti/mokacap":{name:"קפוצ'ינו ביאלטי", tag:"חלב מוקצף ביד + מוקה",
+    dial:"אין מקל קיטור, אז מקציפים ביד. חלב מלא מקציף הכי עבה.",
+    milk:"מחממים ~120 מ״ל חלב במיקרוגל או בסיר ל-<b>~60°C</b>, ואז <b>מקציפים 20–30 שנ'</b> עד שמכפיל ומבריק.",
+    steps:["מכינים מקינטת ביאלטי חזקה (VS3 <span class='hl'>5.0</span>).",
+      "מחממים ומקציפים את החלב ביד עד עבה ואוורירי.",
+      "מוזגים את הקפה לכוס, ואז מכפילים ומוזגים את הקצף למעלה.",
+      "מפזרים קקאו אם רוצים."]},
+  "brikka/moka":{name:"מוקה בריקה", tag:"קצף כמו קרמה — גוף עשיר יותר",
+    dial:"מר / מקרטע → טוחנים <b>גס יותר</b> (5.0) ומנמיכים אש. חלש וחמוץ → <b>דק יותר</b> (3.5). השסתום של הבריקה בונה לחץ — שומרים עין.",
+    steps:["<b>מרתיחים מים בנפרד</b> וממלאים את הבסיס עד <b>מתחת לשסתום הביטחון</b> — השסתום צריך מים חמים מההתחלה.",
+      "ממלאים את סל המשפך בטחינה <b>קצת דקה יותר</b> ב-VS3 <span class='hl'>4.5</span>, מיישרים — <b>בלי לטמפר</b>.",
+      "מרכיבים ומניחים על אש <b>נמוכה–בינונית</b>, מכסה פתוח. השסתום צריך זמן לבנות לחץ.",
+      "כשהקפה עולה עם <b>קצף עשיר כמו קרמה</b> ושומעים את הגרגור הראשון, מורידים מהאש מיד.",
+      "מקררים את הבסיס תחת ברז קר כדי <b>לעצור את החילוץ</b> — הבריקה ממשיכה לחלוץ בגלל לחץ השסתום. מערבבים ומוזגים."]},
+  "brikka/mokaamericano":{name:"אמריקנו בריקה", tag:"מוארך את הקצף העשיר",
+    dial:"מכינים כמו בריקה רגיל; מאריכים עם מים לפי הטעם.",
+    steps:["מכינים מקינטת בריקה מלאה (VS3 <span class='hl'>4.5</span>).",
+      "מוסיפים <span class='hl'>100–150 ml</span> מים חמים לספל.",
+      "מוזגים את קפה הבריקה פנימה — השסתום נותן לו יותר גוף, אז סופג מים יפה.",
+      "מכוונים עם עוד מים במקום לטחון מחדש."]},
+  "brikka/mokacap":{name:"קפוצ'ינו בריקה", tag:"קצף מוקה + חלב מוקצף ביד",
+    dial:"הבסיס העשיר של הבריקה מתאים נהדר עם חלב. חלב מלא מקציף הכי עבה.",
+    milk:"מחממים ~120 מ״ל חלב במיקרוגל או בסיר ל-<b>~60°C</b>, ואז <b>מקציפים 20–30 שנ'</b> עד שמכפיל ומבריק.",
+    steps:["מכינים מקינטת בריקה חזקה (VS3 <span class='hl'>4.5</span>). השסתום ייתן קצף כמו קרמה למעלה.",
+      "מחממים ומקציפים את החלב ביד עד עבה ואוורירי.",
+      "מוזגים את קפה הבריקה לכוס, ואז מכפילים ומוזגים את הקצף למעלה. הבסיס העשיר נושא חלב יפה.",
+      "מפזרים קקאו אם רוצים — הגוף והקצף של הבריקה עושים את זה מיוחד."]},
   "cold/concentrate":{name:"קונצנטרט קולד ברו", tag:"בסיס חזק 1:5 · מדללים לפי הטעם",
     dial:"כוס גרגרית / בוצית → טוחנים <b>גס יותר</b> (9.5). חלש ומימי → משרים <b>יותר זמן</b>, לא דק יותר.",
     steps:["טוחנים <span class='hl'>100 g</span> גס ב-VS3 <span class='hl'>9.0</span> — כמו מלח ים גס, בלי אבקה.",
