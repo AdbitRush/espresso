@@ -620,11 +620,23 @@ h1, h2, h3, .bk-display{ letter-spacing: -.022em; }
     grid-template-columns: repeat(6, 1fr) !important;
     gap: 14px !important;
   }
-  .machines > *:nth-child(1),
-  .machines > *:nth-child(2){ grid-column: span 3; }
-  .machines > *:nth-child(n+3){ grid-column: span 2; }
-  .machines > *:nth-child(1) .hero,
-  .machines > *:nth-child(2) .hero{ aspect-ratio: 16/9; }
+  /* Default: three per row, which divides cleanly for any even count. */
+  .machines > *{ grid-column: span 2; }
+
+  /* Quantity query. With an odd count, three-per-row strands the last tile
+     alone, so the first two are promoted to half-width and the remainder
+     falls as 3+3 / 2+2+2. Machines get added to this app over time — it went
+     from five to six while this refactor was in progress — so the layout has
+     to survive that rather than be hand-tuned to today's count. */
+  .machines > *:nth-child(1):nth-last-child(5),
+  .machines > *:nth-child(2):nth-last-child(4),
+  .machines > *:nth-child(1):nth-last-child(7),
+  .machines > *:nth-child(2):nth-last-child(6){ grid-column: span 3; }
+
+  .machines > *:nth-child(1):nth-last-child(5) .hero,
+  .machines > *:nth-child(2):nth-last-child(4) .hero,
+  .machines > *:nth-child(1):nth-last-child(7) .hero,
+  .machines > *:nth-child(2):nth-last-child(6) .hero{ aspect-ratio: 16/9; }
 }
 .machines > *{
   transition: transform .24s var(--ease), box-shadow .24s var(--ease);
@@ -742,6 +754,8 @@ footer{
 
 
 
+
+
 </head>
 <body>
 <div class="wrap">
@@ -786,6 +800,8 @@ footer{
   </div>
 </section>
 <!-- bateshka:end -->
+
+
 
 
 
@@ -2541,6 +2557,8 @@ migrateLegacy();
 restore(); applyBg(); applyLang(); wireSync(); wireProfiles();
 if(syncCode()) cloudLoad(false);
 </script>
+
+
 
 
 
