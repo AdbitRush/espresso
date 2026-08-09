@@ -203,3 +203,76 @@ When a visual state can be expressed in CSS, express it in CSS.
 □ Confirm the tab is visible before believing anything is broken
 □ Ship. One improvement a day.
 ```
+
+---
+
+# Worked example: the three passes on espresso
+
+Run as three separate passes, each measured before it was written. Each is its
+own file and each reverts on its own (`python passN_*.py --undo`).
+
+## Pass 1 — typography (`pass1_type.py`)
+
+**Measured:** 30 distinct font sizes across 56 text styles — including 12.95px,
+17.28px, 14.88px, 13.76px. Those are not decisions, they are `em` units
+compounding through nested elements. 15 elements had `line-height: normal`.
+
+**Done:** a 9-step scale, and the hierarchy widened rather than merely tidied —
+brew timer 30→44px, machine name 18→22px in Fraunces, micro labels tracked and
+uppercased at 11px. Big things bigger, small things quieter. An even scale is
+consistent and still dull; the contrast is what reads as designed.
+
+**Result: 30 → 23**, not 9. Honest reason: the stragglers sit on unclassed
+`span`/`b`/`a`/`h1` inheriting from `em`-based parents, and reaching 9 needs
+blanket rules on generic tags or a rewrite of the original cascade.
+
+**Trap:** the first attempt moved 30 → 29. Five selectors (`.timer .disp`,
+`.machine .mn`, `.machine .ms`, `.gear .gn`, `.gear .gi`) are two-class in the
+original sheet, which outranks a one-class override no matter how late it
+loads. Found by asking the browser which rule won — not by reading CSS.
+
+## Pass 2 — spacing (`pass2_spacing.py`)
+
+**Measured:** six block paddings — `0/18`, `51/0`, `11/11`, `0/0`, `32/32`,
+`38/0` — four asymmetric, three top-heavy with *zero* underneath, so blocks
+ended by colliding with what followed. Four different grid gaps (10/12/14/16).
+Section labels separated by 0, 22 or 24px depending which one you hit.
+
+**Done:** one section rhythm, `clamp(46px, 6vw, 78px)` above every numbered
+section, with a hairline rule so the rhythm is visible rather than merely
+present. One gap. Symmetric padding on an 8px grid.
+
+**Result:** every section now at a uniform 76.8px. Page 5047 → 5648px. This was
+the biggest visible change of the three — the steps stopped touching and
+started reading as steps.
+
+## Pass 3 — motion (`pass3_motion.py`)
+
+**Measured:** eight durations (.15 → .8s) and four easings mixed arbitrarily.
+
+**And a bug I had shipped in the makeover layer:**
+
+```css
+.bk-reveal { opacity: 0 }        /* JS adds .in to bring it back */
+```
+
+Every revealed block was invisible until JavaScript ran. Not hypothetical — a
+backgrounded tab suspends IntersectionObserver, and the entire machine picker
+rendered as an empty band under its heading.
+
+> **Content must never require JavaScript in order to be visible.**
+
+The reveal now *fails open*: visible by default, hidden only once the script has
+run and armed it, plus a 1.2s safety net that un-arms if nothing ever revealed.
+If JS is blocked, slow or throttled the page is static — never blank.
+
+Three tokens: 150ms colour, 220ms hover, 320ms reveals. Nothing overshoots.
+
+## What the passes cost and returned
+
+| | |
+|---|---|
+| Measuring first | Turned "improve the typography" into "30 sizes, 5 of them outranked" |
+| Doing them separately | Pass 3 found a blank-content bug that a combined pass would have buried |
+| Verifying each | Two passes appeared to work and hadn't — 30→29, and reveals |
+| Zero API spend | All CSS and existing photography |
