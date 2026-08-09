@@ -99,17 +99,94 @@ h1, h2, h3, .bk-display{ letter-spacing: -.022em; }
 }
 
 /* ---- hero --------------------------------------------------------------
-   Asymmetric: type occupies the left 7 columns, an overlapping image stack
-   the right 5. Collapses to type-only on small screens, where the stack
-   would just be noise. */
+   Full-bleed cinematic plate. Breaks out of .wrap's padding with the
+   50%/50vw trick so the image runs edge to edge, with the type sitting on
+   the dark half of the frame. This is the one place on the site that is
+   allowed to be pure theatre — everything below it is a working tool. */
+/* 100vw counts the vertical scrollbar, so the naive full-bleed trick pushes a
+   horizontal scrollbar onto every desktop page. Clip at the root and measure
+   against the documentElement width instead. */
+html{ overflow-x: hidden; }
 .bk-hero{
+  position: relative;
+  margin-left: calc(50% - 50vw + var(--sbw, 0px) / 2);
+  margin-right: calc(50% - 50vw + var(--sbw, 0px) / 2);
+  width: calc(100vw - var(--sbw, 0px));
+  min-height: min(82vh, 720px);
   display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: center;
-  padding: clamp(2rem, 6vw, 5.5rem) 0 var(--sp-block);
+  align-items: end;
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0d0907;
 }
-.bk-hero-copy{ min-width: 0; }
+.bk-hero::before{
+  content: "";
+  position: absolute; inset: 0; z-index: 0;
+  background: url("images/hero-cine.jpg") center 42% / cover no-repeat;
+  transform: scale(1.06);
+  animation: bk-drift 26s ease-in-out infinite alternate;
+}
+/* Two overlaid gradients: one darkens the base so white type holds up at any
+   viewport, the other keeps the top edge dark so the header does not float
+   on a bright patch of the photograph. */
+.bk-hero::after{
+  content: "";
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(13,9,7,.82) 0%, rgba(13,9,7,.28) 34%, rgba(13,9,7,.90) 100%),
+    radial-gradient(120% 90% at 12% 78%, rgba(13,9,7,.86), transparent 62%);
+}
+@keyframes bk-drift{
+  from{ transform: scale(1.06) translate3d(0,0,0); }
+  to  { transform: scale(1.12) translate3d(0,-1.6%,0); }
+}
+
+.bk-hero-copy{
+  position: relative; z-index: 2;
+  min-width: 0;
+  max-width: min(56rem, 92vw);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 clamp(18px,4vw,40px) clamp(2.5rem,7vh,5rem);
+}
+/* Light type on the plate regardless of the light/dark theme. */
+.bk-hero .bk-display{ color: #fdf6ec; text-shadow: 0 2px 30px rgba(0,0,0,.55); }
+.bk-hero .bk-lead{ color: rgba(253,246,236,.82); max-width: 40ch; }
+.bk-hero .bk-eyebrow{ color: var(--crema-bright); }
+.bk-hero .bk-cta.ghost{
+  color: #fdf6ec; border-color: rgba(253,246,236,.42);
+  backdrop-filter: blur(6px);
+}
+.bk-hero .bk-cta.ghost:hover{ background: rgba(253,246,236,.12); border-color: #fdf6ec; }
+
+/* Film grain. Cheap, and it is most of what separates a flat CSS gradient
+   from something that reads as photographed. */
+.bk-hero .bk-grain{
+  position: absolute; inset: -50%; z-index: 2; pointer-events: none;
+  opacity: .16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,\\
+<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'>\\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter>\\
+<rect width='140' height='140' filter='url(%23n)' opacity='.5'/></svg>");
+  animation: bk-grain 1.1s steps(3) infinite;
+}
+@keyframes bk-grain{
+  0%{ transform: translate(0,0) }
+  33%{ transform: translate(-3%,2%) }
+  66%{ transform: translate(2%,-3%) }
+  100%{ transform: translate(0,0) }
+}
+
+/* Scroll cue at the base of the plate. */
+.bk-scroll{
+  position: absolute; z-index: 3; left: 50%; bottom: 14px;
+  transform: translateX(-50%);
+  width: 1px; height: 40px;
+  background: linear-gradient(180deg, transparent, rgba(253,246,236,.75));
+  animation: bk-cue 2.4s ease-in-out infinite;
+}
+@keyframes bk-cue{ 0%,100%{ opacity:.25; height:26px } 50%{ opacity:.9; height:44px } }
 .bk-cta-row{ display:flex; gap:.7rem; flex-wrap:wrap; margin-top: 1.8rem; }
 .bk-cta{
   display:inline-flex; align-items:center; gap:.5rem;
@@ -183,8 +260,8 @@ h1, h2, h3, .bk-display{ letter-spacing: -.022em; }
 
 /* ---- responsive --------------------------------------------------------- */
 @media (max-width: 899px){
-  .bk-hero{ grid-template-columns: 1fr; padding-top: 1.5rem; }
-  .bk-stack{ display: none; }
+  .bk-hero{ min-height: min(74vh, 560px); }
+  .bk-hero::before{ background-position: center 46%; animation: none; }
 }
 @media (max-width: 420px){
   :root{ --fs-display: clamp(2.1rem, 11vw, 2.9rem); }
@@ -250,12 +327,30 @@ header{
   background: var(--card);
 }
 .machines > *:hover{ border-color: color-mix(in oklab, var(--crema) 45%, var(--hair)); }
-.machines .hero{ overflow: hidden; }
-.machines .hero img{
+
+/* The tile photo was pinned to height:58px, which made every machine read as
+   a thumbnail on a page that is otherwise photography-led. Give it a real
+   aspect ratio instead of a fixed height so it scales with the tile. */
+.mic{
+  height: auto !important;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 11px !important;
+  margin-bottom: 10px !important;
   transition: transform .5s var(--ease);
   will-change: transform;
 }
-.machines > *:hover .hero img{ transform: scale(1.045); }
+.machines > *{ overflow: hidden; }
+.machines > *:hover .mic{ transform: scale(1.05); }
+
+@media (min-width: 900px){
+  /* The two promoted tiles get a wider crop so the row reads as deliberate
+     rather than as two stretched thumbnails. */
+  .machines > *:nth-child(1):nth-last-child(5) .mic,
+  .machines > *:nth-child(2):nth-last-child(4) .mic,
+  .machines > *:nth-child(1):nth-last-child(7) .mic,
+  .machines > *:nth-child(2):nth-last-child(6) .mic{ aspect-ratio: 16 / 10; }
+}
 
 /* The two feature cards read as plain boxes; give them the same elevation
    language as everything else. */
@@ -303,11 +398,8 @@ HERO = """
       <button class="bk-cta ghost" type="button" id="bkSurprise" data-i18n-bk="cta2">Surprise me</button>
     </div>
   </div>
-  <div class="bk-stack" aria-hidden="true">
-    <img src="images/dedica_espresso.jpg" alt="" loading="eager" width="600" height="600">
-    <img src="images/milkfoam_latteart.jpg" alt="" loading="lazy" width="600" height="600">
-    <img src="images/filter_v60.jpg" alt="" loading="lazy" width="600" height="600">
-  </div>
+  <div class="bk-grain" aria-hidden="true"></div>
+  <div class="bk-scroll" aria-hidden="true"></div>
 </section>
 """
 
@@ -318,6 +410,16 @@ SCRIPT = """
    nothing is hidden and every control still works. */
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Publish the scrollbar width so the full-bleed hero can subtract it.
+  // Without this, 100vw is wider than the visible page on any desktop browser
+  // that reserves space for a scrollbar, and the whole page scrolls sideways.
+  function setScrollbarWidth() {
+    var sbw = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--sbw', (sbw > 0 ? sbw : 0) + 'px');
+  }
+  setScrollbarWidth();
+  window.addEventListener('resize', setScrollbarWidth);
 
   // Hero buttons reuse the controls that already exist rather than
   // duplicating their logic.
@@ -340,7 +442,7 @@ SCRIPT = """
   if (reduce || !('IntersectionObserver' in window)) return;
 
   var targets = document.querySelectorAll(
-    '.bk-hero-copy, .bk-stack, #machines, .qr-card, .sync-card, #favWrap');
+    '#machines, .qr-card, .sync-card, #favWrap');
   if (!targets.length) return;
 
   var io = new IntersectionObserver(function (entries) {
