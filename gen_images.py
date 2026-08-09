@@ -60,6 +60,11 @@ DRINKS = {
     # machine-tile thumbnails
     "machine_dedica": "a slim stainless-steel DeLonghi Dedica style espresso machine on a warm kitchen counter, front product photo",
     "machine_moka": "a classic aluminium moka pot stovetop espresso maker, product photo",
+    # Added when the Bialetti and Brikka machines landed — without these two the
+    # picker fell back to emoji for them while every other tile had a photo,
+    # which made the whole grid look half-finished.
+    "machine_bialetti": "a polished stainless steel Bialetti-style octagonal moka pot on a warm kitchen counter, product photo",
+    "machine_brikka": "a stainless steel Brikka-style moka pot with its weighted pressure valve on top, on a warm kitchen counter, product photo",
     "machine_cold": "a tall glass jar of dark cold-brew coffee concentrate with a lid, product photo",
     "machine_filter": "a white ceramic V60 pour-over dripper with a paper filter on a glass carafe, product photo",
     "machine_milkfoam": "a stainless-steel milk frothing pitcher holding glossy white microfoam, product photo",

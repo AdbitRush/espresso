@@ -189,7 +189,19 @@ h1, h2, h3, .bk-display{ letter-spacing: -.022em; }
 @media (max-width: 420px){
   :root{ --fs-display: clamp(2.1rem, 11vw, 2.9rem); }
   .wrap{ padding-left: 16px !important; padding-right: 16px !important; }
-  .bk-cta{ flex: 1 1 auto; justify-content: center; }
+  .bk-cta{ flex: 1 1 100%; justify-content: center; }
+
+  /* The tagline wrapped onto two lines at this width and shunted the three
+     action buttons into the brand block. Drop it — the h1 next to a cup mark
+     already says what the app is, and the vertical space is worth more here. */
+  /* !important because the original rules for these two are more specific
+     than a descendant selector can beat from an override layer. */
+  header .brand p, header .brand div p{ display: none !important; }
+  header{ padding-bottom: 12px !important; }
+  header .brand h1, header h1{ font-size: 1.3rem !important; line-height: 1.1 !important; }
+
+  /* Tighter tiles so two still fit comfortably with the reduced gutter. */
+  .machines{ gap: 10px !important; }
 }
 
 @media (prefers-reduced-motion: reduce){
