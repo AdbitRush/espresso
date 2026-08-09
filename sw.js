@@ -1,7 +1,7 @@
 /* Espresso PWA service worker.
    - Page/HTML: network-first (fresh when online, cached fallback offline)
    - Everything else (icons, fonts): stale-while-revalidate */
-const V = "espresso-v4";
+const V = "espresso-v5";
 const PREFIX = "espresso-";
 const SHELL = [
   "./", "./index.html", "./manifest.webmanifest",
